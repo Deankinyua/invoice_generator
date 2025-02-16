@@ -3,14 +3,20 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
 
   alias InvoiceGenerator.Mailer
 
+  use Phoenix.Swoosh,
+    template_root: "lib/invoice_generator_web/templates/emails",
+    template_path: "welcome"
+
   # Delivers the email using the application mailer.
-  defp deliver(recipient, subject, body) do
+  defp deliver(recipient, subject, _body) do
     email =
       new()
       |> to(recipient)
       |> from({"InvoiceGenerator", "shattymtana@gmail.com"})
       |> subject(subject)
-      |> text_body(body)
+      |> render_body("welcome.html", %{})
+
+    # |> text_body(_body)
 
     with {:ok, _metadata} <- Mailer.deliver(email) do
       {:ok, email}
