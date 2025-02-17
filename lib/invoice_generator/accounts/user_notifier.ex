@@ -3,18 +3,36 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
 
   alias InvoiceGenerator.Mailer
 
+  alias InvoiceGenerator.Accounts
+
   use Phoenix.Swoosh,
     template_root: "lib/invoice_generator_web/templates/emails",
     template_path: "welcome"
 
   # Delivers the email using the application mailer.
   defp deliver(recipient, subject, _body) do
+    result = Accounts.get_user_by_email(recipient)
+
+    email = result.email
+    name = result.name
+
+    dbg(recipient)
+    dbg(name)
+    dbg(email)
+
     email =
       new()
       |> to(recipient)
       |> from({"InvoiceGenerator", "shattymtana@gmail.com"})
       |> subject(subject)
-      |> render_body("welcome.html", %{})
+      |> render_body("welcome.html", email: email, name: name)
+      |> attachment(
+        Swoosh.Attachment.new(
+          Path.absname("priv/static/images/logo.png"),
+          # content_type: "image/png",
+          type: :inline
+        )
+      )
 
     # |> text_body(_body)
 

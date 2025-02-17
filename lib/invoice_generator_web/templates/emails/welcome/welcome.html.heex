@@ -1,12 +1,40 @@
-<h1>Cookie We're better than friends.</h1>
-<h2>We're cookie friends</h2>
-<p>Hey there,</p>
-<p>we love you .</p>
-<br />
-<br />
-<p>When our cookies are ready, you'll be the first to know</p>
-<br />
-<p>Best,</p>
-<p>Cookie Team</p>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
 
-<button class="bg-[7c5dfa]">good boy</button>
+    <style>
+      .background {
+        background: #7c5dfa;
+      }
+
+      .container {
+        border: 1px solid red;
+        padding: 1rem 2.5rem;
+        max-width: 33rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="cid:logo.png" alt="logo" />
+      <h3>Hi,<%= assigns[:name] %></h3>
+      <p>Welcome to invoives</p>
+      <p>
+        Please take a second to confirm <%= assigns[:email] %> as your email
+        address:
+      </p>
+
+      <p>
+        Once you do, you'll be able to opt-in to notifications of activity and
+      </p>
+      <p>access other features that require a valid email address.</p>
+
+      <button class="background">Confirm email</button>
+      <p>High fives,</p>
+      <p>Team Invoice!</p>
+    </div>
+  </body>
+</html>

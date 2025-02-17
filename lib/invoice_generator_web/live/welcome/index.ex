@@ -45,9 +45,6 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    _email =
-      InvoiceGenerator.UserEmail.welcome(%{name: "Tracy Karanja", email: "kinyuadean@gmail.com"})
-
     # config = Application.get_env(:invoice_generator, InvoiceGenerator.Mailer)
     # dbg(config)
     # InvoiceGenerator.Mailer.deliver(email)
