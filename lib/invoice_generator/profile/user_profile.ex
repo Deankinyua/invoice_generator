@@ -1,10 +1,11 @@
 defmodule InvoiceGenerator.Profile.UserProfile do
   use Ecto.Schema
   import Ecto.Changeset
-
+  @primary_key {:id, :binary_id, autogenerate: true}
   @foreign_key_type :binary_id
 
   schema "profiles" do
+    field :user_id, :binary_id
     field :country, :string
     field :city, :string
     field :phone, :string
@@ -17,8 +18,9 @@ defmodule InvoiceGenerator.Profile.UserProfile do
   @doc false
   def changeset(user_profile, attrs) do
     user_profile
-    |> cast(attrs, [:country, :city, :phone, :postal_code, :street])
-    |> validate_required([:country, :city, :phone, :postal_code, :street])
+    |> cast(attrs, [:user_id, :country, :city, :phone, :postal_code, :street])
+    |> validate_required([:user_id, :country, :city, :phone, :postal_code, :street])
+    |> unique_constraint(:user_id)
     |> validate_the_lengths()
   end
 

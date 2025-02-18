@@ -65,19 +65,41 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   end
 
   defp save_user_profile(socket, :new, user_profile_params) do
+    dbg(user_profile_params)
+    user_profile_params = include_user_id(socket, user_profile_params)
+
+    dbg(user_profile_params)
+
     case Profile.create_user_profile(user_profile_params) do
       {:ok, user_profile} ->
+        dbg(user_profile)
+
         notify_parent({:saved, user_profile})
 
         {:noreply,
          socket
          |> put_flash(:info, "User profile created successfully")
-         |> push_patch(to: socket.assigns.patch)}
+         |> redirect(to: ~p"/welcome")}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
+      {:error, changeset} ->
+        dbg(changeset)
+
+        {:noreply,
+         socket
+         |> put_flash(:error, "User profile exists Already")
+         |> redirect(to: ~p"/welcome")}
     end
   end
 
   defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp include_user_id(socket, params) do
+    id = socket.assigns.current_user
+
+    map_with_id = %{"user_id" => id}
+
+    params = Map.merge(params, map_with_id)
+
+    params
+  end
 end

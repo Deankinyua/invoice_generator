@@ -18,7 +18,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
           current_user={@current_user.id}
           action={@live_action}
           user_profile={@user_profile}
-          patch={~p"/welcome"}
         />
       <% else %>
         <Button.button size="xl" phx-click={JS.patch(~p"/profiles/new")}>

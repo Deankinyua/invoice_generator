@@ -12,12 +12,15 @@ defmodule InvoiceGenerator.Repo.Migrations.CreateUsersAuthTables do
       add :email, :citext, null: false
       add :hashed_password, :string, null: false
       add :confirmed_at, :utc_datetime
+      # add :profile_id, references(:profiles, type: :binary_id)
 
       timestamps(type: :utc_datetime)
     end
 
     create unique_index(:users, [:email])
     create unique_index(:users, [:username])
+
+    # create unique_index(:users, [:profile_id])
 
     create table(:users_tokens, primary_key: false) do
       add :id, :binary_id, primary_key: true
@@ -33,6 +36,7 @@ defmodule InvoiceGenerator.Repo.Migrations.CreateUsersAuthTables do
     create unique_index(:users_tokens, [:context, :token])
 
     create table(:profiles, primary_key: false) do
+      add :id, :binary_id, primary_key: true
       add :user_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false
       add :country, :string
       add :city, :string
@@ -42,5 +46,7 @@ defmodule InvoiceGenerator.Repo.Migrations.CreateUsersAuthTables do
 
       timestamps(type: :utc_datetime)
     end
+
+    create unique_index(:profiles, [:user_id])
   end
 end
