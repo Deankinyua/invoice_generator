@@ -1,6 +1,7 @@
 defmodule InvoiceGenerator.Repo.Migrations.CreateUsersAuthTables do
   use Ecto.Migration
 
+  # * instead of up and down use change
   def change do
     execute "CREATE EXTENSION IF NOT EXISTS citext", ""
 
@@ -34,6 +35,7 @@ defmodule InvoiceGenerator.Repo.Migrations.CreateUsersAuthTables do
 
     create table(:profiles, primary_key: false) do
       add :id, :binary_id, primary_key: true
+      # * defines a foreign key, you must explicitly set the type if using binary_ids
       add :user_id, references(:users, type: :binary_id, on_delete: :delete_all), null: false
       add :country, :string
       add :city, :string

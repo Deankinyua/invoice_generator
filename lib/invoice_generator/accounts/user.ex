@@ -9,6 +9,7 @@ defmodule InvoiceGenerator.Accounts.User do
     field :username, :string
     field :name, :string
     field :email, :string
+    # * redact means censored
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :current_password, :string, virtual: true, redact: true
