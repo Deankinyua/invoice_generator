@@ -4,9 +4,39 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   alias InvoiceGenerator.Profile
   alias InvoiceGenerator.Profile.UserProfile
 
+  # alias Tremorx.Components.Button
+
+  @impl true
+
+  def render(assigns) do
+    ~H"""
+    <div>
+      <%= if @live_action == :new do %>
+        <.live_component
+          module={InvoiceGeneratorWeb.UserProfileLive.FormComponent}
+          id="live_user_profile"
+          current_user={@current_user.id}
+          action={@live_action}
+          user_profile={@user_profile}
+          patch={~p"/welcome"}
+        />
+      <% else %>
+        <Button.button size="xl" phx-click={JS.patch(~p"/profiles/new")}>
+          <:icon>
+            <.icon name="hero-plus" />
+          </:icon>
+          Profile Setup
+        </Button.button>
+      <% end %>
+    </div>
+    """
+  end
+
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, stream(socket, :profiles, Profile.list_profiles())}
+    # dbg(Profile.list_profiles())
+
+    {:ok, stream(socket, :profiles, [])}
   end
 
   @impl true

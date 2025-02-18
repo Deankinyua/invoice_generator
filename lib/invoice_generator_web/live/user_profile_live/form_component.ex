@@ -7,11 +7,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   def render(assigns) do
     ~H"""
     <div>
-      <.header>
-        {@title}
-        <:subtitle>Use this form to manage user_profile records in your database.</:subtitle>
-      </.header>
-
       <.simple_form
         for={@form}
         id="user_profile-form"
@@ -34,6 +29,8 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
 
   @impl true
   def update(%{user_profile: user_profile} = assigns, socket) do
+    dbg(assigns)
+
     {:ok,
      socket
      |> assign(assigns)
