@@ -18,7 +18,6 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
       |> attachment(
         Swoosh.Attachment.new(
           Path.absname("priv/static/images/logo.png"),
-          # content_type: "image/png",
           type: :inline
         )
       )
@@ -46,6 +45,8 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
   @doc """
   Deliver instructions to update a user email.
   """
+
+  # * Not used for now
   def deliver_update_email_instructions(user, url) do
     deliver(user, url, "Update email instructions", "update_email.html")
   end
