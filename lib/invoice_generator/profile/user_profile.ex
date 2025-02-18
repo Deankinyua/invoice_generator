@@ -20,6 +20,7 @@ defmodule InvoiceGenerator.Profile.UserProfile do
     user_profile
     |> cast(attrs, [:user_id, :country, :city, :phone, :postal_code, :street])
     |> validate_required([:user_id, :country, :city, :phone, :postal_code, :street])
+    # * ensure unique constraint of user_id
     |> unique_constraint(:user_id)
     |> validate_the_lengths()
   end
