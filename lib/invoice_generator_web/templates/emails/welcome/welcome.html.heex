@@ -20,12 +20,9 @@
   <body>
     <div class="container">
       <img src="cid:logo.png" alt="logo" />
-      <h3>Hi,<%= assigns[:name] %></h3>
+      <h3>Hi,{@name},</h3>
       <p>Welcome to invoives</p>
-      <p>
-        Please take a second to confirm <%= assigns[:email] %> as your email
-        address:
-      </p>
+      <p>Please take a second to confirm {@the_email} as your email address:</p>
 
       <p>
         Once you do, you'll be able to opt-in to notifications of activity and
