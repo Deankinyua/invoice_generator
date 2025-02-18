@@ -4,17 +4,17 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
   alias InvoiceGenerator.Mailer
 
   use Phoenix.Swoosh,
-    template_root: "lib/invoice_generator_web/templates/emails",
-    template_path: "welcome"
+    template_root: "lib/invoice_generator_web/templates",
+    template_path: "emails"
 
   # Delivers the email using the application mailer.
-  defp deliver(user, url, subject, _body) do
+  defp deliver(user, url, subject, template) do
     email =
       new()
       |> to(user.email)
       |> from({"InvoiceGenerator", "shattymtana@gmail.com"})
       |> subject(subject)
-      |> render_body("confirm.html", %{the_email: user.email, name: user.name, url: url})
+      |> render_body(template, %{the_email: user.email, name: user.name, url: url})
       |> attachment(
         Swoosh.Attachment.new(
           Path.absname("priv/static/images/logo.png"),
@@ -32,60 +32,21 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
   Deliver instructions to confirm account.
   """
   def deliver_confirmation_instructions(user, url) do
-    deliver(user, url, "Confirmation instructions", """
-
-    ==============================
-
-    Hi #{user.email},
-
-    You can confirm your account by visiting the URL below:
-
-    #{url}
-
-    If you didn't create an account with us, please ignore this.
-
-    ==============================
-    """)
+    deliver(user, url, "Confirmation instructions", "confirm.html")
   end
 
   @doc """
   Deliver instructions to reset a user password.
   """
 
-  # def deliver_reset_password_instructions(user, url) do
-  #   deliver(user.email, "Reset password instructions", """
-
-  #   ==============================
-
-  #   Hi #{user.email},
-
-  #   You can reset your password by visiting the URL below:
-
-  #   #{url}
-
-  #   If you didn't request this change, please ignore this.
-
-  #   ==============================
-  #   """)
-  # end
+  def deliver_reset_password_instructions(user, url) do
+    deliver(user, url, "Reset password instructions", "password.html")
+  end
 
   @doc """
   Deliver instructions to update a user email.
   """
-  # def deliver_update_email_instructions(user, url) do
-  #   deliver(user.email, "Update email instructions", """
-
-  #   ==============================
-
-  #   Hi #{user.email},
-
-  #   You can change your email by visiting the URL below:
-
-  #   #{url}
-
-  #   If you didn't request this change, please ignore this.
-
-  #   ==============================
-  #   """)
-  # end
+  def deliver_update_email_instructions(user, url) do
+    deliver(user, url, "Update email instructions", "update_email.html")
+  end
 end

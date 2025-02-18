@@ -45,14 +45,10 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    # config = Application.get_env(:invoice_generator, InvoiceGenerator.Mailer)
-    # dbg(config)
-    # InvoiceGenerator.Mailer.deliver(email)
-    # Swoosh.Adapter.deliver(email, config)
     {:ok, socket}
   end
 
-  def handle_params(params, _url, socket) do
+  def handle_params(_params, _url, socket) do
     {:noreply, socket}
   end
 end
