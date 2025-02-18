@@ -1,0 +1,50 @@
+<.header>
+  Listing Profiles
+  <:actions>
+    <.link patch={~p"/profiles/new"}>
+      <.button>New User profile</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.table
+  id="profiles"
+  rows={@streams.profiles}
+  row_click={fn {_id, user_profile} -> JS.navigate(~p"/profiles/#{user_profile}") end}
+>
+  <:col :let={{_id, user_profile}} label="Country">{user_profile.country}</:col>
+  <:col :let={{_id, user_profile}} label="City">{user_profile.city}</:col>
+  <:col :let={{_id, user_profile}} label="Phone">{user_profile.phone}</:col>
+  <:col :let={{_id, user_profile}} label="Postal code">{user_profile.postal_code}</:col>
+  <:col :let={{_id, user_profile}} label="Street">{user_profile.street}</:col>
+  <:action :let={{_id, user_profile}}>
+    <div class="sr-only">
+      <.link navigate={~p"/profiles/#{user_profile}"}>Show</.link>
+    </div>
+    <.link patch={~p"/profiles/#{user_profile}/edit"}>Edit</.link>
+  </:action>
+  <:action :let={{id, user_profile}}>
+    <.link
+      phx-click={JS.push("delete", value: %{id: user_profile.id}) |> hide("##{id}")}
+      data-confirm="Are you sure?"
+    >
+      Delete
+    </.link>
+  </:action>
+</.table>
+
+<.modal
+  :if={@live_action in [:new, :edit]}
+  id="user_profile-modal"
+  show
+  on_cancel={JS.patch(~p"/profiles")}
+>
+  <.live_component
+    module={InvoiceGeneratorWeb.UserProfileLive.FormComponent}
+    id={@user_profile.id || :new}
+    title={@page_title}
+    action={@live_action}
+    user_profile={@user_profile}
+    patch={~p"/profiles"}
+  />
+</.modal>
