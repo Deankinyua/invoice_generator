@@ -14,11 +14,34 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
         phx-change="validate"
         phx-submit="save"
       >
-        <.input field={@form[:country]} type="text" label="Country" />
-        <.input field={@form[:city]} type="text" label="City" />
-        <.input field={@form[:phone]} type="text" label="Phone" />
-        <.input field={@form[:postal_code]} type="text" label="Postal code" />
-        <.input field={@form[:street]} type="text" label="Street" />
+        <Layout.col class="space-y-1.5">
+          <Select.search_select
+            id="country_id"
+            name={@form[:country].name}
+            placeholder="Choose Country"
+            value={@form[:country].value}
+            phx-update="ignore"
+          >
+            <:item :for={name <- @countries}>
+              {name}
+            </:item>
+          </Select.search_select>
+        </Layout.col>
+        <Layout.col class="space-y-1.5">
+          <.input field={@form[:city]} type="text" placeholder="City Name" />
+        </Layout.col>
+        <Layout.col class="space-y-1.5">
+          <.input field={@form[:street]} type="text" placeholder="Street Address" />
+        </Layout.col>
+
+        <Layout.col class="space-y-1.5">
+          <.input field={@form[:postal_code]} type="text" placeholder="Postal Code" />
+        </Layout.col>
+
+        <Layout.col class="space-y-1.5">
+          <.input field={@form[:phone]} type="text" placeholder="Phone Number" />
+        </Layout.col>
+
         <:actions>
           <.button phx-disable-with="Saving...">Save User profile</.button>
         </:actions>
@@ -29,11 +52,12 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
 
   @impl true
   def update(%{user_profile: user_profile} = assigns, socket) do
-    dbg(assigns)
+    countries = countries()
 
     {:ok,
      socket
      |> assign(assigns)
+     |> assign(:countries, countries)
      |> assign_new(:form, fn ->
        to_form(Profile.change_user_profile(user_profile))
      end)}

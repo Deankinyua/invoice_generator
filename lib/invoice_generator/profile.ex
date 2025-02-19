@@ -7,6 +7,7 @@ defmodule InvoiceGenerator.Profile do
   alias InvoiceGenerator.Repo
 
   alias InvoiceGenerator.Profile.UserProfile
+  alias InvoiceGenerator.Profile.Picture
 
   @doc """
   Returns the list of profiles.
@@ -100,5 +101,9 @@ defmodule InvoiceGenerator.Profile do
   """
   def change_user_profile(%UserProfile{} = user_profile, attrs \\ %{}) do
     UserProfile.changeset(user_profile, attrs)
+  end
+
+  def change_user_picture(%Picture{} = user_picture, attrs \\ %{}) do
+    Picture.changeset(user_picture, attrs)
   end
 end

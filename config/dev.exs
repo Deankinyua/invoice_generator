@@ -10,6 +10,16 @@ config :invoice_generator, InvoiceGenerator.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+config :ex_aws,
+  region: {:system, "S3_REGION"},
+  access_key_id: {:system, "S3_ACCESS_KEY_ID"},
+  secret_access_key: {:system, "S3_SECRET_ACCESS_KEY"}
+
+config :ex_aws, :s3,
+  scheme: "http://",
+  host: "localhost",
+  port: 9000
+
 # For development, we disable any cache and enable
 # debugging and code reloading.
 #
