@@ -4,6 +4,8 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
   alias SimpleS3Upload
 
   alias InvoiceGenerator.Profile.Picture
+
+  alias InvoiceGenerator.Profile
   @impl true
   def render(assigns) do
     ~H"""
@@ -66,8 +68,10 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
               </article>
             <% end %>
 
-            <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Submitting...">
-              Continue
+            <Button.button phx-disable-with="Proceeding...">
+              <.link phx-click={JS.push("continue")} phx-target={@myself}>
+                Continue
+              </.link>
             </Button.button>
           </.form>
         </Layout.col>
@@ -94,7 +98,9 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> assign_form()}
+     |> assign_new(:form, fn ->
+       to_form(Profile.change_user_picture(%Picture{}), as: :picture)
+     end)}
   end
 
   @impl true
@@ -103,15 +109,27 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"checkin" => checkin_params}, socket) do
-    # form = socket.assigns.form |> Form.validate(checkin_params, errors: false)
-
-    # {:noreply, assign(socket, form: form)}
+  def handle_event("validate", _params, socket) do
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("continue", _params, socket) do
+    entries = socket.assigns.uploads.profile_photo.entries
+
+    case Enum.count(entries) do
+      0 ->
+        {:noreply, socket}
+
+      _ ->
+        send(self(), :success_upload)
+        {:noreply, socket}
+    end
   end
 
   def handle_event("save", %{"checkin" => checkin_params}, socket) do
     id = socket.assigns.current_user
+    dbg(id)
 
     consume_uploaded_entries(socket, :profile_photo, fn _meta, entry ->
       client_name = Map.get(entry, :client_name)
@@ -123,11 +141,15 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
          original_filename: client_name
        }}
     end)
+
+    # * consume_uploaded_entries ends here !! and at
+    # * this point the picture has been uploaded to s3
+
     |> case do
       [] ->
         socket =
           socket
-          |> assign(:audio_errors, %{filename: "is required"})
+          |> assign(:photo_errors, %{filename: "is required"})
 
         send_update(__MODULE__,
           id: socket.assigns.form_name,
@@ -165,15 +187,15 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
 
   # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
-  defp assign_form(socket) do
-    form =
-      AshPhoenix.Form.for_create(Marketingbsm.Clockin.Checkin, :create,
-        as: "checkin",
-        actor: socket.assigns.current_user
-      )
+  # defp assign_form(socket) do
+  #   form =
+  #     AshPhoenix.Form.for_create(Marketingbsm.Clockin.Checkin, :create,
+  #       as: "checkin",
+  #       actor: socket.assigns.current_user
+  #     )
 
-    assign(socket, form: to_form(form))
-  end
+  #   assign(socket, form: to_form(form))
+  # end
 
   defp error_to_string(:too_large), do: "Too large"
   defp error_to_string(:too_many_files), do: "You have selected too many files"
@@ -190,9 +212,9 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
 
         {:noreply,
          socket
-         |> assign_form()
+         #  |> assign_form()
          |> assign(:uploaded_files, [])
-         |> assign(:audio_errors, nil)}
+         |> assign(:photo_errors, nil)}
 
       {:error, form} ->
         {:noreply, assign(socket, form: form)}

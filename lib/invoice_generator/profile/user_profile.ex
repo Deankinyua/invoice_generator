@@ -24,7 +24,7 @@ defmodule InvoiceGenerator.Profile.UserProfile do
     # * ensure unique constraint of user_id
     |> unique_constraint(:user_id)
     |> validate_the_lengths()
-    |> cast_embed(:picture, required: true)
+    |> cast_embed(:picture)
   end
 
   def validate_the_lengths(changeset) do

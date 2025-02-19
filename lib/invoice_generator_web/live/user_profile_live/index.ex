@@ -59,52 +59,38 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   def mount(_params, _session, socket) do
     first_step = Enum.at(@steps, 0)
 
+    user_profile = %UserProfile{}
+
     dbg(first_step)
 
     socket =
       socket
       |> assign(live_action: :new)
       |> assign(progress: first_step)
+      |> assign(user_profile: user_profile)
 
     {:ok, stream(socket, :profiles, [])}
   end
 
   @impl true
-  def handle_params(params, _url, socket) do
-    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
-  end
+  def handle_info(:success_upload, socket) do
+    second_step = Enum.at(@steps, 1)
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit User profile")
-    |> assign(:user_profile, Profile.get_user_profile!(id))
-  end
+    IO.puts("video is in the process")
 
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New User profile")
-    |> assign(:user_profile, %UserProfile{})
-  end
-
-  defp apply_action(socket, :index, _params) do
-    socket
-    |> assign(:page_title, "Listing Profiles")
-    |> assign(:user_profile, nil)
+    {:noreply,
+     socket
+     |> assign(progress: second_step)}
   end
 
   @impl true
-  def handle_info(
-        {InvoiceGeneratorWeb.UserProfileLive.FormComponent, {:saved, user_profile}},
-        socket
-      ) do
-    {:noreply, stream_insert(socket, :profiles, user_profile)}
-  end
+  def handle_info(:back, socket) do
+    first_step = Enum.at(@steps, 0)
 
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    user_profile = Profile.get_user_profile!(id)
-    {:ok, _} = Profile.delete_user_profile(user_profile)
+    IO.puts("going back")
 
-    {:noreply, stream_delete(socket, :profiles, user_profile)}
+    {:noreply,
+     socket
+     |> assign(progress: first_step)}
   end
 end
