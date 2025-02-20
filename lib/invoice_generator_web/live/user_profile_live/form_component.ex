@@ -42,20 +42,14 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
           <.input field={@form[:phone]} type="text" placeholder="Phone Number" />
         </Layout.col>
 
-        <:actions>
-          <.button phx-disable-with="Saving..." class="hidden">Save User profile</.button>
-        </:actions>
-
         <Button.button>
           <.link phx-click={JS.push("back")} phx-target={@myself}>
             Back
           </.link>
         </Button.button>
 
-        <Button.button>
-          <.link phx-click="trigger" phx-target="#user_picture">
-            trigger
-          </.link>
+        <Button.button type="submit" phx-disable-with="Saving...">
+          Complete
         </Button.button>
       </.simple_form>
     </div>
@@ -81,8 +75,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
 
     case changeset.valid? do
       true ->
-        send(self(), {:valid_details, changeset})
-
         {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
 
       false ->
@@ -99,7 +91,15 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   def handle_event("save", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.user_profile, user_profile_params)
 
-    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    case changeset.valid? do
+      true ->
+        send(self(), {:valid_details, changeset})
+
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+
+      false ->
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+    end
 
     # save_user_profile(socket, socket.assigns.action, user_profile_params)
   end

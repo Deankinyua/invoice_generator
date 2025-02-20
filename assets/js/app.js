@@ -23,6 +23,8 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { TremorxHooks } from "tremorx";
 
+import Uploaders from "./uploaders";
+
 let Hooks = {};
 
 Hooks = {
@@ -35,6 +37,7 @@ let csrfToken = document
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
+  uploaders: Uploaders,
   hooks: Hooks,
 });
 

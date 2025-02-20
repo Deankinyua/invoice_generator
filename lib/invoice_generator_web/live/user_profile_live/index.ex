@@ -28,7 +28,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   def render(assigns) do
     ~H"""
     <div>
-      <div>
+      <div class={unless @progress.name == "picture", do: "hidden"}>
         <form id="upload-form" phx-submit="save" phx-change="validate">
           <fieldset>
             <.live_file_input type="file" upload={@uploads.photo} class="hidden pointer-events-none" />
@@ -93,7 +93,15 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
             </article>
           <% end %>
 
-          <div class="mb-10"><button type="submit">Upload</button></div>
+          <Button.button size="xl" type="submit" class="mb-10">
+            Upload
+          </Button.button>
+
+          <Button.button phx-disable-with="Proceeding...">
+            <.link phx-click={JS.push("continue")}>
+              Continue
+            </.link>
+          </Button.button>
         </form>
       </div>
 
@@ -147,24 +155,44 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     {:ok, socket}
   end
 
+  # @impl true
+  # def handle_info({:success_upload, entries}, socket) do
+  #   second_step = Enum.at(@steps, 1)
+
+  #   dbg(entries)
+
+  #   IO.puts("video is in the process")
+
+  #   {:noreply,
+  #    socket
+  #    |> assign(progress: second_step)}
+  # end
+
   @impl true
-  def handle_info({:success_upload, entries}, socket) do
-    second_step = Enum.at(@steps, 1)
+  def handle_event("continue", _params, socket) do
+    entries = socket.assigns.uploads.photo.entries
 
-    dbg(entries)
+    case Enum.count(entries) do
+      0 ->
+        {:noreply, socket}
 
-    IO.puts("video is in the process")
+      _ ->
+        second_step = Enum.at(@steps, 1)
 
-    {:noreply,
-     socket
-     |> assign(progress: second_step)}
+        dbg(entries)
+
+        {:noreply,
+         socket
+         |> assign(progress: second_step)}
+    end
   end
 
   @impl true
   def handle_info({:valid_details, changeset}, socket) do
     {:noreply,
      socket
-     |> assign(details: changeset)}
+     |> assign(details: changeset)
+     |> put_flash(:info, "Take the LiveView Pro Course its free :)")}
   end
 
   @impl true
