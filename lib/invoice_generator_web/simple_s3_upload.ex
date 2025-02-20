@@ -173,7 +173,7 @@ defmodule SimpleS3Upload do
     [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
 
     config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
-    bucket = "invoice_generator"
+    bucket = "invoicegenerator"
     key = "#{key}/#{entry.client_name}"
 
     case ExAws.S3.presigned_url(config, :put, bucket, key,

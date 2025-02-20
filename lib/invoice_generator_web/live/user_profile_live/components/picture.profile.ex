@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <section>
+    <section id="user_picture">
       <Layout.col>
         <Layout.col>
           <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
@@ -18,7 +18,6 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
                 type="file"
                 upload={@uploads.profile_photo}
                 class="hidden pointer-events-none"
-                capture="environment"
               />
             </fieldset>
 
@@ -73,6 +72,17 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
                 Continue
               </.link>
             </Button.button>
+
+            <div class="flex justify-center">
+              <Button.button
+                type="submit"
+                size="xl"
+                class="mt-2 w-min"
+                phx-disable-with="Uploading..."
+              >
+                Upload
+              </Button.button>
+            </div>
           </.form>
         </Layout.col>
       </Layout.col>
@@ -82,6 +92,8 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
 
   @impl true
   def update(assigns, socket) do
+    dbg(assigns)
+
     socket =
       socket
       |> assign(:uploaded_files, [])
@@ -122,14 +134,36 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
         {:noreply, socket}
 
       _ ->
-        send(self(), :success_upload)
+        send(self(), {:success_upload, entries})
         {:noreply, socket}
     end
   end
 
-  def handle_event("save", %{"checkin" => checkin_params}, socket) do
+  def handle_event("trigger", _unsigned_params, socket) do
     id = socket.assigns.current_user
     dbg(id)
+    entries = socket.assigns.uploads.profile_photo.entries
+    dbg(entries)
+
+    consume_uploaded_entries(socket, :profile_photo, fn _meta, entry ->
+      client_name = Map.get(entry, :client_name)
+      filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+
+      {:ok,
+       %Picture{
+         filename: filename,
+         original_filename: client_name
+       }}
+    end)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Good Work Dean")}
+  end
+
+  def handle_event("save", params, socket) do
+    dbg(params)
+    IO.puts("submit invoked")
 
     consume_uploaded_entries(socket, :profile_photo, fn _meta, entry ->
       client_name = Map.get(entry, :client_name)
@@ -151,37 +185,12 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
           socket
           |> assign(:photo_errors, %{filename: "is required"})
 
-        send_update(__MODULE__,
-          id: socket.assigns.form_name,
-          update: :toggle_submit,
-          value: false
-        )
-
         {:noreply, socket}
 
       [%Picture{} = file] ->
-        checkin_params = Map.merge(checkin_params, %{"file" => file})
-        form = socket.assigns.form |> Form.validate(checkin_params)
+        dbg(file)
 
-        Form.errors(form)
-        |> case do
-          [] ->
-            submit_form(socket, checkin_params, file)
-
-          errors ->
-            send_update(__MODULE__,
-              id: socket.assigns.form_name,
-              update: :toggle_submit,
-              value: false
-            )
-
-            socket =
-              socket
-              |> assign(:form, form)
-              |> assign(:errors, errors)
-
-            {:noreply, socket}
-        end
+        {:noreply, socket}
     end
   end
 
