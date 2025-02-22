@@ -61,6 +61,13 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :mime, :types, %{
+  "image/jpeg" => ["jpeg"],
+  "image/png" => ["png"],
+  "image/jpg" => ["jpg"]
+  # "audio/x-ms-wma" => ["wma"]
+}
+
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 

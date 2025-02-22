@@ -13,6 +13,7 @@ defmodule InvoiceGenerator.Profile.UserProfile do
     field :street, :string
 
     timestamps(type: :utc_datetime)
+    embeds_one :picture, InvoiceGenerator.Profile.Picture
   end
 
   @doc false
@@ -23,8 +24,10 @@ defmodule InvoiceGenerator.Profile.UserProfile do
     # * ensure unique constraint of user_id
     |> unique_constraint(:user_id)
     |> validate_the_lengths()
+    |> cast_embed(:picture)
   end
 
+  @spec validate_the_lengths(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def validate_the_lengths(changeset) do
     changeset
     |> validate_length(:country, max: 80)

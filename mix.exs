@@ -32,6 +32,10 @@ defmodule InvoiceGenerator.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      {:ex_image_info, "~> 0.2.4"},
+      {:ex_aws, "~> 2.5"},
+      {:ex_aws_s3, "~> 2.0"},
+      {:sweet_xml, "~> 0.7"},
       {:hackney, "~> 1.20"},
       {:gen_smtp, "~> 1.1"},
       {:bcrypt_elixir, "~> 3.0"},

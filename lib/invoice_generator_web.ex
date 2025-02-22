@@ -83,7 +83,6 @@ defmodule InvoiceGeneratorWeb do
   defp html_helpers do
     quote do
       # Translation
-      use Tremorx
       use Gettext, backend: InvoiceGeneratorWeb.Gettext
 
       # HTML escaping functionality
@@ -93,6 +92,7 @@ defmodule InvoiceGeneratorWeb do
 
       # Shortcut for generating JS commands
       alias Phoenix.LiveView.JS
+      use Tremorx
 
       # Routes generation with the ~p sigil
       unquote(verified_routes())

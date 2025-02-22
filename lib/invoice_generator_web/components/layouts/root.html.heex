@@ -11,14 +11,7 @@
     <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
     </script>
   </head>
-  <body class="bg-white">
-    <.link
-      href={~p"/users/log_out"}
-      method="delete"
-      class="text-[0.8125rem] leading-6 text-zinc-900 font-semibold hover:text-zinc-700"
-    >
-      Log out
-    </.link>
+  <body class="bg-white dark:bg-[#141D2F]">
     {@inner_content}
   </body>
 </html>

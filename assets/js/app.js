@@ -23,6 +23,8 @@ import { LiveSocket } from "phoenix_live_view";
 import topbar from "../vendor/topbar";
 import { TremorxHooks } from "tremorx";
 
+import Uploaders from "./uploaders";
+
 let Hooks = {};
 
 Hooks = {
@@ -35,6 +37,7 @@ let csrfToken = document
 let liveSocket = new LiveSocket("/live", Socket, {
   longPollFallbackMs: 2500,
   params: { _csrf_token: csrfToken },
+  uploaders: Uploaders,
   hooks: Hooks,
 });
 
@@ -42,6 +45,10 @@ let liveSocket = new LiveSocket("/live", Socket, {
 topbar.config({ barColors: { 0: "#29d" }, shadowColor: "rgba(0, 0, 0, .3)" });
 window.addEventListener("phx:page-loading-start", (_info) => topbar.show(300));
 window.addEventListener("phx:page-loading-stop", (_info) => topbar.hide());
+
+window.addEventListener("phx:toggle-mode", (e) =>
+  document.documentElement.classList.toggle("dark")
+);
 
 // connect if there are any LiveViews on the page
 liveSocket.connect();

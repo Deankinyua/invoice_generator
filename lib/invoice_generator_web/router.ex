@@ -73,11 +73,9 @@ defmodule InvoiceGeneratorWeb.Router do
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
 
       live "/profiles", UserProfileLive.Index, :index
-      live "/profiles/new", UserProfileLive.Index, :new
-      live "/profiles/:id/edit", UserProfileLive.Index, :edit
-
-      live "/profiles/:id", UserProfileLive.Show, :show
-      live "/profiles/:id/show/edit", UserProfileLive.Show, :edit
+      live "/home", HomeLive.Index, :index
+      live "/settings", SettingsLive.Index, :index
+      # live "/photo", TrialLive.Index, :index
     end
   end
 
