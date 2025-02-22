@@ -37,6 +37,7 @@ defmodule InvoiceGenerator.Profile do
 
   """
   def get_user_profile!(id), do: Repo.get!(UserProfile, id)
+  def get_user_profile_by_user_id(user_id), do: Repo.get_by(UserProfile, user_id: user_id)
 
   @doc """
   Creates a user_profile.

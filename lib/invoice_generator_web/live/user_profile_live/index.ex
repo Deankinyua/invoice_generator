@@ -186,12 +186,14 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
       {:ok, _record} ->
         {:noreply,
          socket
-         |> put_flash(:info, "User profile created successfully")}
+         |> put_flash(:info, "User profile created successfully")
+         |> redirect(to: ~p"/home")}
 
       {:error, _changeset} ->
         {:noreply,
          socket
-         |> put_flash(:error, "You have already completed your profile!")}
+         |> put_flash(:error, "You have already completed your profile!")
+         |> redirect(to: ~p"/home")}
     end
   end
 
