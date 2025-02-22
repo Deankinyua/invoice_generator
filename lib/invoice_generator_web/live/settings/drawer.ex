@@ -11,25 +11,28 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
 
   def drawer(assigns) do
     ~H"""
-    <div>
-      <Layout.flex flex_direction="row">
-        <.menu_item
-          on_click={on_live_navigate(:report, ~p"/home")}
-          active={@active_tab == "personal"}
-          name="Personal"
-        />
+    <div class="pl-4">
+      <Layout.flex flex_direction="col" align_items="start" class="gap-4">
+        <Text.title color="black" class="font-bold">Settings</Text.title>
+        <Layout.flex flex_direction="row" justify_content="start" class="w-[75%] gap-4">
+          <.menu_item
+            on_click={on_live_navigate(:report, ~p"/home")}
+            active={@active_tab == "personal"}
+            name="Personal"
+          />
 
-        <.menu_item
-          on_click={on_live_navigate(:checkin, ~p"/home")}
-          active={@active_tab == "password"}
-          name="Password"
-        />
+          <.menu_item
+            on_click={on_live_navigate(:checkin, ~p"/home")}
+            active={@active_tab == "password"}
+            name="Password"
+          />
 
-        <.menu_item
-          on_click={on_live_navigate(:template, ~p"/home")}
-          active={@active_tab == "notifications"}
-          name="Email notifications"
-        />
+          <.menu_item
+            on_click={on_live_navigate(:template, ~p"/home")}
+            active={@active_tab == "notifications"}
+            name="Email notifications"
+          />
+        </Layout.flex>
       </Layout.flex>
     </div>
     """
@@ -50,13 +53,13 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
       class={
         Tails.classes([
           Theme.make_class_name("menu_button", "root"),
-          Theme.get_spacing_style("two_xl", "padding_x"),
+          Theme.get_spacing_style("two_xs", "padding_x"),
           Theme.get_spacing_style("lg", "padding_y"),
-          "flex-shrink-0 inline-flex outline-none  rounded-tremor-default",
+          "flex-shrink-1 flex outline-none  rounded-tremor-default",
           if(@active,
-            do: "bg-tremor-brand dark:bg-dark-tremor-brand hover:bg-tremor-brand-emphasis
-            dark:hover:bg-dark-tremor-brand-emphasis text-tremor-brand-inverted
-            dark:text-dark-tremor-brand-inverted font-semibold",
+            do: "text-[#9277ff]
+            text-tremor-brand-inverted
+            font-semibold",
             else: "hover:bg-gray-100 text-tremor-content
           dark:text-dark-tremor-content hover:text-tremor-content-emphasis"
           ),
@@ -73,7 +76,7 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
           }
           justify_content="start"
         >
-          <Text.subtitle color="" class="">{@name}</Text.subtitle>
+          <Text.subtitle color="" class="text-xs">{@name}</Text.subtitle>
         </Layout.flex>
       </Layout.flex>
     </button>
