@@ -9,36 +9,61 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
     ~H"""
     <div class="border border-red-400 m-4">
       <div>header section</div>
-      <div>
-        <div class="rounded-full border  overflow-hidden ">
-          <img src={@profile_url} height="50" />
+      <Layout.flex flex_direction="col" class="gap-32">
+        <div class="flex w-[70%]  flex-col gap-3 items-center border-2 border-blue-400">
+          <section class="h-48 w-48 rounded-full border-2 border-blue-400 overflow-hidden ">
+            <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
+          </section>
+          <section>{@username}</section>
         </div>
-        nav links
-      </div>
+        <Layout.flex flex_direction="col" class="w-[20%] ">
+          <Layout.flex justify_content="start" class="gap-6 ">
+            <div>
+              <img src="images/home/home1.svg" />
+            </div>
+            <div>Dashboard</div>
+          </Layout.flex>
+
+          <Layout.flex justify_content="start" class="gap-6">
+            <div>
+              <img src="images/home/home2.png" />
+            </div>
+            <div>Settings</div>
+          </Layout.flex>
+
+          <Layout.flex justify_content="start" class="gap-6">
+            <div>
+              <img src="images/home/home3.svg" />
+            </div>
+            <div>Sign Out</div>
+          </Layout.flex>
+        </Layout.flex>
+      </Layout.flex>
     </div>
     """
   end
 
   @impl true
   def mount(_params, _session, socket) do
+    username = socket.assigns.current_user.username
     user_id = socket.assigns.current_user.id
 
     case get_user(user_id) do
       nil ->
         {:ok,
          socket
-         |> assign(profile_url: "")}
+         |> assign(profile_url: "")
+         |> assign(username: username)}
 
       user ->
         base_url = "http://127.0.0.1:9000/invoicegenerator/photo/"
 
         user_profile_picture_url = base_url <> user.picture.original_filename
 
-        dbg(user_profile_picture_url)
-
         {:ok,
          socket
-         |> assign(profile_url: user_profile_picture_url)}
+         |> assign(profile_url: user_profile_picture_url)
+         |> assign(username: username)}
     end
   end
 
