@@ -8,15 +8,23 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
   def render(assigns) do
     ~H"""
     <div class="border border-red-400 m-4">
-      <div>header section</div>
+      {live_render(@socket, InvoiceGeneratorWeb.Header,
+        session: %{
+          "user" => "user?id=#{@current_user.email}",
+          "image_url" => "user?url=#{@profile_url}"
+        },
+        id: "live_drawer",
+        sticky: true
+      )}
+
       <Layout.flex flex_direction="col" class="gap-32">
         <div class="flex w-[70%]  flex-col gap-3 items-center border-2 border-blue-400">
-          <section class="h-48 w-48 rounded-full border-2 border-blue-400 overflow-hidden ">
+          <section class="h-36 w-36 rounded-full border-2 border-blue-400 overflow-hidden ">
             <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
           </section>
           <section>{@username}</section>
         </div>
-        <Layout.flex flex_direction="col" class="w-[20%] ">
+        <Layout.flex flex_direction="col" class="w-[40%] md:w-[30%] border border-red-400">
           <Layout.flex justify_content="start" class="gap-6 ">
             <div>
               <img src="images/home/home1.svg" />

@@ -111,13 +111,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
           user_profile={@user_profile}
         />
       </div>
-
-      <Button.button size="xl" phx-click={JS.patch(~p"/profiles/new")}>
-        <:icon>
-          <.icon name="hero-plus" />
-        </:icon>
-        Profile Setup
-      </Button.button>
     </div>
     """
   end

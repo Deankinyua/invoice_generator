@@ -6,7 +6,7 @@ const fs = require("fs");
 const path = require("path");
 
 module.exports = {
-  darkMode: ["class", '[data-mode="dark"]'],
+  darkMode: "class",
   content: [
     "./js/**/*.js",
     "../lib/invoice_generator_web.ex",
