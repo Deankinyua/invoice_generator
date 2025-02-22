@@ -60,6 +60,8 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   def update(%{user_profile: user_profile} = assigns, socket) do
     countries = countries()
 
+    dbg(user_profile)
+
     {:ok,
      socket
      |> assign(assigns)
@@ -107,8 +109,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   defp save_user_profile(socket, :edit, user_profile_params) do
     case Profile.update_user_profile(socket.assigns.user_profile, user_profile_params) do
       {:ok, user_profile} ->
-        notify_parent({:saved, user_profile})
-
         {:noreply,
          socket
          |> put_flash(:info, "User profile updated successfully")
@@ -121,15 +121,12 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
 
   defp save_user_profile(socket, :new, user_profile_params) do
     dbg(user_profile_params)
-    user_profile_params = include_user_id(socket, user_profile_params)
 
     dbg(user_profile_params)
 
     case Profile.create_user_profile(user_profile_params) do
       {:ok, user_profile} ->
         dbg(user_profile)
-
-        notify_parent({:saved, user_profile})
 
         {:noreply,
          socket
@@ -144,18 +141,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
          |> put_flash(:error, "User profile exists Already")
          |> redirect(to: ~p"/welcome")}
     end
-  end
-
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
-
-  defp include_user_id(socket, params) do
-    id = socket.assigns.current_user
-
-    map_with_id = %{"user_id" => id}
-
-    params = Map.merge(params, map_with_id)
-
-    params
   end
 
   defp countries do

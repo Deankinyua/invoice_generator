@@ -1,7 +1,12 @@
+// * we need a slice of JavaScript that the client will invoke to
+// * send a post request to the signed url with the signed form data
+
+// the name S3 matches what we declared in our SimpleS3Upload module
 let Uploaders = {};
 
 Uploaders.S3 = function (entries, onViewError) {
   entries.forEach((entry) => {
+    // Prepares an AJAX request
     let xhr = new XMLHttpRequest();
     onViewError(() => xhr.abort());
     xhr.onload = () =>

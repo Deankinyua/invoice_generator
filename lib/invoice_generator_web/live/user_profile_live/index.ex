@@ -8,11 +8,13 @@ defmodule InvoiceGeneratorWeb.Event.Step do
 end
 
 defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
+  require Logger
   use InvoiceGeneratorWeb, :live_view
 
   alias InvoiceGenerator.Profile
   alias InvoiceGenerator.Profile.UserProfile
   alias SimpleS3Upload
+  # alias ExAwsS3
 
   alias InvoiceGenerator.Profile.Picture
 
@@ -94,13 +96,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
           <% end %>
 
           <Button.button size="xl" type="submit" class="mb-10">
-            Upload
-          </Button.button>
-
-          <Button.button phx-disable-with="Proceeding...">
-            <.link phx-click={JS.push("continue")}>
-              Continue
-            </.link>
+            Continue
           </Button.button>
         </form>
       </div>
@@ -126,6 +122,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
+    # * The presign_upload function generates metadata
     socket =
       socket
       |> assign(form: to_form(Profile.change_user_picture(%Picture{}), as: :picture))
@@ -155,43 +152,31 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     {:ok, socket}
   end
 
-  # @impl true
-  # def handle_info({:success_upload, entries}, socket) do
-  #   second_step = Enum.at(@steps, 1)
-
-  #   dbg(entries)
-
-  #   IO.puts("video is in the process")
-
-  #   {:noreply,
-  #    socket
-  #    |> assign(progress: second_step)}
-  # end
+  defp submit_details(socket, changeset) do
+    dbg(changeset)
+    details = socket.assigns.details
+    dbg(details)
+  end
 
   @impl true
-  def handle_event("continue", _params, socket) do
-    entries = socket.assigns.uploads.photo.entries
+  def handle_info({:picture_details, details}, socket) do
+    Logger.warning("Picture details are in the socket :)")
 
-    case Enum.count(entries) do
-      0 ->
-        {:noreply, socket}
-
-      _ ->
-        second_step = Enum.at(@steps, 1)
-
-        dbg(entries)
-
-        {:noreply,
-         socket
-         |> assign(progress: second_step)}
+    if details == %{} do
+      {:noreply, socket}
+    else
+      {:noreply,
+       socket
+       |> assign(details: details)}
     end
   end
 
   @impl true
   def handle_info({:valid_details, changeset}, socket) do
+    submit_details(socket, changeset)
+
     {:noreply,
      socket
-     |> assign(details: changeset)
      |> put_flash(:info, "Take the LiveView Pro Course its free :)")}
   end
 
@@ -208,27 +193,27 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
      |> assign(progress: first_step)}
   end
 
-  @impl true
-  def handle_info(:save_invoked, socket) do
-    IO.puts("save from details component received")
+  # @impl true
+  # def handle_info(:save_invoked, socket) do
+  #   IO.puts("save from details component received")
 
-    consume_uploaded_entries(socket, :photo, fn _meta, entry ->
-      client_name = Map.get(entry, :client_name)
-      filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+  #   consume_uploaded_entries(socket, :photo, fn _meta, entry ->
+  #     client_name = Map.get(entry, :client_name)
+  #     filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
 
-      picture_fields = %{filename: filename, original_filename: client_name}
+  #     picture_fields = %{filename: filename, original_filename: client_name}
 
-      dbg(picture_fields)
+  #     dbg(picture_fields)
 
-      {:ok,
-       %Picture{
-         filename: filename,
-         original_filename: client_name
-       }}
-    end)
+  #     {:ok,
+  #      %Picture{
+  #        filename: filename,
+  #        original_filename: client_name
+  #      }}
+  #   end)
 
-    {:noreply, socket}
-  end
+  #   {:noreply, socket}
+  # end
 
   @impl true
   def handle_event("validate", _params, socket) do
@@ -236,14 +221,65 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("save", params, socket) do
-    dbg(socket.assigns.uploads)
-    IO.puts("submit invoked")
+  def handle_event("save", _params, socket) do
+    Logger.warning("submit invoked")
 
-    uploaded_files =
+    second_step = Enum.at(@steps, 1)
+    entries = socket.assigns.uploads.photo.entries
+
+    case Enum.count(entries) do
+      0 ->
+        picture_details = %{}
+        # if no entries exist send an empty map
+        send(self(), {:picture_details, picture_details})
+
+        {:noreply,
+         socket
+         |> assign(progress: second_step)}
+
+      _ ->
+        case Map.get(socket.assigns, :details) do
+          nil ->
+            # if nothing was uploaded earlier just consume the current uploads
+            consume_entries(socket)
+
+          previous_file_details ->
+            file_name = "photo/" <> previous_file_details.original_filename
+
+            # if there was an earlier upload then delete it before consuming the current one
+
+            _result =
+              ExAws.S3.delete_object("invoicegenerator", file_name)
+              |> ExAws.request()
+
+            consume_entries(socket)
+        end
+
+        # * consume_uploaded_entries ends here !! and at
+        # * this point the picture has been uploaded to s3
+    end
+  end
+
+  @impl true
+  def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
+    {:noreply, cancel_upload(socket, :photo, ref)}
+  end
+
+  def handle_params(_unsigned_params, _uri, socket) do
+    {:noreply, socket}
+  end
+
+  defp consume_entries(socket) do
+    second_step = Enum.at(@steps, 1)
+
+    _uploaded_files =
       consume_uploaded_entries(socket, :photo, fn _meta, entry ->
         client_name = Map.get(entry, :client_name)
         filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
+
+        picture_details = %{filename: filename, original_filename: client_name}
+
+        send(self(), {:picture_details, picture_details})
 
         {:ok,
          %Picture{
@@ -252,35 +288,9 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
          }}
       end)
 
-    {:noreply, update(socket, :uploaded_files, &(&1 ++ uploaded_files))}
-
-    # * consume_uploaded_entries ends here !! and at
-    # * this point the picture has been uploaded to s3
-
-    # |> case do
-    #   [] ->
-    #     socket =
-    #       socket
-    #       |> assign(:photo_errors, %{filename: "is required"})
-
-    #     {:noreply, socket}
-
-    #   [%Picture{} = file] ->
-    #     dbg(file)
-
-    #     {:noreply, socket}
-    # end
-  end
-
-  @impl true
-  def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
-    {:noreply, cancel_upload(socket, :photo, ref)}
-  end
-
-  def handle_params(unsigned_params, uri, socket) do
-    dbg(unsigned_params)
-    dbg(uri)
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(progress: second_step)}
   end
 
   attr :on_click, JS, required: true

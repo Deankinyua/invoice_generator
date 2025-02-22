@@ -10,6 +10,8 @@ config :invoice_generator, InvoiceGenerator.Repo,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
+# * Setting this details here essentially means we do not have to do the nitty-gritty details everytime
+
 config :ex_aws,
   region: {:system, "S3_REGION"},
   access_key_id: {:system, "S3_ACCESS_KEY_ID"},

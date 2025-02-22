@@ -7,9 +7,11 @@ defmodule SimpleS3Upload do
   @doc """
   Signs a form upload.
   The configuration is a map which must contain the following keys:
+  config = %{
     * `:region` - The AWS region, such as "us-east-1"
     * `:access_key_id` - The AWS access key id
     * `:secret_access_key` - The AWS secret access key
+    }
   Returns a map of form fields to be used on the client via the JavaScript `FormData` API.
   ## Options
     * `:key` - The required key of the object to be uploaded.
@@ -169,6 +171,10 @@ defmodule SimpleS3Upload do
     |> ExAws.request!(config)
   end
 
+  # * The presign_upload function's job is to generate metadata
+  # * returns a map of metadata and the socket unchanged
+  # * It must return {:ok, metadata, socket}
+
   def presign_upload(entry, socket, key \\ "audio") do
     [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
 
@@ -176,6 +182,7 @@ defmodule SimpleS3Upload do
     bucket = "invoicegenerator"
     key = "#{key}/#{entry.client_name}"
 
+    # * Generates a presigned url for the object
     case ExAws.S3.presigned_url(config, :put, bucket, key,
            expires_in: 3600,
            query_params: [{"Content-Type", entry.client_type}]

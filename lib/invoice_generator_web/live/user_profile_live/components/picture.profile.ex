@@ -12,7 +12,7 @@ defmodule InvoiceGeneratorWeb.Picture.FormComponent do
     <section id="user_picture">
       <Layout.col>
         <Layout.col>
-          <.form :let={f} for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
+          <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
             <fieldset>
               <.live_file_input
                 type="file"
