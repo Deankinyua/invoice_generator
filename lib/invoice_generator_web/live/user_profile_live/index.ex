@@ -18,6 +18,8 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
 
   alias InvoiceGenerator.Profile.Picture
 
+  alias InvoiceGenerator.Repo
+
   alias InvoiceGeneratorWeb.Event.Step
 
   @steps [
@@ -103,7 +105,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
 
       <div class={unless @progress.name == "details", do: "hidden"}>
         <.live_component
-          module={InvoiceGeneratorWeb.UserProfileLive.FormComponent}
+          module={InvoiceGeneratorWeb.Profile.Address.Component}
           id="user_details"
           current_user={@current_user.id}
           user_profile={@user_profile}
@@ -153,9 +155,16 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   end
 
   defp submit_details(socket, changeset) do
-    dbg(changeset)
     details = socket.assigns.details
-    dbg(details)
+
+    address_details = changeset.changes
+
+    complete_details =
+      Map.merge(address_details, %{picture: details})
+
+    complete_profile = Profile.change_user_profile(socket.assigns.user_profile, complete_details)
+
+    Repo.insert(complete_profile)
   end
 
   @impl true
@@ -173,17 +182,21 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
 
   @impl true
   def handle_info({:valid_details, changeset}, socket) do
-    submit_details(socket, changeset)
+    case submit_details(socket, changeset) do
+      {:ok, _record} ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "User profile created successfully")}
 
-    {:noreply,
-     socket
-     |> put_flash(:info, "Take the LiveView Pro Course its free :)")}
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "You have already completed your profile!")}
+    end
   end
 
   @impl true
   def handle_info(:back, socket) do
-    dbg(socket.assigns)
-
     first_step = Enum.at(@steps, 0)
 
     IO.puts("going back")
@@ -192,28 +205,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
      socket
      |> assign(progress: first_step)}
   end
-
-  # @impl true
-  # def handle_info(:save_invoked, socket) do
-  #   IO.puts("save from details component received")
-
-  #   consume_uploaded_entries(socket, :photo, fn _meta, entry ->
-  #     client_name = Map.get(entry, :client_name)
-  #     filename = Map.get(entry, :uuid) <> "." <> SimpleS3Upload.ext(entry)
-
-  #     picture_fields = %{filename: filename, original_filename: client_name}
-
-  #     dbg(picture_fields)
-
-  #     {:ok,
-  #      %Picture{
-  #        filename: filename,
-  #        original_filename: client_name
-  #      }}
-  #   end)
-
-  #   {:noreply, socket}
-  # end
 
   @impl true
   def handle_event("validate", _params, socket) do

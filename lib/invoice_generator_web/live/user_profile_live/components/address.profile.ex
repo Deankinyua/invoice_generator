@@ -1,4 +1,4 @@
-defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
+defmodule InvoiceGeneratorWeb.Profile.Address.Component do
   use InvoiceGeneratorWeb, :live_component
 
   alias InvoiceGenerator.Profile
@@ -60,8 +60,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   def update(%{user_profile: user_profile} = assigns, socket) do
     countries = countries()
 
-    dbg(user_profile)
-
     {:ok,
      socket
      |> assign(assigns)
@@ -120,22 +118,14 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.FormComponent do
   end
 
   defp save_user_profile(socket, :new, user_profile_params) do
-    dbg(user_profile_params)
-
-    dbg(user_profile_params)
-
     case Profile.create_user_profile(user_profile_params) do
       {:ok, user_profile} ->
-        dbg(user_profile)
-
         {:noreply,
          socket
          |> put_flash(:info, "User profile created successfully")
          |> redirect(to: ~p"/welcome")}
 
       {:error, changeset} ->
-        dbg(changeset)
-
         {:noreply,
          socket
          |> put_flash(:error, "User profile exists Already")

@@ -27,6 +27,7 @@ defmodule InvoiceGenerator.Profile.UserProfile do
     |> cast_embed(:picture)
   end
 
+  @spec validate_the_lengths(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def validate_the_lengths(changeset) do
     changeset
     |> validate_length(:country, max: 80)
