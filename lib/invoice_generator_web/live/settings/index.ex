@@ -9,9 +9,18 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     <div class="border border-red-400">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
-          "user" => "user?id=#{@current_user.email}"
+          "user" => "user?email=#{@current_user.email}"
         },
         id: "live_header",
+        sticky: true
+      )}
+
+      {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
+        session: %{
+          "active_tab" => "personal",
+          "user" => "user?email=#{@current_user.email}"
+        },
+        id: "settings_live_drawer",
         sticky: true
       )}
     </div>

@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
     <div class="border border-red-400">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
-          "user" => "user?id=#{@current_user.email}"
+          "user" => "user?email=#{@current_user.email}"
         },
         id: "live_header",
         sticky: true

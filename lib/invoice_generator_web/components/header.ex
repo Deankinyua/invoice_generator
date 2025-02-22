@@ -10,7 +10,7 @@ defmodule InvoiceGeneratorWeb.Header do
 
   @impl true
   def mount(_params, session, socket) do
-    %{"user" => "user?id=" <> email} = session
+    %{"user" => "user?email=" <> email} = session
 
     current_user = Accounts.get_user_by_email(email)
 
