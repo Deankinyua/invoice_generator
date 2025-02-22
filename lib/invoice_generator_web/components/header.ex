@@ -52,10 +52,14 @@ defmodule InvoiceGeneratorWeb.Header do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="border border-red-400 bg-[#252945]">
       <Layout.flex class="gap-6">
         <Layout.flex>
-          <section>logo</section>
+          <section>
+            <.link>
+              <img src="images/header/logo.svg" alt="home" />
+            </.link>
+          </section>
           <section>
             <.link phx-click={JS.push("dark-mode", value: %{dark: @is_dark})}>
               <img src={theme_icon(@is_dark)} alt="theme" />
@@ -63,7 +67,7 @@ defmodule InvoiceGeneratorWeb.Header do
           </section>
         </Layout.flex>
 
-        <section class="w-[32%] border border-red-400">
+        <section class="w-[30%] border border-red-400">
           <div class="w-[60%] mx-auto rounded-full overflow-hidden">
             <img src={@profile_url} class="h-10 w-10 rounded-full object-cover object-center" />
           </div>
