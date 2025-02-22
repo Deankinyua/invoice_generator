@@ -6,15 +6,19 @@ defmodule InvoiceGeneratorWeb.Header do
 
   alias InvoiceGenerator.Accounts
 
+  alias InvoiceGenerator.Helpers
+
   @impl true
   def mount(_params, session, socket) do
-    %{"user" => "user?id=" <> email, "image_url" => "user?url=" <> profile_url} = session
+    %{"user" => "user?id=" <> email} = session
 
     current_user = Accounts.get_user_by_email(email)
 
+    user_id = current_user.id
+    profile_url = Helpers.get_profile_url(user_id)
+
     socket =
       socket
-      |> assign(:current_user, current_user)
       |> assign(:profile_url, profile_url)
       |> assign(:theme, "profile_url")
       |> assign(is_dark: false)

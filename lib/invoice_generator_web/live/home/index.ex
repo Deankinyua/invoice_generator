@@ -4,16 +4,14 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
   alias InvoiceGenerator.Profile
 
   @impl true
-
   def render(assigns) do
     ~H"""
     <div class="border border-red-400">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
-          "user" => "user?id=#{@current_user.email}",
-          "image_url" => "user?url=#{@profile_url}"
+          "user" => "user?id=#{@current_user.email}"
         },
-        id: "live_drawer",
+        id: "live_header",
         sticky: true
       )}
 
@@ -24,26 +22,38 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
           </section>
           <section>{@username}</section>
         </div>
-        <Layout.flex flex_direction="col" class="w-[40%] md:w-[30%] border border-red-400">
+        <Layout.flex flex_direction="col" class="w-[40%] md:w-[30%] gap-6 border border-red-400">
           <Layout.flex justify_content="start" class="gap-6 ">
             <div>
               <img src="images/home/home1.svg" />
             </div>
-            <div>Dashboard</div>
+            <div>
+              <.link navigate={~p"/home"}>
+                Dashboard
+              </.link>
+            </div>
           </Layout.flex>
 
           <Layout.flex justify_content="start" class="gap-6">
             <div>
               <img src="images/home/home2.png" />
             </div>
-            <div>Settings</div>
+            <div>
+              <.link navigate={~p"/settings"}>
+                Settings
+              </.link>
+            </div>
           </Layout.flex>
 
           <Layout.flex justify_content="start" class="gap-6">
             <div>
               <img src="images/home/home3.svg" />
             </div>
-            <div>Sign Out</div>
+            <div>
+              <.link navigate={~p"/home"}>
+                Sign Out
+              </.link>
+            </div>
           </Layout.flex>
         </Layout.flex>
       </Layout.flex>
