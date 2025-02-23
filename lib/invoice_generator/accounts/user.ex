@@ -51,6 +51,13 @@ defmodule InvoiceGenerator.Accounts.User do
     |> validate_name_and_username(opts)
   end
 
+  def update_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:name, :username, :email])
+    |> validate_email(opts)
+    |> validate_name_and_username(opts)
+  end
+
   defp validate_email(changeset, opts) do
     changeset
     |> validate_required([:email])

@@ -90,7 +90,7 @@ defmodule InvoiceGenerator.Accounts do
 
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, hash_password: true, validate_email: true)
+    User.update_changeset(user, attrs, validate_email: true)
   end
 
   ## Settings
