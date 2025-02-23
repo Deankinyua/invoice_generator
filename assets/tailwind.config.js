@@ -18,6 +18,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // These defines the colors used all throughout Tremorx
+        // e.g text-tremor-brand-inverted generates a text color of #ffffff
+        // Because of the default key text-tremor-brand generates text of color #3b82f6
         tremor: {
           brand: {
             faint: "#eff6ff",

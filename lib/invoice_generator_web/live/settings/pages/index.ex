@@ -6,7 +6,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="border border-red-400">
+    <div>
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -23,6 +23,8 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
         id: "settings_live_drawer",
         sticky: true
       )}
+
+      <div class="border border-blue-400 mx-4">Personal</div>
     </div>
     """
   end

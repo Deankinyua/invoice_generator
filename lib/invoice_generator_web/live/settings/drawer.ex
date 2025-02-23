@@ -16,19 +16,19 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
         <Text.title color="black" class="font-bold">Settings</Text.title>
         <Layout.flex flex_direction="row" justify_content="start" class="w-[75%] gap-4">
           <.menu_item
-            on_click={on_live_navigate(:report, ~p"/home")}
+            on_click={on_live_navigate(:personal, ~p"/personaldetails")}
             active={@active_tab == "personal"}
             name="Personal"
           />
 
           <.menu_item
-            on_click={on_live_navigate(:checkin, ~p"/home")}
+            on_click={on_live_navigate(:password, ~p"/password")}
             active={@active_tab == "password"}
             name="Password"
           />
 
           <.menu_item
-            on_click={on_live_navigate(:template, ~p"/home")}
+            on_click={on_live_navigate(:notifications, ~p"/emailnotifications")}
             active={@active_tab == "notifications"}
             name="Email notifications"
           />
@@ -57,8 +57,7 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
           Theme.get_spacing_style("lg", "padding_y"),
           "flex-shrink-1 flex outline-none  rounded-tremor-default",
           if(@active,
-            do: "text-[#9277ff]
-            text-tremor-brand-inverted
+            do: "text-[#7c5dfa]
             font-semibold",
             else: "hover:bg-gray-100 text-tremor-content
           dark:text-dark-tremor-content hover:text-tremor-content-emphasis"
@@ -76,7 +75,7 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
           }
           justify_content="start"
         >
-          <Text.subtitle color="" class="text-xs">{@name}</Text.subtitle>
+          <Text.subtitle class="text-xs">{@name}</Text.subtitle>
         </Layout.flex>
       </Layout.flex>
     </button>

@@ -39,7 +39,7 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
               <img src="images/home/home2.png" />
             </div>
             <div>
-              <.link navigate={~p"/settings"}>
+              <.link navigate={~p"/personaldetails"}>
                 Settings
               </.link>
             </div>
