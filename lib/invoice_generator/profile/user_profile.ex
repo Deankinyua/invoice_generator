@@ -13,7 +13,7 @@ defmodule InvoiceGenerator.Profile.UserProfile do
     field :street, :string
 
     timestamps(type: :utc_datetime)
-    embeds_one :picture, InvoiceGenerator.Profile.Picture
+    embeds_one :picture, InvoiceGenerator.Profile.Picture, on_replace: :update
   end
 
   @doc false

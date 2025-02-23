@@ -58,12 +58,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.PersonalDetails do
 
   @impl true
   def handle_event("validate", %{"user" => user_params}, socket) do
-    dbg(user_params)
     changeset = Accounts.change_user_registration(socket.assigns.current_user, user_params)
 
     {:noreply, socket}
-
-    dbg(changeset)
 
     case changeset.valid? do
       true ->
