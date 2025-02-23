@@ -1,9 +1,6 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.PersonalDetails do
-  alias InvoiceGenerator.{Helpers, Profile}
-
-  alias InvoiceGenerator.Accounts
-
   use InvoiceGeneratorWeb, :live_component
+  alias InvoiceGenerator.Accounts
 
   @impl true
   def render(assigns) do

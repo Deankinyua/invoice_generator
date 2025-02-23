@@ -251,6 +251,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     {:noreply, cancel_upload(socket, :photo, ref)}
   end
 
+  @impl true
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end

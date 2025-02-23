@@ -146,12 +146,16 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
   @impl true
   def handle_info(
-        {:update_profile_picture, %{original_filename: original_filename} = details},
+        {:update_profile_picture, details},
         socket
       ) do
     user_id = socket.assigns.current_user.id
 
     user = Helpers.get_user(user_id)
+
+    previous_picture = user.picture.original_filename
+
+    delete_previous_profile_picture(previous_picture)
 
     changeset = Changeset.change(user, %{picture: details})
     Repo.update(changeset)
@@ -166,6 +170,14 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   @impl true
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
+  end
+
+  defp delete_previous_profile_picture(file_name) do
+    file_name = "photo/" <> file_name
+
+    _result =
+      ExAws.S3.delete_object("invoicegenerator", file_name)
+      |> ExAws.request()
   end
 
   attr :on_click, JS, required: true
