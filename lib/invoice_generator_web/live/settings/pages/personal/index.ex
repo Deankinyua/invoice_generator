@@ -1,4 +1,5 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.Index do
+  alias InvoiceGenerator.Accounts
   use InvoiceGeneratorWeb, :live_view
 
   require Logger
@@ -104,6 +105,40 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   end
 
   @impl true
+  def handle_info(
+        {:valid_personal_details, changeset},
+        socket
+      ) do
+    personal_details = changeset.changes
+
+    {:noreply,
+     socket
+     |> assign(personal_details: personal_details)}
+  end
+
+  @impl true
+  def handle_info(
+        :update_personal_info,
+        socket
+      ) do
+    case Map.get(socket.assigns, :personal_details) do
+      nil ->
+        :ok
+
+      details ->
+        current_user = socket.assigns.current_user
+
+        user_changeset = Accounts.change_user_registration(current_user, details)
+        Repo.update(user_changeset)
+    end
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "Your profile has been updated successfully")
+     |> redirect(to: "/personaldetails")}
+  end
+
+  @impl true
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end
@@ -118,12 +153,12 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
         {:noreply, socket}
 
       filename ->
-        new_picture_details = %{original_filename: "", filename: ""}
+        new_picture_details = %{original_filename: "none", filename: "none"}
 
         profile_changeset =
           Profile.change_user_profile(user_profile, %{picture: new_picture_details})
 
-        Repo.insert(profile_changeset)
+        Repo.update(profile_changeset)
         delete_profile_picture(filename)
 
         {:noreply,

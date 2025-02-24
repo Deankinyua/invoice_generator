@@ -1,5 +1,5 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
-  alias InvoiceGenerator.{Helpers, Profile}
+  alias InvoiceGenerator.{Helpers, Profile, Repo}
 
   alias InvoiceGenerator.Profile.UserProfile
 
@@ -104,9 +104,19 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
   def handle_event("validate", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
 
+    {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+  end
+
+  @impl true
+  def handle_event("save", %{"user_profile" => user_profile_params}, socket) do
+    changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
+
     case changeset.valid? do
       true ->
-        {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
+        send(self(), :update_personal_info)
+        Repo.update(changeset)
+
+        {:noreply, socket}
 
       false ->
         {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
