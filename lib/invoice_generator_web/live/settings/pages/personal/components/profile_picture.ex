@@ -1,4 +1,30 @@
-defmodule InvoiceGeneratorWeb.SettingsLive.ProfilePicture do
+defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
+  use InvoiceGeneratorWeb, :live_component
+  @impl true
+  def render(assigns) do
+    ~H"""
+    <div>
+      <Layout.flex flex_direction="row">
+        <section class="h-20 w-20 rounded-full border-2 border-blue-400 overflow-hidden ">
+          <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
+        </section>
+        <section>
+          {@name} / Profile Information
+        </section>
+      </Layout.flex>
+    </div>
+    """
+  end
+
+  @impl true
+  def update(assigns, socket) do
+    {:ok,
+     socket
+     |> assign(assigns)}
+  end
+end
+
+defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
   use InvoiceGeneratorWeb, :live_component
   require Logger
 

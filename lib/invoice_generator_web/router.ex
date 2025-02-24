@@ -77,7 +77,6 @@ defmodule InvoiceGeneratorWeb.Router do
       live "/personaldetails", SettingsLive.Index, :index
       live "/password", SettingsLive.Password, :index
       live "/emailnotifications", SettingsLive.EmailNotifications, :index
-      # live "/photo", TrialLive.Index, :index
     end
   end
 

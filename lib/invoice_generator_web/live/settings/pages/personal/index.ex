@@ -30,20 +30,18 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
       <div class="border border-blue-400 mx-4 py-20">
         <Layout.flex flex_direction="col">
-          <Layout.flex flex_direction="row">
-            <section class="h-36 w-36 rounded-full border-2 border-blue-400 overflow-hidden ">
-              <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
-            </section>
+          <.live_component
+            module={InvoiceGeneratorWeb.Profile.ActualPicture}
+            id="actual_picture_live_component"
+            profile_url={@profile_url}
+            name={@current_user.name}
+          />
 
-            <section>
-              {@current_user.name} / Profile Information
-            </section>
-          </Layout.flex>
           <Layout.flex flex_direction="row">
             <section>
               <.live_component
-                module={InvoiceGeneratorWeb.SettingsLive.ProfilePicture}
-                id="settings_personal_profile_picture_details"
+                module={InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture}
+                id="settings_update_profile_picture"
                 profile_url={@profile_url}
               />
             </section>
@@ -52,12 +50,12 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
         <.live_component
           module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}
-          id="settings_personal_address_details"
+          id="settings_personal_details"
           current_user={@current_user}
         />
 
         <.live_component
-          module={InvoiceGeneratorWeb.SettingsLive.BusinessDetails}
+          module={InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails}
           id="settings_business_address_details"
           current_user={@current_user.id}
         />

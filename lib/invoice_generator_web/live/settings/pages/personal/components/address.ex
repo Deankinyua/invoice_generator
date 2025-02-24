@@ -1,4 +1,4 @@
-defmodule InvoiceGeneratorWeb.SettingsLive.BusinessDetails do
+defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
   alias InvoiceGenerator.{Helpers, Profile}
 
   alias InvoiceGenerator.Profile.UserProfile
