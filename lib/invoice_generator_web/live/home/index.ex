@@ -50,8 +50,8 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
               <img src="images/home/home3.svg" />
             </div>
             <div>
-              <.link navigate={~p"/home"}>
-                Sign Out
+              <.link href={~p"/users/log_out"} method="delete">
+                Sign out
               </.link>
             </div>
           </Layout.flex>

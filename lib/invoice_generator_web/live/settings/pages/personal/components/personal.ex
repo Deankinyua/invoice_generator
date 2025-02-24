@@ -6,7 +6,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.PersonalDetails do
   def render(assigns) do
     ~H"""
     <div>
-      <.simple_form for={@form} id="user_profile-form" phx-target={@myself} phx-change="validate">
+      <.simple_form for={@form} phx-target={@myself} phx-change="validate">
         <Layout.col class="space-y-1.5">
           <label for="profile_name">
             <Text.text class="text-tremor-content text-bold py-2">

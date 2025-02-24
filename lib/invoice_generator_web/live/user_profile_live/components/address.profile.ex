@@ -108,7 +108,7 @@ defmodule InvoiceGeneratorWeb.Profile.Address.Component do
 
   defp save_user_profile(socket, :edit, user_profile_params) do
     case Profile.update_user_profile(socket.assigns.user_profile, user_profile_params) do
-      {:ok, user_profile} ->
+      {:ok, _user_profile} ->
         {:noreply,
          socket
          |> put_flash(:info, "User profile updated successfully")
@@ -121,13 +121,13 @@ defmodule InvoiceGeneratorWeb.Profile.Address.Component do
 
   defp save_user_profile(socket, :new, user_profile_params) do
     case Profile.create_user_profile(user_profile_params) do
-      {:ok, user_profile} ->
+      {:ok, _user_profile} ->
         {:noreply,
          socket
          |> put_flash(:info, "User profile created successfully")
          |> redirect(to: ~p"/welcome")}
 
-      {:error, changeset} ->
+      {:error, _changeset} ->
         {:noreply,
          socket
          |> put_flash(:error, "User profile exists Already")

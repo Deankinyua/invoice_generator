@@ -208,8 +208,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
 
   @impl Phoenix.LiveView
   def handle_event("save", _params, socket) do
-    Logger.warning("submit invoked")
-
     second_step = Enum.at(@steps, 1)
     entries = socket.assigns.uploads.photo.entries
 
