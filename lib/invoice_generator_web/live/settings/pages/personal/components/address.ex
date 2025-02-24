@@ -9,13 +9,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
   def render(assigns) do
     ~H"""
     <div>
-      <.simple_form
-        for={@form}
-        id="user_profile-form"
-        phx-target={@myself}
-        phx-change="validate"
-        phx-submit="save"
-      >
+      <.simple_form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
         <Layout.col class="space-y-1.5">
           <label for="profile_country">
             <Text.text class="text-tremor-content">
@@ -97,8 +91,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
          |> assign(userprofile: user_profile)}
 
       user_profile ->
-        dbg(user_profile)
-
         form = to_form(Profile.change_user_profile(user_profile))
 
         {:ok,
@@ -110,10 +102,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
   @impl true
   def handle_event("validate", %{"user_profile" => user_profile_params}, socket) do
-    dbg(user_profile_params)
     changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
-
-    dbg(changeset)
 
     case changeset.valid? do
       true ->

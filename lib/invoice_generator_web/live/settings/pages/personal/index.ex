@@ -5,7 +5,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   alias InvoiceGenerator.{Helpers}
 
   alias Ecto.Changeset
-  alias InvoiceGenerator.Repo
+  alias InvoiceGenerator.{Repo, Profile}
 
   @impl true
   def render(assigns) do
@@ -42,7 +42,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
               <.live_component
                 module={InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture}
                 id="settings_update_profile_picture"
-                profile_url={@profile_url}
+                user_id={@current_user.id}
               />
             </section>
           </Layout.flex>
@@ -84,9 +84,14 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
     user = Helpers.get_user(user_id)
 
-    previous_picture = user.picture.original_filename
+    _result =
+      case Map.get(user.picture, :original_filename) do
+        nil ->
+          :ok
 
-    delete_previous_profile_picture(previous_picture)
+        filename ->
+          delete_profile_picture(filename)
+      end
 
     changeset = Changeset.change(user, %{picture: details})
     Repo.update(changeset)
@@ -103,7 +108,31 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     {:noreply, socket}
   end
 
-  defp delete_previous_profile_picture(file_name) do
+  @impl true
+  def handle_event("delete", %{"user_id" => user_id}, socket) do
+    user_profile = Helpers.get_user(user_id)
+
+    case Map.get(user_profile.picture, :original_filename) do
+      nil ->
+        Logger.warning("value is nil")
+        {:noreply, socket}
+
+      filename ->
+        new_picture_details = %{original_filename: "", filename: ""}
+
+        profile_changeset =
+          Profile.change_user_profile(user_profile, %{picture: new_picture_details})
+
+        Repo.insert(profile_changeset)
+        delete_profile_picture(filename)
+
+        {:noreply,
+         socket
+         |> redirect(to: "/personaldetails")}
+    end
+  end
+
+  defp delete_profile_picture(file_name) do
     file_name = "photo/" <> file_name
 
     _result =

@@ -47,7 +47,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
 
         <Button.button size="xl" class="mb-10">
           <.link
-            phx-click={JS.push("delete", value: %{profile_url: @profile_url})}
+            phx-click={JS.push("delete", value: %{user_id: @user_id})}
             data-confirm="Are you sure?"
           >
             Delete
