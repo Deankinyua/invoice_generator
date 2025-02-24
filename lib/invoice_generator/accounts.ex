@@ -41,7 +41,18 @@ defmodule InvoiceGenerator.Accounts do
   def get_user_by_email_and_password(email, password)
       when is_binary(email) and is_binary(password) do
     user = Repo.get_by(User, email: email)
+    # if the password is valid return the user
     if User.valid_password?(user, password), do: user
+  end
+
+  # use this function to check if the old password is indeed the password the user entered
+  def get_user_if_valid_password(user, password)
+      when is_binary(password) do
+    if User.valid_password?(user, password) do
+      user
+    else
+      :error
+    end
   end
 
   @doc """
@@ -185,6 +196,10 @@ defmodule InvoiceGenerator.Accounts do
   """
   def change_user_password(user, attrs \\ %{}) do
     User.password_changeset(user, attrs, hash_password: false)
+  end
+
+  def change_user_password_with_old_password(user, attrs \\ %{}) do
+    User.new_password_changeset(user, attrs, hash_password: false)
   end
 
   @doc """

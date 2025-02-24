@@ -149,7 +149,15 @@ defmodule InvoiceGenerator.Accounts.User do
   def password_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:password])
+    # checks that the given parameter matches its confirmation
     |> validate_confirmation(:password, message: "does not match password")
+    |> validate_password(opts)
+  end
+
+  def new_password_changeset(user, attrs, opts \\ []) do
+    user
+    |> cast(attrs, [:password])
+    # checks that the given parameter matches its confirmation
     |> validate_password(opts)
   end
 

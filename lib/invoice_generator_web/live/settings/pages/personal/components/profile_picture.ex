@@ -4,7 +4,7 @@ defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
   def render(assigns) do
     ~H"""
     <div>
-      <Layout.flex flex_direction="row">
+      <Layout.flex flex_direction="w-full row">
         <section class="h-20 w-20 rounded-full border-2 border-blue-400 overflow-hidden ">
           <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
         </section>
@@ -33,7 +33,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
     ~H"""
     <section>
       <.form for={@form} phx-target={@myself} phx-change="check">
-        <Button.button size="xl" class="mb-10 bg-white hover:bg-white">
+        <Button.button size="xl" class="bg-white hover:bg-white">
           <fieldset>
             <.live_file_input type="file" upload={@uploads.photo} class="hidden pointer-events-none" />
           </fieldset>
@@ -45,7 +45,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
           />
         </Button.button>
 
-        <Button.button size="xl" class="mb-10">
+        <Button.button size="xl" class="mb-2">
           <.link
             phx-click={JS.push("delete", value: %{user_id: @user_id})}
             data-confirm="Are you sure?"

@@ -3,10 +3,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   use InvoiceGeneratorWeb, :live_view
 
   require Logger
-  alias InvoiceGenerator.{Helpers}
 
   alias Ecto.Changeset
-  alias InvoiceGenerator.{Repo, Profile}
+  alias InvoiceGenerator.{Repo, Profile, Helpers}
 
   @impl true
   def render(assigns) do
@@ -30,13 +29,15 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
       )}
 
       <div class="border border-blue-400 mx-4 py-20">
-        <Layout.flex flex_direction="col">
-          <.live_component
-            module={InvoiceGeneratorWeb.Profile.ActualPicture}
-            id="actual_picture_live_component"
-            profile_url={@profile_url}
-            name={@current_user.name}
-          />
+        <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
+          <div class="border border-red-400">
+            <.live_component
+              module={InvoiceGeneratorWeb.Profile.ActualPicture}
+              id="actual_picture_live_component"
+              profile_url={@profile_url}
+              name={@current_user.name}
+            />
+          </div>
 
           <Layout.flex flex_direction="row">
             <section>
@@ -48,6 +49,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
             </section>
           </Layout.flex>
         </Layout.flex>
+        <Text.title class="my-4">
+          Edit Profile Information
+        </Text.title>
 
         <.live_component
           module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}

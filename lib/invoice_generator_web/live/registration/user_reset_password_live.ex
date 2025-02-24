@@ -74,6 +74,7 @@ defmodule InvoiceGeneratorWeb.UserResetPasswordLive do
   end
 
   defp assign_user_and_token(socket, %{"token" => token}) do
+    # grab the token from the url
     if user = Accounts.get_user_by_reset_password_token(token) do
       assign(socket, user: user, token: token)
     else
