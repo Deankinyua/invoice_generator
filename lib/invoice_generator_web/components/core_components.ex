@@ -272,6 +272,7 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
   attr :name, :any
   attr :label, :string, default: nil
   attr :value, :any
+  attr :hide_errors, :string, default: "block"
 
   attr :type, :string,
     default: "text",
@@ -383,7 +384,9 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
         ]}
         {@rest}
       />
-      <.error :for={msg <- @errors}>{msg}</.error>
+      <div class={@hide_errors}>
+        <.error :for={msg <- @errors}>{msg}</.error>
+      </div>
     </div>
     """
   end

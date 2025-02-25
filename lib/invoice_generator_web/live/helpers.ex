@@ -217,4 +217,20 @@ defmodule InvoiceGenerator.Helpers do
       "Zimbabwe"
     ]
   end
+
+  def get_map_of_errors(errors) do
+    # removes the password key from the keyword list
+    messages =
+      Enum.reduce(errors, [], fn {_key, value}, acc ->
+        [value | acc]
+      end)
+
+    # converts the keyword items into a map with atom keys
+
+    result =
+      Enum.map(messages, fn {x, y} -> {String.to_atom(x), y} end)
+      |> Enum.into(%{})
+
+    result
+  end
 end

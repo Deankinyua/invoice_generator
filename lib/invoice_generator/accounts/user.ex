@@ -69,8 +69,10 @@ defmodule InvoiceGenerator.Accounts.User do
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: 7, max: 72)
-    # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
+    |> validate_length(:password, min: 8, max: 72, message: "length")
+    |> validate_format(:password, ~r/[A-Z]/, message: "uppercase")
+    |> validate_format(:password, ~r/\d/, message: "number")
+    |> validate_format(:password, ~r/[@$!#%*&]/, message: "special")
     |> maybe_hash_password(opts)
   end
 
