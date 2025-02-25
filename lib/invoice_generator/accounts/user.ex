@@ -99,6 +99,10 @@ defmodule InvoiceGenerator.Accounts.User do
     end
   end
 
+  def hash_valid_password(changeset, opts) do
+    maybe_hash_password(changeset, opts)
+  end
+
   defp maybe_validate_unique_email(changeset, opts) do
     if Keyword.get(opts, :validate_email, true) do
       changeset

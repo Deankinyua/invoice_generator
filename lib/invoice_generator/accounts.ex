@@ -202,6 +202,10 @@ defmodule InvoiceGenerator.Accounts do
     User.new_password_changeset(user, attrs, hash_password: false)
   end
 
+  def hash_password_before_insertion(changeset) do
+    User.hash_valid_password(changeset, hash_password: true)
+  end
+
   @doc """
   Updates the user password.
 

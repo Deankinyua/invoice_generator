@@ -1,9 +1,7 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.Password do
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.Accounts
-
-  alias InvoiceGenerator.{Helpers}
+  alias InvoiceGenerator.{Helpers, Accounts, Repo}
   @impl true
   def render(assigns) do
     ~H"""
@@ -64,8 +62,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
 
     form = to_form(changeset, as: "password")
 
-    dbg(form)
-
     {:ok,
      socket
      |> assign(profile_url: profile_url)
@@ -73,13 +69,18 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
   end
 
   @impl true
-  def handle_event("validate", %{"password" => _password_params}, socket) do
-    # changeset = Accounts.change_user_password(socket.assigns.user, password_params)
+  def handle_event(
+        "validate",
+        %{"password" => %{"old_password" => _old_password, "password" => new_password}},
+        socket
+      ) do
+    changeset =
+      Accounts.change_user_password_with_old_password(
+        socket.assigns.current_user,
+        %{"password" => new_password}
+      )
 
-    # dbg(password_params)
-
-    {:noreply, socket}
-    # {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
+    {:noreply, assign(socket, form: to_form(changeset, action: :validate, as: "password"))}
   end
 
   @impl true
@@ -88,25 +89,35 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
         %{"password" => %{"old_password" => old_password, "password" => new_password}},
         socket
       ) do
-    # changeset = Accounts.change_user_password(socket.assigns.user, password_params)
-
     user = socket.assigns.current_user
 
-    case Accounts.get_user_if_valid_password(user, old_password) do
-      :error ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "The old password you entered is incorrect")}
+    changeset =
+      Accounts.change_user_password_with_old_password(
+        user,
+        %{"password" => new_password}
+      )
 
-      _user ->
+    case changeset.valid? do
+      true ->
+        case Accounts.get_user_if_valid_password(user, old_password) do
+          :error ->
+            {:noreply,
+             socket
+             |> put_flash(:error, "The old password you entered is incorrect")}
 
+          _user ->
+            changeset = Accounts.hash_password_before_insertion(changeset)
 
+            Repo.update(changeset)
 
+            {:noreply,
+             socket
+             |> put_flash(:info, "You updated your password successfully")
+             |> redirect(to: "/password")}
+        end
 
-        {:noreply,
-         socket
-         |> put_flash(:info, "You entered the correct old password")}
+      false ->
+        {:noreply, assign(socket, form: to_form(changeset, action: :validate, as: "password"))}
     end
-
   end
 end
