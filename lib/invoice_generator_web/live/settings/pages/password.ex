@@ -41,7 +41,13 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
 
         <.simple_form for={@form} phx-submit="reset_password" phx-change="validate">
           <.input field={@form[:old_password]} type="text" label="Old password" />
-          <.input field={@form[:password]} type="text" label="New password" hide_errors="hidden" />
+          <.input
+            field={@form[:password]}
+            type="text"
+            label="New password"
+            autocomplete="off"
+            hide_errors="hidden"
+          />
 
           <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
             <Text.text class="my-4">
@@ -168,8 +174,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
         socket.assigns.current_user,
         %{"password" => new_password}
       )
-
-    dbg(changeset)
 
     errors = Helpers.get_map_of_errors(changeset.errors)
 
