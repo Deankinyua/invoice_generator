@@ -52,6 +52,10 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
             />
             <.input field={@form[:sign_in_notification]} type="checkbox" label="Sign in notification" />
             <.input field={@form[:payment_reminders]} type="checkbox" label="Due payment reminders" />
+
+            <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+              Save Changes
+            </Button.button>
           </.form>
         </div>
       </div>
@@ -66,14 +70,15 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
 
     profile_url = Helpers.get_profile_url(user_id)
 
-    notification_changeset = get_form_source(user_id)
+    {notification, notification_changeset} = get_form_source(user_id)
 
     form = to_form(notification_changeset, as: "notifications")
 
     {:ok,
      socket
      |> assign(profile_url: profile_url)
-     |> assign(form: form)}
+     |> assign(form: form)
+     |> assign(notification_settings: notification)}
   end
 
   defp get_form_source(user_id) do
@@ -83,12 +88,55 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
 
         changeset = Notifications.change_notification(notification)
 
-        changeset
+        {notification, changeset}
 
       user_notification_settings ->
         changeset = Notifications.change_notification(user_notification_settings)
 
-        changeset
+        {user_notification_settings, changeset}
+    end
+  end
+
+  @impl true
+  def handle_event("change_notifications", %{"notifications" => notification_params}, socket) do
+    user_id = socket.assigns.current_user.id
+
+    notification_settings = socket.assigns.notification_settings
+
+    changeset = Notifications.change_notification(notification_settings, notification_params)
+
+    case submit_details(user_id, changeset) do
+      :success ->
+        {:noreply,
+         socket
+         |> put_flash(:info, "Your notification settings were updated successfully")}
+
+      :failure ->
+        {:noreply,
+         socket
+         |> put_flash(:error, "An error occurred while updating your notification settings")}
+    end
+  end
+
+  defp submit_details(user_id, changeset) do
+    case Notifications.get_notification_by_user_id(user_id) do
+      nil ->
+        case Repo.insert(changeset) do
+          {:ok, _notification} ->
+            :success
+
+          {:error, _changeset} ->
+            :failure
+        end
+
+      _user_notification_settings ->
+        case Repo.update(changeset) do
+          {:ok, _updated_record} ->
+            :success
+
+          {:error, _changeset} ->
+            :failure
+        end
     end
   end
 end
