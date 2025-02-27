@@ -8,8 +8,31 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="border border-red-400">
-      invoices
+    <div>
+      {live_render(@socket, InvoiceGeneratorWeb.Header,
+        session: %{
+          "user" => "user?email=#{@current_user.email}"
+        },
+        id: "live_header",
+        sticky: true
+      )}
+
+      <div class="w-[95%] mx-auto">
+        <Layout.flex flex_direction="row" justify_content="between" class="border border-red-400">
+          <Layout.flex flex_direction="col" align_items="start" class="border border-red-400">
+            <section>Invoices</section>
+            <section>No invoices</section>
+          </Layout.flex>
+
+          <Layout.flex flex_direction="row">
+            <section>filter</section>
+
+            <Button.button class="mt-2 w-min">
+              New
+            </Button.button>
+          </Layout.flex>
+        </Layout.flex>
+      </div>
     </div>
     """
   end

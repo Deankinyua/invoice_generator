@@ -47,13 +47,7 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                   Oops, something went wrong! Please check the errors below.
                 </.error>
 
-                <.input
-                  field={@form[:name]}
-                  type="text"
-                  label="Name"
-                  placeholder="Enter Your Name"
-                  required
-                />
+                <.input field={@form[:name]} type="text" label="Name" placeholder="Enter Your Name" />
                 <.input
                   field={@form[:username]}
                   type="text"
@@ -66,7 +60,6 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                   type="email"
                   label="Email"
                   placeholder="Enter Your Email"
-                  required
                 />
 
                 <Layout.col class="space-y-1.5">
@@ -155,7 +148,8 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
   end
 
   def handle_event("validate", %{"user" => user_params}, socket) do
-    changeset = Accounts.change_user_registration(%User{}, user_params)
+    changeset = Accounts.change_user_registration_sign_up(%User{}, user_params)
+    dbg(changeset.errors)
     {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
   end
 
