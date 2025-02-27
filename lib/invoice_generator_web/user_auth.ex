@@ -168,6 +168,7 @@ defmodule InvoiceGeneratorWeb.UserAuth do
     socket = mount_current_user(socket, session)
 
     if socket.assigns.current_user do
+      # * grabs request and pushes it to the controller which will forward it to our welcome page
       {:halt, Phoenix.LiveView.redirect(socket, to: signed_in_path(socket))}
     else
       {:cont, socket}

@@ -53,6 +53,9 @@ defmodule InvoiceGeneratorWeb.Router do
     pipe_through [:browser, :redirect_if_user_is_authenticated]
 
     live_session :redirect_if_user_is_authenticated,
+      # * Tip: if you need to define multiple on_mount callbacks,
+      # * avoid defining multiple modules. Instead, pass a tuple and use
+      # * pattern matching to handle different cases
       on_mount: [{InvoiceGeneratorWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       live "/users/register", UserRegistrationLive, :new
       live "/users/register/:id", UserRegistrationLive.Show

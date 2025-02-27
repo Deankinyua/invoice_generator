@@ -1,7 +1,7 @@
 defmodule InvoiceGeneratorWeb.UserRegistrationLive do
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.Accounts
+  alias InvoiceGenerator.{Accounts, Helpers}
   alias InvoiceGenerator.Accounts.User
 
   def render(assigns) do
@@ -79,6 +79,12 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                   />
                 </Layout.col>
 
+                <.live_component
+                  module={InvoiceGeneratorWeb.Password.Validation.Component}
+                  id="password_validation_component"
+                  form_errors={@form_errors}
+                />
+
                 <Button.button
                   type="submit"
                   size="xl"
@@ -120,6 +126,7 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
       |> assign(confirm: false)
       |> assign(email: "")
       |> assign_form(changeset)
+      |> assign(form_errors: Helpers.initial_errors())
 
     {:ok, socket, temporary_assigns: [form: nil]}
   end
@@ -147,9 +154,19 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
     end
   end
 
-  def handle_event("validate", %{"user" => user_params}, socket) do
+  def handle_event("validate", %{"user" => %{"password" => password} = user_params}, socket) do
     changeset = Accounts.change_user_registration_sign_up(%User{}, user_params)
-    dbg(changeset.errors)
+    errors = Helpers.get_map_of_errors(changeset.errors)
+
+    socket =
+      if password == "" do
+        socket
+        |> assign(form_errors: Helpers.initial_errors())
+      else
+        socket
+        |> assign(form_errors: errors)
+      end
+
     {:noreply, assign_form(socket, Map.put(changeset, :action, :validate))}
   end
 

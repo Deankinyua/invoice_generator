@@ -233,4 +233,13 @@ defmodule InvoiceGenerator.Helpers do
 
     result
   end
+
+  def initial_errors() do
+    %{
+      length: "errors",
+      uppercase: "errors",
+      number: "errors",
+      special: "errors"
+    }
+  end
 end
