@@ -28,7 +28,7 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
               <img src="images/home/home1.svg" />
             </div>
             <div>
-              <.link navigate={~p"/home"}>
+              <.link navigate={~p"/invoices"}>
                 Dashboard
               </.link>
             </div>
