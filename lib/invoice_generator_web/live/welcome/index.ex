@@ -57,7 +57,7 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
   end
 
   @impl true
-  def handle_params(_params, url, socket) do
+  def handle_params(_params, _url, socket) do
     {:noreply, socket}
   end
 end

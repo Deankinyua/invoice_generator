@@ -62,7 +62,6 @@ defmodule InvoiceGenerator.Records.Invoice do
       :project_description,
       :invoice_state
     ])
-    |> unique_constraint(:user_id)
     |> cast_embed(:items)
   end
 end

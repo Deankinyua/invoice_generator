@@ -5,6 +5,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   use InvoiceGeneratorWeb, :live_view
 
+  alias InvoiceGenerator.Records
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -27,11 +29,56 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
           <Layout.flex flex_direction="row">
             <section>filter</section>
 
-            <Button.button class="mt-2 w-min">
-              New
+            <Button.button
+              class="bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
+              phx-click={JS.patch(~p"/invoices/new")}
+            >
+              <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
+                <div><img src={~p"/images/invoices/plusbutton.svg"} alt="invoice button" /></div>
+
+                <div>New Invoice</div>
+              </Layout.flex>
+            </Button.button>
+
+            <Button.button
+              class="bg-[#7c5dfa] rounded-full pl-2 block sm:hidden"
+              phx-click={JS.patch(~p"/invoices/new")}
+            >
+              <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
+                <div><img src={~p"/images/invoices/plusbutton.svg"} alt="invoice button" /></div>
+
+                <div>New</div>
+              </Layout.flex>
             </Button.button>
           </Layout.flex>
         </Layout.flex>
+
+        <Layout.flex flex_direction="col" justify_content="center">
+          <section class="mt-32 mb-6">
+            <img src={~p"/images/invoices/campaign.svg"} alt="invoice button" />
+          </section>
+          <Text.subtitle color="black" class="text-2xl font-semibold py-6">
+            There is nothing here
+          </Text.subtitle>
+          <Text.text>Create an invoice by clicking the</Text.text>
+          <Text.text>New button and get started</Text.text>
+        </Layout.flex>
+
+        <.modal
+          :if={@live_action in [:new, :edit]}
+          id="invoices-modal"
+          show
+          on_cancel={JS.patch(~p"/invoices")}
+        >
+          <.live_component
+            module={InvoiceGeneratorWeb.InvoiceLive.FormComponent}
+            id="create invoice form"
+            title={@page_title}
+            current_user={@current_user.id}
+            action={@live_action}
+            patch={~p"/invoices"}
+          />
+        </.modal>
       </div>
     </div>
     """
@@ -43,7 +90,33 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   end
 
   @impl true
-  def handle_params(_params, _url, socket) do
-    {:noreply, socket}
+  def handle_params(params, _url, socket) do
+    {:noreply, apply_action(socket, socket.assigns.live_action, params)}
+  end
+
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    socket
+    |> assign(:page_title, "Edit Shop")
+    |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id))
+
+    # |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id, actor: socket.assigns.current_user))
+  end
+
+  defp apply_action(socket, :new, _params) do
+    socket
+    |> assign(:page_title, "New Shop")
+    |> assign(:shop, nil)
+  end
+
+  defp apply_action(socket, :index, _params) do
+    socket
+    |> assign(:page_title, "Listing Outlets")
+    |> assign(:shop, nil)
+  end
+
+  defp get_invoices(user_id) do
+    result = Records.get_invoices_by_user_id(user_id)
+
+    dbg(result)
   end
 end

@@ -37,6 +37,12 @@ defmodule InvoiceGenerator.Records do
   """
   def get_invoice!(id), do: Repo.get!(Invoice, id)
 
+  def get_invoices_by_user_id(user_id) do
+    query = from i in Invoice, where: i.user_id == ^user_id
+
+    Repo.all(query)
+  end
+
   @doc """
   Creates a invoice.
 
