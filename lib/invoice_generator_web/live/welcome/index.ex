@@ -8,35 +8,43 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="flex flex-col items-center border border-red-400">
-      <section class="flex flex-col items-center justify-start gap-6 border border-red-400 h-[90vh] py-8">
-        <div class="flex flex-row justify-center items-center gap-6 border border-blue-400 w-full">
-          <section><img src="images/mobilelogo.svg" /></section>
-          <section class="font-semibold text-[#7c5dfa] text-5xl">Invoice</section>
-        </div>
-        <div class="w-full flex flex-col items-center border border-red-400 mb-20 text-2xl font-semibold">
-          Sign in to Invoice
-        </div>
-        <div class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 border border-red-400">
-          <section class="border border-blue-400 w-6">
-            <img class="object-cover" src="images/googlesmall.svg" />
+    <div class="flex flex-col items-center">
+      <section class="w-full flex flex-col items-center justify-start gap-6  h-[90vh] py-8">
+        <div class="flex flex-row justify-center items-center gap-6  w-full">
+          <section>
+            <img src={~p"/images/mobilelogo.svg"} width="80" />
           </section>
-          <section class="text-lg border border-blue-400">Sign in with Google</section>
+          <section class="font-semibold text-[#7c5dfa] text-4xl">Invoice</section>
+        </div>
+        <div class="w-full flex flex-col items-center mb-20 text-2xl font-semibold">
+          <div class="text-tremor-content-emphasis text-2xl text-bold">Sign in to Invoice</div>
         </div>
         <.link
-          class="flex flex-row justify-center items-center gap-6 w-full mb-14 w-[75%]"
+          class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 py-2 border rounded-full"
+          patch={~p"/"}
+        >
+          <section class="w-6">
+            <img class="object-cover" src={~p"/images/googlesmall.svg"} />
+          </section>
+          <Text.text class="text-3xl">Sign in with Google</Text.text>
+        </.link>
+        <.link
+          class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 py-2 border rounded-full"
           patch={~p"/users/register"}
         >
-          <section class="border border-blue-400 w-6">
-            <img class="object-cover" width="60" src="images/email.svg" />
+          <section class="w-6">
+            <img class="object-cover" src={~p"/images/email.svg"} />
           </section>
-          <section class="text-lg">Continue with email</section>
+          <Text.text class="text-3xl">Continue with email</Text.text>
         </.link>
 
-        <div class="w-[68%] border border-green-400">
-          By creating an account, you agree to Invoice company's
-          <span class="font-bold">Terms of use</span>
-          and <span class="font-bold">Privacy Policy</span>
+        <div class="w-[68%] text-center text-gray-500 text-sm">
+          <p>By creating an account, you agree to</p>
+          <p class="mt-1">Invoice company's</p>
+          <p class="mt-1">
+            <span class="font-bold text-gray-500">Terms of use</span>
+            and <span class="font-bold text-gray-500">Privacy Policy.</span>
+          </p>
         </div>
       </section>
     </div>
@@ -49,7 +57,7 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
   end
 
   @impl true
-  def handle_params(_params, _url, socket) do
+  def handle_params(_params, url, socket) do
     {:noreply, socket}
   end
 end
