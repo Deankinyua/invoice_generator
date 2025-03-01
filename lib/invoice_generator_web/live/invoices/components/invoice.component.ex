@@ -165,8 +165,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
             <.input field={@form[:project_description]} type="text" placeholder="Postal Code..." />
           </Layout.col>
 
-          <div id="container_stream_items" phx-update="stream">
-            <div :for={{dom_id, item} <- @streams.items} id={dom_id}>
+          <div class="border border-red-400">
+            <%= for item <- @items do %>
               <Layout.col class="space-y-1.5">
                 <label for="name_field">
                   <Text.text class="text-tremor-content">
@@ -196,7 +196,17 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
 
                 <.input field={@form[item.price]} type="number" placeholder="Price..." />
               </Layout.col>
-            </div>
+
+              <Button.button
+                variant="secondary"
+                size="xs"
+                class="mt-2 w-min"
+                phx-click={JS.push("remove_item", value: %{id: item.id})}
+                phx-target={@myself}
+              >
+                Remove Item
+              </Button.button>
+            <% end %>
           </div>
 
           <Button.button
@@ -223,7 +233,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
-     |> stream(:items, [])
+     |> assign(:items, [])
      |> assign(payment_terms: Helpers.payment_terms())
      |> assign(item_count: 0)
      |> assign_form()}
@@ -255,6 +265,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
 
   @impl true
   def handle_event("add_new_item", _params, socket) do
+    items = socket.assigns.items
+
     count = socket.assigns.item_count
 
     new_count = count + 1
@@ -264,19 +276,37 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
     price = "product-" <> Integer.to_string(new_count) <> "-price"
 
     new_item = %{
-      id: UUID.uuid4(),
+      id: new_count,
       name: String.to_atom(name),
       quantity: String.to_atom(quantity),
       price: String.to_atom(price)
     }
 
-    socket = stream_insert(socket, :items, new_item)
+    # to append the new_item into our list
+    new_items = items ++ [new_item]
 
     {
       :noreply,
       socket
       |> assign(item_count: new_count)
+      |> assign(:items, new_items)
     }
+  end
+
+  @impl true
+  def handle_event("remove_item", %{"id" => id}, socket) do
+    items = socket.assigns.items
+
+    item =
+      Enum.filter(items, fn x -> x.id == id end)
+      |> Enum.at(0)
+
+    new_items =
+      Enum.filter(items, fn x -> x != item end)
+
+    {:noreply,
+     socket
+     |> assign(items: new_items)}
   end
 
   # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
