@@ -127,11 +127,14 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
               </Text.text>
             </label>
 
-            <DatePicker.date_picker
-              id="invoice_date"
-              on_change="change_date"
-              day_indicator_class="bg-[#7c5dfa]"
-            />
+            <div>
+              <DatePicker.date_picker
+                id="invoice_date"
+                date={Date.to_string(@form[:invoice_date].value)}
+                on_change="change_date"
+                day_indicator_class="bg-[#7c5dfa]"
+              />
+            </div>
           </Layout.col>
 
           <Layout.col class="space-y-1.5">
@@ -228,6 +231,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"invoice" => invoice_params}, socket) do
+    date = socket.assigns.invoice_date
+
+    invoice_date_map = %{"invoice_date" => date}
+
+    invoice_params = Map.merge(invoice_params, invoice_date_map)
+
     invoice = socket.assigns.invoice
 
     socket = create_and_assign_form(socket, invoice, invoice_params)
@@ -277,7 +286,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
 
     case Helpers.get_user(user_id) do
       nil ->
-        invoice = %Invoice{user_id: user_id}
+        invoice = %Invoice{user_id: user_id, invoice_date: Date.utc_today()}
 
         socket = create_and_assign_form(socket, invoice)
         socket
@@ -288,7 +297,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
           from_address: user_profile.street,
           from_city: user_profile.city,
           from_country: user_profile.country,
-          from_post_code: user_profile.postal_code
+          from_post_code: user_profile.postal_code,
+          invoice_date: Date.utc_today()
         }
 
         socket = create_and_assign_form(socket, invoice)

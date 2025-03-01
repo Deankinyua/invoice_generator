@@ -77,6 +77,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             current_user={@current_user.id}
             action={@live_action}
             patch={~p"/invoices"}
+            invoice_date={@invoice_date}
           />
         </.modal>
       </div>
@@ -86,7 +87,11 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    date = Date.utc_today()
+
+    {:ok,
+     socket
+     |> assign(invoice_date: date)}
   end
 
   @impl true
@@ -120,7 +125,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   @impl true
   def handle_event("change_date", %{"date" => date}, socket) do
-    dbg(date)
-    {:noreply, socket}
+    {:noreply,
+     socket
+     |> assign(invoice_date: date)}
   end
 end
