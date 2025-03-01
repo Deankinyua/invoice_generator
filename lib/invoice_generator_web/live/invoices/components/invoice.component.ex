@@ -1,6 +1,9 @@
 defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
   use InvoiceGeneratorWeb, :live_component
 
+  alias InvoiceGenerator.{Records, Helpers}
+  alias InvoiceGenerator.Records.Invoice
+
   @impl true
   def render(assigns) do
     ~H"""
@@ -17,95 +20,194 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
         <Layout.divider class="my-4" />
 
         <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
-          <%= if @form.source.type == :create do %>
-            <Layout.col class="space-y-1.5">
-              <label for="name_field">
-                <Text.text class="text-tremor-content">
-                  Shop Name
-                </Text.text>
-              </label>
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Street Address
+              </Text.text>
+            </label>
 
-              <Input.text_input
-                id="name"
-                name={@form[:name].name}
-                placeholder="Shop Name..."
-                type="text"
-                field={@form[:name]}
-                value={@form[:name].value}
-                required="true"
-              />
-            </Layout.col>
+            <.input field={@form[:from_address]} type="text" placeholder="Street Address..." />
+          </Layout.col>
 
-            <Layout.col class="space-y-1.5">
-              <label for="region[region_id]">
-                <Text.text class="text-tremor-content">
-                  Region Name
-                </Text.text>
-              </label>
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                City
+              </Text.text>
+            </label>
 
-              <Select.select
-                id="region[:region_id]"
-                name={@form[:region_id].name}
-                placeholder="Select..."
-                value={@form[:region_id].value}
-                phx-update="ignore"
-                required={true}
-              >
-                <:item :for={%{id: _id, name: name} <- @regions}>
-                  {name}
-                </:item>
-              </Select.select>
-            </Layout.col>
-          <% end %>
+            <.input field={@form[:from_city]} type="text" placeholder="City..." />
+          </Layout.col>
 
-          <%= if @form.source.type == :update do %>
-            <Layout.col class="space-y-1.5">
-              <label for="name_field">
-                <Text.text class="text-tremor-content">
-                  Shop Name
-                </Text.text>
-              </label>
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Post Code
+              </Text.text>
+            </label>
 
-              <Input.text_input
-                disabled
-                id="name"
-                name={@form[:name].name}
-                placeholder="Shop Name..."
-                type="text"
-                field={@form[:name]}
-                value={@form[:name].value}
-                required="true"
-              />
-            </Layout.col>
+            <.input field={@form[:from_post_code]} type="text" placeholder="Postal Code..." />
+          </Layout.col>
 
-            <Layout.col class="space-y-1.5">
-              <label for="region[region_id]">
-                <Text.text class="text-tremor-content">
-                  Region Name
-                </Text.text>
-              </label>
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Country
+              </Text.text>
+            </label>
 
-              <Select.select
-                id="region[:region_id]"
-                name={@form[:region_id].name}
-                placeholder="Select..."
-                value={@form[:region_id].value}
-                phx-update="ignore"
-                required={true}
-              >
-                <:item :for={%{id: _id, name: name} <- @regions}>
-                  {name}
-                </:item>
-              </Select.select>
-            </Layout.col>
-          <% end %>
+            <.input field={@form[:from_country]} type="text" placeholder="Country..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Client's Name
+              </Text.text>
+            </label>
+
+            <.input field={@form[:to_client_name]} type="text" placeholder="Client's Name..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Client's Email
+              </Text.text>
+            </label>
+
+            <.input field={@form[:to_client_email]} type="text" placeholder=" Client's Email..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Street Address
+              </Text.text>
+            </label>
+
+            <.input field={@form[:to_address]} type="text" placeholder="Street Address..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                City
+              </Text.text>
+            </label>
+
+            <.input field={@form[:to_city]} type="text" placeholder="City..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Post Code
+              </Text.text>
+            </label>
+
+            <.input field={@form[:to_post_code]} type="text" placeholder="Postal Code..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Country
+              </Text.text>
+            </label>
+
+            <.input field={@form[:to_country]} type="text" placeholder="Country..." />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Invoice Date
+              </Text.text>
+            </label>
+
+            <DatePicker.date_picker
+              id="invoice_date"
+              on_change="change_date"
+              day_indicator_class="bg-[#7c5dfa]"
+            />
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Payment Terms
+              </Text.text>
+            </label>
+            <Select.search_select
+              id="country_id"
+              name={@form[:invoice_due].name}
+              placeholder="Payment terms"
+              value={@form[:invoice_due].value}
+            >
+              <:item :for={%{name: name} <- @payment_terms}>
+                {name}
+              </:item>
+            </Select.search_select>
+          </Layout.col>
+
+          <Layout.col class="space-y-1.5">
+            <label for="name_field">
+              <Text.text class="text-tremor-content">
+                Project Description
+              </Text.text>
+            </label>
+
+            <.input field={@form[:project_description]} type="text" placeholder="Postal Code..." />
+          </Layout.col>
+
+          <div id="container_stream_items" phx-update="stream">
+            <div :for={{dom_id, item} <- @streams.items} id={dom_id}>
+              <Layout.col class="space-y-1.5">
+                <label for="name_field">
+                  <Text.text class="text-tremor-content">
+                    Item Name
+                  </Text.text>
+                </label>
+
+                <.input field={@form[item.name]} type="text" placeholder="Item Name..." />
+              </Layout.col>
+
+              <Layout.col class="space-y-1.5">
+                <label for="name_field">
+                  <Text.text class="text-tremor-content">
+                    Quantity
+                  </Text.text>
+                </label>
+
+                <.input field={@form[item.quantity]} type="number" placeholder="Quantity..." />
+              </Layout.col>
+
+              <Layout.col class="space-y-1.5">
+                <label for="name_field">
+                  <Text.text class="text-tremor-content">
+                    Price
+                  </Text.text>
+                </label>
+
+                <.input field={@form[item.price]} type="number" placeholder="Price..." />
+              </Layout.col>
+            </div>
+          </div>
+
+          <Button.button
+            variant="secondary"
+            size="xl"
+            class="mt-2 w-min"
+            phx-click={JS.push("add_new_item")}
+            phx-target={@myself}
+          >
+            Add new item
+          </Button.button>
 
           <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
-            <%= if @form.source.type == :update do %>
-              Update Shop
-            <% else %>
-              Create Shop
-            <% end %>
+            Create Invoice
           </Button.button>
         </.form>
       </Layout.col>
@@ -118,60 +220,92 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FormComponent do
     {:ok,
      socket
      |> assign(assigns)
+     |> stream(:items, [])
+     |> assign(payment_terms: Helpers.payment_terms())
+     |> assign(item_count: 0)
      |> assign_form()}
   end
 
   @impl true
-  def handle_event("validate", %{"shop" => shop_params}, socket) do
-    {:noreply, assign(socket, form: AshPhoenix.Form.validate(socket.assigns.form, shop_params))}
+  def handle_event("validate", %{"invoice" => invoice_params}, socket) do
+    invoice = socket.assigns.invoice
+
+    socket = create_and_assign_form(socket, invoice, invoice_params)
+
+    {:noreply, socket}
   end
 
-  def handle_event("save", %{"shop" => shop_params}, socket) do
-    region_id =
-      Enum.find_value(socket.assigns.regions, fn reg ->
-        if reg.name == Map.get(shop_params, "region_id"), do: reg.id, else: nil
-      end)
+  def handle_event("save", %{"invoice" => invoice_params}, socket) do
+    due_days = invoice_params["invoice_due"]
+    map = Helpers.string_mappings_of_days()
+    days = map[due_days]
+    dbg(days)
 
-    shop_params =
-      Map.merge(shop_params, %{
-        "region_id" => region_id
-      })
+    {:noreply, socket}
+  end
 
-    case AshPhoenix.Form.submit(socket.assigns.form, params: shop_params) do
-      {:ok, shop} ->
-        notify_parent({:saved, shop})
+  @impl true
+  def handle_event("add_new_item", _params, socket) do
+    count = socket.assigns.item_count
 
-        socket =
-          socket
-          |> put_flash(:info, "Shop #{socket.assigns.form.source.type}d successfully")
-          |> push_patch(to: socket.assigns.patch)
+    new_count = count + 1
 
-        {:noreply, socket}
+    name = "product-" <> Integer.to_string(new_count)
+    quantity = "product-" <> Integer.to_string(new_count) <> "-quantity"
+    price = "product-" <> Integer.to_string(new_count) <> "-price"
 
-      {:error, _form} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "You are not authorized to perform this action")
-         |> push_patch(to: socket.assigns.patch)}
+    new_item = %{
+      id: UUID.uuid4(),
+      name: String.to_atom(name),
+      quantity: String.to_atom(quantity),
+      price: String.to_atom(price)
+    }
+
+    socket = stream_insert(socket, :items, new_item)
+
+    {
+      :noreply,
+      socket
+      |> assign(item_count: new_count)
+    }
+  end
+
+  # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+
+  defp assign_form(socket) do
+    user_id = socket.assigns.current_user
+
+    case Helpers.get_user(user_id) do
+      nil ->
+        invoice = %Invoice{user_id: user_id}
+
+        socket = create_and_assign_form(socket, invoice)
+        socket
+
+      user_profile ->
+        invoice = %Invoice{
+          user_id: user_id,
+          from_address: user_profile.street,
+          from_city: user_profile.city,
+          from_country: user_profile.country,
+          from_post_code: user_profile.postal_code
+        }
+
+        socket = create_and_assign_form(socket, invoice)
+        socket
     end
   end
 
-  defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
+  defp create_and_assign_form(socket, invoice, params \\ %{}) do
+    changeset = Records.change_invoice(invoice, params)
 
-  defp assign_form(%{assigns: %{shop: shop}} = socket) do
-    form =
-      if shop do
-        AshPhoenix.Form.for_update(shop, :update_region,
-          as: "shop",
-          actor: socket.assigns.current_user
-        )
-      else
-        AshPhoenix.Form.for_create(InvoiceGenerator.Outlet.Shop, :new,
-          as: "shop",
-          actor: socket.assigns.current_user
-        )
-      end
+    form = to_form(changeset, as: "invoice")
 
-    assign(socket, form: to_form(form))
+    socket =
+      socket
+      |> assign(invoice: invoice)
+      |> assign(form: form)
+
+    socket
   end
 end

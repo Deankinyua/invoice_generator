@@ -15,6 +15,9 @@ defmodule InvoiceGenerator.Helpers do
     end
   end
 
+  @doc """
+  Gets a user's profile
+  """
   def get_user(user_id) do
     Profile.get_user_profile_by_user_id(user_id)
   end
@@ -216,6 +219,19 @@ defmodule InvoiceGenerator.Helpers do
       "Zambia",
       "Zimbabwe"
     ]
+  end
+
+  def payment_terms() do
+    [
+      %{name: "Net 30 Days"},
+      %{name: "Net 14 Days"},
+      %{name: "Net 7 Days"},
+      %{name: "Net 1 Day"}
+    ]
+  end
+
+  def string_mappings_of_days do
+    %{"Net 30 Days" => 30, "Net 14 Days" => 14, "Net 7 Days" => 7, "Net 1 Day" => 1}
   end
 
   def get_map_of_errors(errors) do

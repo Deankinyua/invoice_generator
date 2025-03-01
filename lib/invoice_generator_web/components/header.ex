@@ -47,9 +47,9 @@ defmodule InvoiceGeneratorWeb.Header do
 
   defp theme_icon(is_dark) do
     if is_dark == false do
-      "images/header/moon.svg"
+      ~p"/images/header/moon.svg"
     else
-      "images/header/light.svg"
+      ~p"/images/header/light.svg"
     end
   end
 
@@ -61,7 +61,7 @@ defmodule InvoiceGeneratorWeb.Header do
         <Layout.flex>
           <section>
             <.link>
-              <img src="images/header/logo.svg" alt="home" />
+              <img src={~p"/images/header/logo.svg"} alt="home" />
             </.link>
           </section>
           <section>

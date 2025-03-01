@@ -115,8 +115,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   end
 
   defp get_invoices(user_id) do
-    result = Records.get_invoices_by_user_id(user_id)
+    _result = Records.get_invoices_by_user_id(user_id)
+  end
 
-    dbg(result)
+  @impl true
+  def handle_event("change_date", %{"date" => date}, socket) do
+    dbg(date)
+    {:noreply, socket}
   end
 end
