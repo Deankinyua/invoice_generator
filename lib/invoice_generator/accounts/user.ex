@@ -79,8 +79,16 @@ defmodule InvoiceGenerator.Accounts.User do
   defp validate_name_and_username(changeset, opts) do
     changeset
     |> validate_required([:name, :username])
-    |> validate_length(:name, min: 4, max: 60)
-    |> validate_length(:username, min: 4, max: 60)
+    |> validate_length(:name,
+      min: 4,
+      max: 60,
+      message: "the name must be between 4 and 60 characters"
+    )
+    |> validate_length(:username,
+      min: 4,
+      max: 60,
+      message: "the username must be between 4 and 60 characters"
+    )
     |> maybe_validate_unique_username(opts)
   end
 

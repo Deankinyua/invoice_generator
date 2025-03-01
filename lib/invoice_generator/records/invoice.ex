@@ -62,6 +62,16 @@ defmodule InvoiceGenerator.Records.Invoice do
       :project_description,
       :invoice_state
     ])
+    |> validate_client_email()
     |> cast_embed(:items)
+  end
+
+  defp validate_client_email(changeset) do
+    changeset
+    |> validate_required([:to_client_email])
+    |> validate_format(:to_client_email, ~r/^[^\s]+@[^\s]+$/,
+      message: "must have the @ sign and no spaces"
+    )
+    |> validate_length(:to_client_email, max: 160)
   end
 end

@@ -30,9 +30,25 @@ defmodule InvoiceGenerator.Profile.UserProfile do
   @spec validate_the_lengths(Ecto.Changeset.t()) :: Ecto.Changeset.t()
   def validate_the_lengths(changeset) do
     changeset
-    |> validate_length(:country, max: 80)
-    |> validate_length(:city, max: 40)
-    |> validate_length(:phone, max: 15)
-    |> validate_length(:postal_code, max: 80)
+    |> validate_length(:country,
+      min: 3,
+      max: 40,
+      message: "the country must be between 3 and 40 characters"
+    )
+    |> validate_length(:city,
+      min: 3,
+      max: 40,
+      message: "the city must be between 3 and 40 characters"
+    )
+    |> validate_length(:phone,
+      min: 3,
+      max: 15,
+      message: "the phone must be between 3 and 15 characters"
+    )
+    |> validate_length(:postal_code,
+      min: 3,
+      max: 15,
+      message: "the country must be between 3 and 15 characters"
+    )
   end
 end
