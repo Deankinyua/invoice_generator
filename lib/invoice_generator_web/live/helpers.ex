@@ -380,11 +380,11 @@ defmodule InvoiceGenerator.Helpers do
     list = Enum.to_list(1..count)
 
     Enum.map(list, fn x ->
-      special(params, x)
+      get_map_of_product(params, x)
     end)
   end
 
-  def special(params, count) do
+  def get_map_of_product(params, count) do
     # * Here we return a list of tuples with each count iteration
     list_of_tuples =
       Enum.reduce(params, [], fn {key, value}, list ->
