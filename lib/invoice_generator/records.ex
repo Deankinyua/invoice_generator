@@ -6,7 +6,7 @@ defmodule InvoiceGenerator.Records do
   import Ecto.Query, warn: false
   alias InvoiceGenerator.Repo
 
-  alias InvoiceGenerator.Records.Invoice
+  alias InvoiceGenerator.Records.{Invoice, Item}
 
   @doc """
   Returns the list of invoices.
@@ -106,5 +106,11 @@ defmodule InvoiceGenerator.Records do
   """
   def change_invoice(%Invoice{} = invoice, attrs \\ %{}) do
     Invoice.changeset(invoice, attrs)
+  end
+
+  # * Producing a changeset for our items
+
+  def change_invoice_items(%Item{} = invoice_item, attrs \\ %{}) do
+    Item.changeset(invoice_item, attrs)
   end
 end

@@ -120,7 +120,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     # * The presign_upload function generates metadata
     socket =
       socket
-      |> assign(form: to_form(Profile.change_user_picture(%Picture{}), as: :picture))
       |> assign(:uploaded_files, [])
       |> allow_upload(:photo,
         accept: ~w(.png .jpg .jpeg),

@@ -71,13 +71,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
           on_cancel={JS.patch(~p"/invoices")}
         >
           <.live_component
-            module={InvoiceGeneratorWeb.InvoiceLive.FormComponent}
-            id="create invoice form"
+            module={InvoiceGeneratorWeb.InvoiceLive.DetailsComponent}
+            id="invoice main details form"
             title={@page_title}
             current_user={@current_user.id}
             action={@live_action}
             patch={~p"/invoices"}
-            invoice_date={@invoice_date}
+          />
+
+          <.live_component
+            module={InvoiceGeneratorWeb.InvoiceLive.DateComponent}
+            id="invoice date information form"
+            current_user={@current_user.id}
+            action={@live_action}
+          />
+
+          <.live_component
+            module={InvoiceGeneratorWeb.InvoiceLive.ItemComponent}
+            id="invoice items information form"
+            current_user={@current_user.id}
+            action={@live_action}
           />
         </.modal>
       </div>
@@ -87,11 +100,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    date = Date.utc_today()
-
-    {:ok,
-     socket
-     |> assign(invoice_date: date)}
+    {:ok, socket}
   end
 
   @impl true
@@ -121,12 +130,5 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   defp get_invoices(user_id) do
     _result = Records.get_invoices_by_user_id(user_id)
-  end
-
-  @impl true
-  def handle_event("change_date", %{"date" => date}, socket) do
-    {:noreply,
-     socket
-     |> assign(invoice_date: date)}
   end
 end

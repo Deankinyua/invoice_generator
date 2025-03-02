@@ -18,6 +18,7 @@ defmodule InvoiceGenerator.Records.Invoice do
     field :to_post_code, :string
     field :to_country, :string
     field :invoice_date, :date
+    field :invoice_due_days, :string, virtual: true
     field :invoice_due, :date
     field :project_description, :string
     field :invoice_state, Ecto.Enum, values: [:pending, :draft, :paid]
