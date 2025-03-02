@@ -12,6 +12,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
         <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <div>
             <%= for item <- @items do %>
+              <div class={show_errors_on_item_field(item.id, @list_of_submitted_params)}>
+                <p class="text-red-400">This item field contains errors</p>
+              </div>
               <Layout.col class="space-y-1.5">
                 <label for="name_field">
                   <Text.text class="text-tremor-content">
@@ -52,7 +55,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
                 <.input field={@form[item.total]} type="text" readonly placeholder="Total..." />
               </Layout.col>
 
-              <div class={only_show_for_last_item(item.id, @item_count)}>
+              <div class={show_remove_item_button(item.id, @item_count)}>
                 <Button.button
                   variant="secondary"
                   size="xs"
@@ -92,17 +95,18 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(assigns)
      |> assign(:items, [])
      |> assign(item_count: 0)
+     |> assign(list_of_submitted_params: [])
      |> assign(item_error: "")
      |> assign_form()}
   end
 
   @impl true
   def handle_event("validate", %{"items" => item_params}, socket) do
+    # * the main purpose of whatever is here is to offer feedback to the user
     item_count = socket.assigns.item_count
 
     item_params = remove_unused_fields(item_params)
 
-    dbg(item_params)
     item_params = Helpers.get_totals(item_params, item_count)
     dbg(item_params)
 
@@ -124,11 +128,22 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
       false ->
         %{"items" => item_params} = params
         count = socket.assigns.item_count
+        # dbg(item_params)
         list_of_item_params = Helpers.get_list_of_params(item_params, count)
 
-        dbg(list_of_item_params)
+        case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
+          nil ->
+            {:noreply,
+             socket
+             |> assign(list_of_submitted_params: [])
+             |> push_patch(to: socket.assigns.patch)
+             |> put_flash(:info, "You are such a bad ass Programmer!!")}
 
-        {:noreply, socket}
+          _map ->
+            {:noreply,
+             socket
+             |> assign(list_of_submitted_params: list_of_item_params)}
+        end
     end
   end
 
@@ -210,11 +225,27 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     map_of_products
   end
 
-  defp only_show_for_last_item(id, count) do
+  defp show_remove_item_button(id, count) do
     if id == count do
       "block"
     else
       "hidden"
+    end
+  end
+
+  defp show_errors_on_item_field(id, list_of_params) do
+    item_index = id - 1
+
+    if list_of_params == [] do
+      "hidden"
+    else
+      item_map = Enum.at(list_of_params, item_index)
+
+      if item_map.errors == true do
+        "block"
+      else
+        "hidden"
+      end
     end
   end
 end

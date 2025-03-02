@@ -406,6 +406,22 @@ defmodule InvoiceGenerator.Helpers do
       Enum.map(list_of_tuples, fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
+    # * adds an error field to detect missing details
+
+    map_of_product =
+      case Enum.find(map_of_product, fn {_key, value} ->
+             value == "" or value == "quantity and price must be numbers"
+           end) do
+        nil ->
+          map_of_product = Map.put(map_of_product, :errors, false)
+          map_of_product
+
+        _ ->
+          map_of_product = Map.put(map_of_product, :errors, true)
+          map_of_product
+      end
+
+    dbg(map_of_product)
     map_of_product
   end
 end

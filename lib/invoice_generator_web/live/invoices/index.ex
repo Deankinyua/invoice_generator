@@ -91,6 +91,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             id="invoice items information form"
             current_user={@current_user.id}
             action={@live_action}
+            patch={~p"/invoices"}
           />
         </.modal>
       </div>
