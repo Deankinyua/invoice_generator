@@ -1,16 +1,16 @@
 defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
   use InvoiceGeneratorWeb, :live_component
 
-  alias InvoiceGenerator.{Records, Helpers}
-  alias InvoiceGenerator.Records.Item
+  alias InvoiceGenerator.{Helpers}
 
   @impl true
   def render(assigns) do
     ~H"""
     <section>
       <Layout.col>
+        <p class="text-red-400">{@item_error}</p>
         <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
-          <div class="border border-red-400">
+          <div>
             <%= for item <- @items do %>
               <Layout.col class="space-y-1.5">
                 <label for="name_field">
@@ -49,7 +49,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
                   </Text.text>
                 </label>
 
-                <.input field={@form[item.total]} type="text" disabled placeholder="Total..." />
+                <.input field={@form[item.total]} type="text" readonly placeholder="Total..." />
               </Layout.col>
 
               <div class={only_show_for_last_item(item.id, @item_count)}>
@@ -92,6 +92,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(assigns)
      |> assign(:items, [])
      |> assign(item_count: 0)
+     |> assign(item_error: "")
      |> assign_form()}
   end
 
@@ -109,13 +110,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
 
     {:noreply,
      socket
-     |> assign(form: form)}
+     |> assign(form: form)
+     |> assign(item_error: "")}
   end
 
-  def handle_event("save", %{"items" => item_params}, socket) do
-    dbg(item_params)
+  def handle_event("save", params, socket) do
+    case params == %{} do
+      true ->
+        {:noreply,
+         socket
+         |> assign(item_error: "Please add at least one item!")}
 
-    {:noreply, socket}
+      false ->
+        %{"items" => item_params} = params
+        count = socket.assigns.item_count
+        list_of_item_params = Helpers.get_list_of_params(item_params, count)
+
+        dbg(list_of_item_params)
+
+        {:noreply, socket}
+    end
   end
 
   @impl true

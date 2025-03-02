@@ -361,4 +361,51 @@ defmodule InvoiceGenerator.Helpers do
     string_keys_map = Map.new(map, fn {key, value} -> {"#{key}", value} end)
     string_keys_map
   end
+
+  def get_list_of_params(params, count) do
+    # params = %{
+    #   "product_1_name" => "mango",
+    #   "product_1_price" => "54",
+    #   "product_1_quantity" => "34",
+    #   "product_2_name" => "colgate",
+    #   "product_2_price" => "56",
+    #   "product_2_quantity" => "43",
+    #   "product_3_name" => "apple",
+    #   "product_3_price" => "23",
+    #   "product_3_quantity" => "19"
+    # }
+
+    # count = 2
+
+    list = Enum.to_list(1..count)
+
+    Enum.map(list, fn x ->
+      special(params, x)
+    end)
+  end
+
+  def special(params, count) do
+    # * Here we return a list of tuples with each count iteration
+    list_of_tuples =
+      Enum.reduce(params, [], fn {key, value}, list ->
+        case String.starts_with?(key, "product_#{count}") do
+          true ->
+            prefix = "product_#{count}_"
+            key = String.replace_prefix(key, prefix, "")
+            # We need to include the count as part of our return value
+            [{key, value} | list]
+
+          false ->
+            list
+        end
+      end)
+
+    # * converts the list of tuples into a map with atom keys
+
+    map_of_product =
+      Enum.map(list_of_tuples, fn {x, y} -> {String.to_atom(x), y} end)
+      |> Enum.into(%{})
+
+    map_of_product
+  end
 end
