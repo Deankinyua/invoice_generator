@@ -17,7 +17,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
               </Text.text>
             </label>
 
-            <.input field={@form[:invoice_date]} type="date" placeholder="Invoice Date..." />
+            <.input field={@form[:invoice_date]} readonly type="date" placeholder="Invoice Date..." />
           </Layout.col>
 
           <Layout.col class="space-y-1.5">
@@ -74,7 +74,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
     invoice = socket.assigns.invoice
 
     changeset = Records.change_invoice(invoice, date_params)
-    dbg(changeset)
+
+    _result =
+      case Keyword.get(changeset.errors, :project_description) do
+        nil ->
+          # * description is valid
+
+          invoice_date = changeset.data.invoice_date
+          date_details = changeset.changes
+
+          date_details = Map.put(date_details, :invoice_date, invoice_date)
+
+          send(self(), {:valid_date_details, date_details})
+
+          :ok
+
+        _ ->
+          # * description is invalid
+
+          :error
+      end
 
     form = to_form(changeset, action: :validate, as: "date_details")
 
@@ -95,7 +114,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
 
   defp create_and_assign_form(socket, invoice, params \\ %{}) do
     changeset = Records.change_invoice(invoice, params)
-    # dbg(changeset)
 
     form = to_form(changeset, as: "date_details")
 
@@ -116,8 +134,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
     {:ok, invoice_date} = Date.from_iso8601(invoice_date_string)
 
     due_date = Date.add(invoice_date, days)
-
-    dbg(due_date)
 
     params = Map.merge(params, %{"invoice_due" => due_date})
 

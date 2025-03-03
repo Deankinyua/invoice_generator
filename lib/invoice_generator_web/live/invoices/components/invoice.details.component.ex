@@ -137,17 +137,31 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
   def handle_event("validate", %{"invoice_details" => invoice_params}, socket) do
     invoice = socket.assigns.invoice
 
-    changeset = Records.change_invoice(invoice, invoice_params)
+    changeset = Records.change_invoice_details(invoice, invoice_params)
 
-    # dbg(changeset)
+    _validity_status =
+      case changeset.valid? do
+        true ->
+          data = changeset.data
+
+          sender_initial_data = extract_changeset_data(data)
+
+          combined_business_data = Map.merge(sender_initial_data, changeset.changes)
+
+          send(self(), {:valid_business_details, combined_business_data})
+
+          :ok
+
+        false ->
+          :error
+      end
+
     form = to_form(changeset, action: :validate, as: "invoice_details")
 
     {:noreply,
      socket
      |> assign(form: form)}
   end
-
-  # defp notify_parent(msg), do: send(self(), {__MODULE__, msg})
 
   defp assign_form(socket) do
     user_id = socket.assigns.current_user
@@ -174,7 +188,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
   end
 
   defp create_and_assign_form(socket, invoice, params \\ %{}) do
-    changeset = Records.change_invoice(invoice, params)
+    changeset = Records.change_invoice_details(invoice, params)
 
     form = to_form(changeset, as: "invoice_details")
 
@@ -184,5 +198,15 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
       |> assign(form: form)
 
     socket
+  end
+
+  defp extract_changeset_data(data) do
+    %{
+      user_id: data.user_id,
+      from_address: data.from_address,
+      from_city: data.from_city,
+      from_post_code: data.from_post_code,
+      from_country: data.from_country
+    }
   end
 end

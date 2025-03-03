@@ -108,6 +108,10 @@ defmodule InvoiceGenerator.Records do
     Invoice.changeset(invoice, attrs)
   end
 
+  def change_invoice_details(%Invoice{} = invoice, attrs \\ %{}) do
+    Invoice.details_changeset(invoice, attrs)
+  end
+
   # * Producing a changeset for our items
 
   def change_invoice_items(%Item{} = invoice_item, attrs \\ %{}) do

@@ -65,6 +65,41 @@ defmodule InvoiceGenerator.Records.Invoice do
     ])
     |> validate_client_email()
     |> cast_embed(:items)
+    |> validate_length(:project_description,
+      min: 10,
+      max: 100,
+      message: "The description must range between 10 and 100 characters in length"
+    )
+  end
+
+  @doc false
+  def details_changeset(invoice, attrs) do
+    invoice
+    |> cast(attrs, [
+      :from_address,
+      :from_city,
+      :from_post_code,
+      :from_country,
+      :to_client_name,
+      :to_client_email,
+      :to_address,
+      :to_city,
+      :to_post_code,
+      :to_country
+    ])
+    |> validate_required([
+      :from_address,
+      :from_city,
+      :from_post_code,
+      :from_country,
+      :to_client_name,
+      :to_client_email,
+      :to_address,
+      :to_city,
+      :to_post_code,
+      :to_country
+    ])
+    |> validate_client_email()
   end
 
   defp validate_client_email(changeset) do

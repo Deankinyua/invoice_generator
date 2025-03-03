@@ -108,7 +108,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     item_params = remove_unused_fields(item_params)
 
     item_params = Helpers.get_totals(item_params, item_count)
-    dbg(item_params)
 
     form = to_form(item_params, as: "items")
 
@@ -128,18 +127,15 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
       false ->
         %{"items" => item_params} = params
         count = socket.assigns.item_count
-        # dbg(item_params)
         list_of_item_params = Helpers.get_list_of_params(item_params, count)
-
-        dbg(list_of_item_params)
 
         case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
           nil ->
+            send(self(), {:valid_item_details, list_of_item_params})
+
             {:noreply,
              socket
-             |> assign(list_of_submitted_params: [])
-             |> push_patch(to: socket.assigns.patch)
-             |> put_flash(:info, "You are such a bad ass Programmer!!")}
+             |> assign(list_of_submitted_params: [])}
 
           _map ->
             {:noreply,
@@ -203,10 +199,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
   end
 
   defp assign_form(socket) do
-    # changeset = Records.change_invoice_items(%Item{})
-
-    # dbg(changeset)
-
     form = to_form(%{}, as: "items")
 
     assign(socket, :form, form)

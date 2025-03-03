@@ -132,4 +132,43 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   defp get_invoices(user_id) do
     _result = Records.get_invoices_by_user_id(user_id)
   end
+
+  @impl true
+  def handle_info({:valid_item_details, item_details}, socket) do
+    item_details =
+      Enum.map(item_details, fn map ->
+        Map.delete(map, :errors)
+      end)
+
+    case Map.get(socket.assigns, :date_details) do
+      nil ->
+        {:noreply, socket}
+
+      date_details ->
+        case Map.get(socket.assigns, :business_details) do
+          nil ->
+            {:noreply, socket}
+
+          business_details ->
+            {:noreply,
+             socket
+             |> push_patch(to: ~p"/invoices")
+             |> put_flash(:info, "you are a bad ass programmmer!!")}
+        end
+    end
+  end
+
+  @impl true
+  def handle_info({:valid_date_details, date_details}, socket) do
+    {:noreply,
+     socket
+     |> assign(date_details: date_details)}
+  end
+
+  @impl true
+  def handle_info({:valid_business_details, business_details}, socket) do
+    {:noreply,
+     socket
+     |> assign(business_details: business_details)}
+  end
 end
