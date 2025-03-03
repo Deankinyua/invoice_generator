@@ -421,7 +421,6 @@ defmodule InvoiceGenerator.Helpers do
           map_of_product
       end
 
-    dbg(map_of_product)
     map_of_product
   end
 end

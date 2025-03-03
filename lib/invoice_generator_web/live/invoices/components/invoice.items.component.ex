@@ -131,6 +131,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
         # dbg(item_params)
         list_of_item_params = Helpers.get_list_of_params(item_params, count)
 
+        dbg(list_of_item_params)
+
         case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
           nil ->
             {:noreply,
@@ -239,12 +241,16 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     if list_of_params == [] do
       "hidden"
     else
-      item_map = Enum.at(list_of_params, item_index)
+      case Enum.at(list_of_params, item_index) do
+        nil ->
+          "hidden"
 
-      if item_map.errors == true do
-        "block"
-      else
-        "hidden"
+        item_map ->
+          if item_map.errors == true do
+            "block"
+          else
+            "hidden"
+          end
       end
     end
   end
