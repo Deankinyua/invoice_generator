@@ -19,12 +19,16 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
         <Layout.divider class="my-4" />
 
-        <.form for={@form} phx-target={@myself} phx-change="validate">
+        <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Street Address
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Street Address
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:from_address]} type="text" placeholder="Street Address..." />
@@ -32,9 +36,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                City
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  City
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:from_city]} type="text" placeholder="City..." />
@@ -42,9 +50,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Post Code
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Post Code
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:from_post_code]} type="text" placeholder="Postal Code..." />
@@ -52,9 +64,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Country
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Country
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:from_country]} type="text" placeholder="Country..." />
@@ -62,9 +78,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Client's Name
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Client's Name
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:to_client_name]} type="text" placeholder="Client's Name..." />
@@ -72,9 +92,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Client's Email
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Client's Email
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:to_client_email]} type="text" placeholder=" Client's Email..." />
@@ -82,9 +106,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Street Address
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Street Address
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:to_address]} type="text" placeholder="Street Address..." />
@@ -92,9 +120,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                City
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  City
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:to_city]} type="text" placeholder="City..." />
@@ -102,9 +134,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Post Code
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Post Code
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:to_post_code]} type="text" placeholder="Postal Code..." />
@@ -112,13 +148,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           <Layout.col class="space-y-1.5">
             <label for="name_field">
-              <Text.text class="text-tremor-content">
-                Country
-              </Text.text>
+              <Layout.flex justify_content="start" align_items="center" class="gap-2">
+                <Text.text class="text-tremor-content">
+                  Country
+                </Text.text>
+
+                <section><img src={~p"/images/star.svg"} width="8" /></section>
+              </Layout.flex>
             </label>
 
             <.input field={@form[:to_country]} type="text" placeholder="Country..." />
           </Layout.col>
+
+          <Button.button
+            type="submit"
+            size="xl"
+            class="mt-2 w-min hidden"
+            phx-disable-with="Saving..."
+          >
+            Save Business Details
+          </Button.button>
         </.form>
       </Layout.col>
     </section>
@@ -155,6 +204,19 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
         false ->
           :error
       end
+
+    form = to_form(changeset, action: :validate, as: "invoice_details")
+
+    {:noreply,
+     socket
+     |> assign(form: form)}
+  end
+
+  @impl true
+  def handle_event("save", %{"invoice_details" => invoice_params}, socket) do
+    invoice = socket.assigns.invoice
+
+    changeset = Records.change_invoice_details(invoice, invoice_params)
 
     form = to_form(changeset, action: :validate, as: "invoice_details")
 
