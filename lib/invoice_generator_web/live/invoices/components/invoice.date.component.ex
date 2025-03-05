@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
     ~H"""
     <section>
       <Layout.col>
-        <.form for={@form} phx-target={@myself} phx-change="validate">
+        <.form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
           <Layout.col class="space-y-1.5">
             <label for="name_field">
               <Text.text class="text-tremor-content">
@@ -52,6 +52,15 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
               placeholder="Project Description..."
             />
           </Layout.col>
+
+          <Button.button
+            type="submit"
+            size="xl"
+            class="mt-2 w-min hidden"
+            phx-disable-with="Saving..."
+          >
+            Save Date Details
+          </Button.button>
         </.form>
       </Layout.col>
     </section>
@@ -94,6 +103,21 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
 
           :error
       end
+
+    form = to_form(changeset, action: :validate, as: "date_details")
+
+    {:noreply,
+     socket
+     |> assign(form: form)}
+  end
+
+  @impl true
+  def handle_event("save", %{"date_details" => date_params}, socket) do
+    date_params = get_the_invoice_due_date(date_params)
+
+    invoice = socket.assigns.invoice
+
+    changeset = Records.change_invoice(invoice, date_params)
 
     form = to_form(changeset, action: :validate, as: "date_details")
 
