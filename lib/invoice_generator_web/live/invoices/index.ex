@@ -5,7 +5,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.Records
+  alias InvoiceGenerator.{Records, Repo}
+
+  alias InvoiceGenerator.Records.Invoice
 
   @impl true
   def render(assigns) do
@@ -150,10 +152,30 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             {:noreply, socket}
 
           business_details ->
-            {:noreply,
-             socket
-             |> push_patch(to: ~p"/invoices")
-             |> put_flash(:info, "you are a bad ass programmmer!!")}
+            item_details = %{
+              items: item_details,
+              invoice_state: :pending,
+              user_id: socket.assigns.current_user.id
+            }
+
+            all_details = Map.merge(item_details, date_details)
+            all_details = Map.merge(all_details, business_details)
+
+            invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
+
+            case submit_the_invoice(invoice_changeset) do
+              {:ok, _record} ->
+                {:noreply,
+                 socket
+                 |> push_patch(to: ~p"/invoices")
+                 |> put_flash(:info, "Invoice was Successfully processed")}
+
+              {:error, _changeset} ->
+                {:noreply,
+                 socket
+                 |> push_patch(to: ~p"/invoices")
+                 |> put_flash(:error, "Details were not Submitted!!")}
+            end
         end
     end
   end
@@ -170,5 +192,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     {:noreply,
      socket
      |> assign(business_details: business_details)}
+  end
+
+  defp submit_the_invoice(changeset) do
+    Repo.insert(changeset)
   end
 end

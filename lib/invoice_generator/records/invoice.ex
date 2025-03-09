@@ -32,6 +32,7 @@ defmodule InvoiceGenerator.Records.Invoice do
   def changeset(invoice, attrs) do
     invoice
     |> cast(attrs, [
+      :user_id,
       :from_address,
       :from_city,
       :from_post_code,
@@ -48,6 +49,7 @@ defmodule InvoiceGenerator.Records.Invoice do
       :invoice_state
     ])
     |> validate_required([
+      :user_id,
       :from_address,
       :from_city,
       :from_post_code,
