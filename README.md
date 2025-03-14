@@ -1,4 +1,4 @@
-# InvoiceGenerator
+# InvoiceGenerator👀
 
 This is a Phoenix application with a PostgreSQL database
 
@@ -16,7 +16,7 @@ This is a Phoenix application with a PostgreSQL database
 
 - If using MacOS, Run your **Local MinIO Server** from the CMD
 
-```
+```zsh
 minio server ~/home/shared/
 ```
 
