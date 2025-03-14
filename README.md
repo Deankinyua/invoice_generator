@@ -17,7 +17,7 @@ This is a Phoenix application with a PostgreSQL database
 - If using MacOS, Run your **Local MinIO Server** from the CMD
 
 ```
-minio server path (e.g ~/home/shared/)
+minio server ~/home/shared/
 ```
 
 - Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
