@@ -20,6 +20,10 @@ This is a Phoenix application with a PostgreSQL database
 minio server ~/home/shared/
 ```
 
+- You will need to register to [Brevo](https://app.brevo.com/) to get an **API KEY** to send emails
+
+- Change the values of **S3_ACCESS_KEY_ID**, **S3_SECRET_ACCESS_KEY**,**S3_BUCKET** and **BREVO_API_KEY** to match your configuration.
+
 - Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
