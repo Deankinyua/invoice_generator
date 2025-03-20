@@ -55,16 +55,32 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
           </Layout.flex>
         </Layout.flex>
 
-        <Layout.flex flex_direction="col" justify_content="center">
-          <section class="mt-32 mb-6">
-            <img src={~p"/images/invoices/campaign.svg"} alt="invoice button" />
+        <%= if @invoices_present == false do %>
+          <Layout.flex flex_direction="col" justify_content="center" class="border border-blue-400">
+            <section class="mt-32 mb-6">
+              <img src={~p"/images/invoices/campaign.svg"} alt="invoice button" />
+            </section>
+            <Text.subtitle color="black" class="text-2xl font-semibold py-6">
+              There is nothing here
+            </Text.subtitle>
+            <Text.text>Create an invoice by clicking the</Text.text>
+            <Text.text>New button and get started</Text.text>
+          </Layout.flex>
+        <% else %>
+          <section id="table_stream_invoices" phx-update="stream" class="py-16">
+            <div :for={{dom_id, invoice} <- @streams.invoices} id={"#{dom_id}"}>
+              <.live_component
+                module={InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent}
+                id={dom_id}
+                invoice_id={invoice.id}
+                client_name={invoice.to_client_name}
+                invoice_due={invoice.invoice_due}
+                invoice_state={invoice.invoice_state}
+                invoice_items={invoice.items}
+              />
+            </div>
           </section>
-          <Text.subtitle color="black" class="text-2xl font-semibold py-6">
-            There is nothing here
-          </Text.subtitle>
-          <Text.text>Create an invoice by clicking the</Text.text>
-          <Text.text>New button and get started</Text.text>
-        </Layout.flex>
+        <% end %>
 
         <.modal
           :if={@live_action in [:new, :edit]}
@@ -103,7 +119,17 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, socket}
+    current_user_id = socket.assigns.current_user.id
+
+    user_invoices = get_invoices(current_user_id)
+
+    dbg(user_invoices)
+
+    socket = invoices?(user_invoices, socket)
+
+    {:ok,
+     socket
+     |> stream(:invoices, user_invoices)}
   end
 
   @impl true
@@ -113,26 +139,25 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   defp apply_action(socket, :edit, %{"id" => id}) do
     socket
-    |> assign(:page_title, "Edit Shop")
-    |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id))
-
-    # |> assign(:shop, Ash.get!(Marketingbsm.Outlet.Shop, id, actor: socket.assigns.current_user))
+    |> assign(:page_title, "Edit Invoice")
+    |> assign(:invoice, nil)
   end
 
   defp apply_action(socket, :new, _params) do
     socket
-    |> assign(:page_title, "New Shop")
-    |> assign(:shop, nil)
+    |> assign(:page_title, "New Invoice")
+    |> assign(:invoice, nil)
   end
 
   defp apply_action(socket, :index, _params) do
     socket
-    |> assign(:page_title, "Listing Outlets")
-    |> assign(:shop, nil)
+    |> assign(:page_title, "Listing Invoices")
+    |> assign(:invoice, nil)
   end
 
   defp get_invoices(user_id) do
-    _result = Records.get_invoices_by_user_id(user_id)
+    result = Records.get_invoices_by_user_id(user_id)
+    result
   end
 
   @impl true
@@ -196,5 +221,15 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   defp submit_the_invoice(changeset) do
     Repo.insert(changeset)
+  end
+
+  defp invoices?(invoices, socket) do
+    case Enum.empty?(invoices) do
+      true ->
+        assign(socket, :invoices_present, false)
+
+      false ->
+        assign(socket, :invoices_present, true)
+    end
   end
 end
