@@ -123,8 +123,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     user_invoices = get_invoices(current_user_id)
 
-    dbg(user_invoices)
-
     socket = invoices?(user_invoices, socket)
 
     {:ok,
