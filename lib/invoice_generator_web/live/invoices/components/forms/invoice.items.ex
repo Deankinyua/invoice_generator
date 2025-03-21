@@ -78,10 +78,39 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
           >
             Add new item
           </Button.button>
+          <div class="flex gap-4">
+            <Button.button
+              variant="secondary"
+              size="xl"
+              class="mt-2 w-min"
+              phx-click={JS.push("close_modal")}
+              phx-target={@myself}
+            >
+              Discard
+            </Button.button>
 
-          <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
-            Save and Send
-          </Button.button>
+            <Button.button
+              type="submit"
+              size="xl"
+              class="mt-2 w-min"
+              phx-click={JS.push("save", value: %{status: "draft"})}
+              phx-target={@myself}
+              phx-disable-with="Saving..."
+            >
+              Save as Draft
+            </Button.button>
+
+            <Button.button
+              type="submit"
+              size="xl"
+              class="mt-2 w-min"
+              phx-click={JS.push("save", value: %{status: "pending"})}
+              phx-target={@myself}
+              phx-disable-with="Saving..."
+            >
+              Save and Send
+            </Button.button>
+          </div>
         </.form>
       </Layout.col>
     </section>
@@ -117,7 +146,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(item_error: "")}
   end
 
-  def handle_event("save", params, socket) do
+  def handle_event("save", %{"status" => value}, socket) do
+    params = socket.assigns.form.params
+
     case params == %{} do
       true ->
         {:noreply,
@@ -125,13 +156,15 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
          |> assign(item_error: "Please add at least one item!")}
 
       false ->
-        %{"items" => item_params} = params
         count = socket.assigns.item_count
-        list_of_item_params = Helpers.get_list_of_params(item_params, count)
+        list_of_item_params = Helpers.get_list_of_params(params, count)
+
+        dbg(list_of_item_params)
 
         case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
           nil ->
-            send(self(), {:valid_item_details, list_of_item_params})
+            status = String.to_atom(value)
+            send(self(), {:valid_item_details, list_of_item_params, status})
 
             {:noreply,
              socket
@@ -196,6 +229,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      socket
      |> assign(item_count: new_count)
      |> assign(items: new_items)}
+  end
+
+  @impl true
+  def handle_event("close_modal", _params, socket) do
+    {:noreply,
+     socket
+     |> push_patch(to: socket.assigns.patch)}
   end
 
   defp assign_form(socket) do

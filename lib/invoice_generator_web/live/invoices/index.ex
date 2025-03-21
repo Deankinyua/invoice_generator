@@ -159,7 +159,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   end
 
   @impl true
-  def handle_info({:valid_item_details, item_details}, socket) do
+  def handle_info({:valid_item_details, item_details, status}, socket) do
     item_details =
       Enum.map(item_details, fn map ->
         Map.delete(map, :errors)
@@ -177,7 +177,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
           business_details ->
             item_details = %{
               items: item_details,
-              invoice_state: :pending,
+              invoice_state: status,
               user_id: socket.assigns.current_user.id
             }
 
