@@ -93,7 +93,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
               type="submit"
               size="xl"
               class="mt-2 w-min"
-              phx-click={JS.push("save", value: %{status: "draft"})}
+              phx-click={JS.push("save", value: %{status: "Draft"})}
               phx-target={@myself}
               phx-disable-with="Saving..."
             >
@@ -104,7 +104,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
               type="submit"
               size="xl"
               class="mt-2 w-min"
-              phx-click={JS.push("save", value: %{status: "pending"})}
+              phx-click={JS.push("save", value: %{status: "Pending"})}
               phx-target={@myself}
               phx-disable-with="Saving..."
             >

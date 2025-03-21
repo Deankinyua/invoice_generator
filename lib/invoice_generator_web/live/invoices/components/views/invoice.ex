@@ -35,8 +35,14 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
             <div>Due {date_formatter(@invoice_due)}</div>
             <div>£ {format_total(@invoice_total)}</div>
           </section>
-          <section class="border border-blue-400 py-3 px-6">
-            {@invoice_state}
+          <section class={[
+            "py-3 min-w-[8rem] flex justify-center items-center gap-3 rounded-md",
+            get_classes_from_state(@invoice_state)
+          ]}>
+            <div><img src={return_status_button(@invoice_state)} alt="Status Button" /></div>
+            <div class="league-spartan-bold">
+              {@invoice_state}
+            </div>
           </section>
         </div>
       </div>
@@ -94,5 +100,31 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   defp format_total(total) do
     formatted = :io_lib.format("~.2f", [total * 1.0]) |> to_string()
     formatted
+  end
+
+  defp return_status_button(state) do
+    case state do
+      :Pending ->
+        ~p"/images/invoices/pending_circle.svg"
+
+      :Paid ->
+        ~p"/images/invoices/paid_circle.svg"
+
+      :Draft ->
+        ~p"/images/invoices/draft_circle.svg"
+    end
+  end
+
+  defp get_classes_from_state(state) do
+    case state do
+      :Pending ->
+        "text-[#FF8F00] bg-[#FF8F00] bg-opacity-[0.06]"
+
+      :Paid ->
+        "text-[#33D69F] bg-[#33D69F] bg-opacity-[0.06]"
+
+      :Draft ->
+        "text-[#373B53] bg-[#373B53] bg-opacity-[0.06]"
+    end
   end
 end

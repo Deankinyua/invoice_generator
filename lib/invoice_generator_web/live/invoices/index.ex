@@ -187,7 +187,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
 
             case submit_the_invoice(invoice_changeset) do
-              {:ok, _record} ->
+              {:ok, record} ->
+                send(self(), {:invoice_modified, record})
+
                 {:noreply,
                  socket
                  |> push_patch(to: ~p"/invoices")
@@ -215,6 +217,13 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     {:noreply,
      socket
      |> assign(business_details: business_details)}
+  end
+
+  @impl true
+  def handle_info({:invoice_modified, invoice}, socket) do
+    {:noreply,
+     socket
+     |> stream_insert(:invoices, invoice)}
   end
 
   defp submit_the_invoice(changeset) do

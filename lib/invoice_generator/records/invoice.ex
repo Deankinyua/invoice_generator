@@ -21,7 +21,7 @@ defmodule InvoiceGenerator.Records.Invoice do
     field :invoice_due_days, :string, virtual: true
     field :invoice_due, :date
     field :project_description, :string
-    field :invoice_state, Ecto.Enum, values: [:pending, :draft, :paid]
+    field :invoice_state, Ecto.Enum, values: [:Pending, :Draft, :Paid]
 
     timestamps(type: :utc_datetime)
 
