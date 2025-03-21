@@ -159,8 +159,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
         count = socket.assigns.item_count
         list_of_item_params = Helpers.get_list_of_params(params, count)
 
-        dbg(list_of_item_params)
-
         case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
           nil ->
             status = String.to_atom(value)

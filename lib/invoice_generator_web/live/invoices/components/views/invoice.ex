@@ -7,7 +7,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="w-[90%] mx-auto">
+    <div class="w-[90%] mx-auto bg-[#FFFFFF] rounded-lg pt-6 pb-8">
       <div class="flex border border-blue-400 hidden md:block">
         <div class="w-[90%] mx-auto flex">
           <section>#RT3080</section>
@@ -23,17 +23,19 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
         </div>
       </div>
 
-      <div class="flex flex-col border border-blue-400 rounded-lg gap-4 mb-8 md:hidden">
+      <div class="flex flex-col gap-4 md:hidden">
         <div class="flex justify-between items-center w-[90%] mx-auto">
-          <section>
-            #{first_six_letters(@invoice_id)}
+          <section class="league-spartan-bold text-[#858BB2]">
+            #<span class="text-[#0C0E16]">{first_six_letters(@invoice_id)}</span>
           </section>
-          <section>{@client_name}</section>
+          <section class="league-spartan-medium text-[#858BB2] text-sm">{@client_name}</section>
         </div>
         <div class="flex justify-between items-center w-[90%] mx-auto">
           <section class="flex flex-col gap-4">
-            <div>Due {date_formatter(@invoice_due)}</div>
-            <div>£ {format_total(@invoice_total)}</div>
+            <div class="league-spartan-medium text-sm text-[#858BB2]">
+              Due {date_formatter(@invoice_due)}
+            </div>
+            <div class="league-spartan-bold text-[#0C0E16]">£ {format_total(@invoice_total)}</div>
           </section>
           <section class={[
             "py-3 min-w-[8rem] flex justify-center items-center gap-3 rounded-md",

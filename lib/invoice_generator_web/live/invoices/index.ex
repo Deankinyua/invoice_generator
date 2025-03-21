@@ -12,7 +12,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="bg-[#F8F8FB] min-h-screen">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -69,15 +69,17 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
         <% else %>
           <section id="table_stream_invoices" phx-update="stream" class="py-16">
             <div :for={{dom_id, invoice} <- @streams.invoices} id={"#{dom_id}"}>
-              <.live_component
-                module={InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent}
-                id={dom_id}
-                invoice_id={invoice.id}
-                client_name={invoice.to_client_name}
-                invoice_due={invoice.invoice_due}
-                invoice_state={invoice.invoice_state}
-                invoice_items={invoice.items}
-              />
+              <div class="mb-10">
+                <.live_component
+                  module={InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent}
+                  id={dom_id}
+                  invoice_id={invoice.id}
+                  client_name={invoice.to_client_name}
+                  invoice_due={invoice.invoice_due}
+                  invoice_state={invoice.invoice_state}
+                  invoice_items={invoice.items}
+                />
+              </div>
             </div>
           </section>
         <% end %>
