@@ -25,18 +25,22 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
 
       <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
         <Layout.flex flex_direction="col" justify_content="between" class="gap-5">
-          <div class="w-full flex gap-6 items-center rounded-lg mt-8">
-            <section>
-              <img src={~p"/images/invoices/back_arrow2.svg"} alt="Back Arrow 2" />
-            </section>
-            <section class="league-spartan-bold text-[#0C0E16]">Go back</section>
+          <div class="w-full mt-8">
+            <.link navigate={~p"/invoices"}>
+              <div class="flex items-center gap-6">
+                <section>
+                  <img src={~p"/images/invoices/back_arrow2.svg"} alt="Back Arrow 2" />
+                </section>
+                <section class="league-spartan-bold text-[#0C0E16]">Go back</section>
+              </div>
+            </.link>
           </div>
 
           <div class="w-full bg-[#FFFFFF] rounded-lg py-8 mt-4">
             <div class="flex justify-between gap-10 items-center w-[90%] mx-auto">
               <div class="text-sm league-spartan-medium text-[#858BB2]">Status</div>
               <div>
-                <InvoiceHelper.invoice_state_button invoice_state={:Pending} />
+                <InvoiceHelper.invoice_state_button invoice_state={@invoice_state} />
               </div>
             </div>
           </div>
@@ -44,60 +48,60 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
             <div class="flex flex-col gap-10 w-[90%] mx-auto my-6 text-sm text-[#7E88C3]">
               <div>
                 <section class="league-spartan-bold text-[#858BB2]">
-                  #<span class="text-[#0C0E16]">{InvoiceComponent.first_six_letters("XM9141")}</span>
+                  #<span class="text-[#0C0E16]">{InvoiceComponent.first_six_letters(@invoice_id)}</span>
                 </section>
 
                 <section class="league-spartan-medium">
-                  Graphic Design
+                  {@description}
                 </section>
               </div>
               <div class="league-spartan-medium">
                 <p>
-                  19 Union Terrace
+                  {@sender_address}
                 </p>
                 <p>
-                  London
+                  {@sender_city}
                 </p>
                 <p>
-                  E1 3EZ
+                  {@sender_postcode}
                 </p>
                 <p>
-                  United Kingdom
+                  {@sender_country}
                 </p>
               </div>
               <div class="flex flex-col gap-3 league-spartan-medium">
-                <div class="flex gap-16">
-                  <section>
+                <div class="flex gap-2">
+                  <section class="w-[50%]">
                     Invoice Date
                   </section>
                   <section>Bill To</section>
                 </div>
-                <div class="flex gap-12 text-[#0C0E16] league-spartan-bold text-base">
-                  <section>21 Aug 2021</section>
-                  <section>Alex Grim</section>
+                <div class="flex gap-2 text-[#0C0E16] league-spartan-bold text-base">
+                  <section class="w-[50%]">{InvoiceComponent.date_formatter(@invoice_date)}</section>
+                  <section>{@receiver_name}</section>
                 </div>
 
-                <div class="flex gap-12">
-                  <section class="flex flex-col gap-2">
+                <div class="flex gap-8">
+                  <section class="w-[50%] flex flex-col gap-2">
                     <div class="mt-6">
                       Payment Due
                     </div>
                     <div class="text-[#0C0E16] league-spartan-bold text-base">
-                      20 Sep 2021
+                      {InvoiceComponent.date_formatter(@due_date)}
                     </div>
                   </section>
                   <section>
                     <p>
-                      84 Church Way
+                      {@receiver_address}
                     </p>
                     <p>
-                      Bradford
+                      {@receiver_city}
                     </p>
                     <p>
-                      BD1 9PB
+                      {@receiver_postcode}
                     </p>
                     <p>
-                      United Kingdom
+                      {@receiver_country}
                     </p>
                   </section>
                 </div>
@@ -106,41 +110,28 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
               <div class="flex flex-col gap-3">
                 <section class="league-spartan-medium">Sent to</section>
                 <section class="text-base league-spartan-bold text-[#0C0E16]">
-                  alexgrim@mail.com
+                  {@receiver_email}
                 </section>
               </div>
 
               <div class="rounded-lg bg-[#F9FAFE] overflow-hidden">
                 <div class="w-[85%] mx-auto my-6 flex flex-col gap-4">
-                  <section class="flex items-center justify-between gap-6">
-                    <div class="flex flex-col gap-2
+                  <%= for item <- @items do %>
+                    <section class="flex items-center justify-between gap-6">
+                      <div class="flex flex-col gap-2
     ">
-                      <section class="league-spartan-bold text-base text-[#0C0E16]">
-                        Banner Design
-                      </section>
-                      <section class="league-spartan-medium">
-                        1 x £ 156.00
-                      </section>
-                    </div>
-                    <div class="league-spartan-bold text-base text-[#0C0E16]">
-                      £ 156.00
-                    </div>
-                  </section>
-
-                  <section class="flex items-center justify-between gap-6">
-                    <div class="flex flex-col gap-2
-    ">
-                      <section class="league-spartan-bold text-base text-[#0C0E16]">
-                        Banner Design
-                      </section>
-                      <section class="league-spartan-medium">
-                        1 x £ 156.00
-                      </section>
-                    </div>
-                    <div class="league-spartan-bold text-base text-[#0C0E16]">
-                      £ 156.00
-                    </div>
-                  </section>
+                        <section class="league-spartan-bold text-base text-[#0C0E16]">
+                          {item.name}
+                        </section>
+                        <section class="league-spartan-medium">
+                          {item.quantity} x £ {InvoiceComponent.format_total(item.price)}
+                        </section>
+                      </div>
+                      <div class="league-spartan-bold text-base text-[#0C0E16]">
+                        £ {InvoiceComponent.format_total(item.total)}
+                      </div>
+                    </section>
+                  <% end %>
                 </div>
 
                 <div class="bg-[#373B53] py-8 flex justify-center items-center gap-20 text-[#FFFFFF]">
@@ -148,7 +139,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
                     Grand Total
                   </section>
                   <section class="text-2xl league-spartan-bold">
-                    £ 556.00
+                    £ {InvoiceComponent.format_total(@total_item_cost)}
                   </section>
                 </div>
               </div>
@@ -169,8 +160,57 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
   def handle_params(%{"id" => id}, _, socket) do
     invoice = Records.get_invoice!(id)
 
-    dbg(invoice)
-
+    socket = assign_invoice_details(invoice, socket)
     {:noreply, socket}
+  end
+
+  defp assign_invoice_details(invoice, socket) do
+    invoice_id = invoice.id
+
+    description = invoice.project_description
+
+    invoice_state = invoice.invoice_state
+
+    invoice_date = invoice.invoice_date
+    due_date = invoice.invoice_due
+
+    sender_address = invoice.from_address
+    receiver_address = invoice.to_address
+
+    sender_city = invoice.from_city
+    receiver_city = invoice.to_city
+
+    sender_postcode = invoice.from_post_code
+    receiver_postcode = invoice.to_post_code
+
+    sender_country = invoice.from_country
+    receiver_name = invoice.to_client_name
+    receiver_country = invoice.to_country
+    receiver_email = invoice.to_client_email
+
+    invoice_items = invoice.items
+    total_item_cost = InvoiceComponent.get_total_invoice_cost(invoice_items)
+
+    socket =
+      socket
+      |> assign(invoice_id: invoice_id)
+      |> assign(description: description)
+      |> assign(invoice_state: invoice_state)
+      |> assign(invoice_date: invoice_date)
+      |> assign(due_date: due_date)
+      |> assign(sender_address: sender_address)
+      |> assign(sender_city: sender_city)
+      |> assign(sender_postcode: sender_postcode)
+      |> assign(sender_country: sender_country)
+      |> assign(receiver_address: receiver_address)
+      |> assign(receiver_city: receiver_city)
+      |> assign(receiver_postcode: receiver_postcode)
+      |> assign(receiver_country: receiver_country)
+      |> assign(receiver_email: receiver_email)
+      |> assign(receiver_name: receiver_name)
+      |> assign(total_item_cost: total_item_cost)
+      |> assign(items: invoice_items)
+
+    socket
   end
 end

@@ -96,7 +96,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
     |> String.upcase()
   end
 
-  defp date_formatter(date) do
+  def date_formatter(date) do
     year = date.year
     day = date.day
     month = date.month
@@ -121,7 +121,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
     "#{day} #{Enum.at(list_of_months, month_index)} #{year}"
   end
 
-  defp format_total(total) do
+  def format_total(total) do
     formatted = :io_lib.format("~.2f", [total * 1.0]) |> to_string()
     formatted
   end
