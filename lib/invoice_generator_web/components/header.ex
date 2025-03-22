@@ -56,27 +56,48 @@ defmodule InvoiceGeneratorWeb.Header do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="border border-red-400 bg-[#252945]">
-      <Layout.flex class="gap-6">
-        <Layout.flex>
+    <div>
+      <div class="w-24 h-screen fixed top-0 left-0 bg-[#373B53] text-white rounded-r-3xl hidden sm:block">
+        <div class="flex flex-col gap-[30rem]">
           <section>
             <.link>
-              <img src={~p"/images/header/logo.svg"} alt="home" />
+              <img src={~p"/images/header/logo.svg"} alt="home" class="w-full h-full" />
             </.link>
           </section>
-          <section>
-            <.link phx-click={JS.push("dark-mode", value: %{dark: @is_dark})}>
-              <img src={theme_icon(@is_dark)} alt="theme" />
-            </.link>
+          <section class="flex flex-col gap-6 items-center">
+            <div>
+              <.link phx-click={JS.push("dark-mode", value: %{dark: @is_dark})}>
+                <img src={theme_icon(@is_dark)} alt="theme" />
+              </.link>
+            </div>
+            <div>
+              <img src={@profile_url} class="h-12 w-12 rounded-full object-cover object-center" />
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="border border-red-400 bg-[#252945] sm:hidden">
+        <Layout.flex class="gap-6">
+          <Layout.flex>
+            <section>
+              <.link>
+                <img src={~p"/images/header/logo.svg"} alt="home" />
+              </.link>
+            </section>
+            <section>
+              <.link phx-click={JS.push("dark-mode", value: %{dark: @is_dark})}>
+                <img src={theme_icon(@is_dark)} alt="theme" />
+              </.link>
+            </section>
+          </Layout.flex>
+          <section class="w-[30%] border border-red-400">
+            <div class="w-[60%] mx-auto rounded-full overflow-hidden">
+              <img src={@profile_url} class="h-10 w-10 rounded-full object-cover object-center" />
+            </div>
           </section>
         </Layout.flex>
-
-        <section class="w-[30%] border border-red-400">
-          <div class="w-[60%] mx-auto rounded-full overflow-hidden">
-            <img src={@profile_url} class="h-10 w-10 rounded-full object-cover object-center" />
-          </div>
-        </section>
-      </Layout.flex>
+      </div>
     </div>
     """
   end

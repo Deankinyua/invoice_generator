@@ -15,51 +15,53 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
         sticky: true
       )}
 
-      {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
-        session: %{
-          "active_tab" => "password",
-          "user" => "user?email=#{@current_user.email}"
-        },
-        id: "settings_live_drawer",
-        sticky: true
-      )}
+      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
+        {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
+          session: %{
+            "active_tab" => "password",
+            "user" => "user?email=#{@current_user.email}"
+          },
+          id: "settings_live_drawer",
+          sticky: true
+        )}
 
-      <div class="border border-blue-400 mx-4 py-20">
-        <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-          <div class="border border-red-400">
-            <.live_component
-              module={InvoiceGeneratorWeb.Profile.ActualPicture}
-              id="actual_picture_live_component"
-              profile_url={@profile_url}
-              name={@current_user.name}
+        <div class="border border-blue-400 mx-4 py-20">
+          <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
+            <div class="border border-red-400">
+              <.live_component
+                module={InvoiceGeneratorWeb.Profile.ActualPicture}
+                id="actual_picture_live_component"
+                profile_url={@profile_url}
+                name={@current_user.name}
+              />
+            </div>
+          </Layout.flex>
+
+          <Text.title class="my-4">
+            Change Password
+          </Text.title>
+
+          <.simple_form for={@form} phx-submit="reset_password" phx-change="validate">
+            <.input field={@form[:old_password]} type="text" label="Old password" />
+            <.input
+              field={@form[:password]}
+              type="text"
+              label="New password"
+              autocomplete="off"
+              hide_errors="hidden"
             />
-          </div>
-        </Layout.flex>
 
-        <Text.title class="my-4">
-          Change Password
-        </Text.title>
+            <.live_component
+              module={InvoiceGeneratorWeb.Password.Validation.Component}
+              id="password_validation_component"
+              form_errors={@form_errors}
+            />
 
-        <.simple_form for={@form} phx-submit="reset_password" phx-change="validate">
-          <.input field={@form[:old_password]} type="text" label="Old password" />
-          <.input
-            field={@form[:password]}
-            type="text"
-            label="New password"
-            autocomplete="off"
-            hide_errors="hidden"
-          />
-
-          <.live_component
-            module={InvoiceGeneratorWeb.Password.Validation.Component}
-            id="password_validation_component"
-            form_errors={@form_errors}
-          />
-
-          <:actions>
-            <.button phx-disable-with="Resetting..." class="w-full">Save Changes</.button>
-          </:actions>
-        </.simple_form>
+            <:actions>
+              <.button phx-disable-with="Resetting..." class="w-full">Save Changes</.button>
+            </:actions>
+          </.simple_form>
+        </div>
       </div>
     </div>
     """

@@ -6,7 +6,7 @@ defmodule InvoiceGeneratorWeb.HomeLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="border border-red-400">
+    <div class="w-full h-full">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"

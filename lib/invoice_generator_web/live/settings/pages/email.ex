@@ -18,45 +18,51 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
         sticky: true
       )}
 
-      {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
-        session: %{
-          "active_tab" => "notifications",
-          "user" => "user?email=#{@current_user.email}"
-        },
-        id: "settings_live_drawer",
-        sticky: true
-      )}
+      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
+        {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
+          session: %{
+            "active_tab" => "notifications",
+            "user" => "user?email=#{@current_user.email}"
+          },
+          id: "settings_live_drawer",
+          sticky: true
+        )}
 
-      <div class="border border-blue-400 mx-4 py-20">
-        <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-          <div class="border border-red-400">
-            <.live_component
-              module={InvoiceGeneratorWeb.Profile.ActualPicture}
-              id="actual_picture_live_component"
-              profile_url={@profile_url}
-              name={@current_user.name}
-            />
+        <div class="border border-blue-400 mx-4 py-20">
+          <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
+            <div class="border border-red-400">
+              <.live_component
+                module={InvoiceGeneratorWeb.Profile.ActualPicture}
+                id="actual_picture_live_component"
+                profile_url={@profile_url}
+                name={@current_user.name}
+              />
+            </div>
+          </Layout.flex>
+
+          <Text.title class="my-4">
+            Edit Notifications Preferences
+          </Text.title>
+
+          <div>
+            <.form for={@form} phx-submit="change_notifications">
+              <.input
+                field={@form[:product_updates]}
+                type="checkbox"
+                label="Newsletter and product updates"
+              />
+              <.input
+                field={@form[:sign_in_notification]}
+                type="checkbox"
+                label="Sign in notification"
+              />
+              <.input field={@form[:payment_reminders]} type="checkbox" label="Due payment reminders" />
+
+              <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+                Save Changes
+              </Button.button>
+            </.form>
           </div>
-        </Layout.flex>
-
-        <Text.title class="my-4">
-          Edit Notifications Preferences
-        </Text.title>
-
-        <div>
-          <.form for={@form} phx-submit="change_notifications">
-            <.input
-              field={@form[:product_updates]}
-              type="checkbox"
-              label="Newsletter and product updates"
-            />
-            <.input field={@form[:sign_in_notification]} type="checkbox" label="Sign in notification" />
-            <.input field={@form[:payment_reminders]} type="checkbox" label="Due payment reminders" />
-
-            <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
-              Save Changes
-            </Button.button>
-          </.form>
         </div>
       </div>
     </div>

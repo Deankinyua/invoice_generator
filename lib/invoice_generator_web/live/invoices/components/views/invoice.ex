@@ -8,23 +8,21 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   def render(assigns) do
     ~H"""
     <div class="w-[90%] max-w-3xl mx-auto bg-[#FFFFFF] rounded-lg pt-6 pb-8">
-      <div class="hidden md:block">
-        <div class="flex justify-between items-center gap-4 w-[90%] mx-auto">
-          <div class="flex items-center gap-6">
+      <.link navigate={~p"/invoices/#{@invoice_id}"}>
+        <div class="flex flex-col gap-4 md:hidden">
+          <div class="flex justify-between items-center w-[90%] mx-auto">
             <section class="league-spartan-bold text-[#858BB2]">
               #<span class="text-[#0C0E16]">{first_six_letters(@invoice_id)}</span>
             </section>
-            <section class="league-spartan-medium text-sm text-[#858BB2]">
-              Due {date_formatter(@invoice_due)}
-            </section>
-          </div>
-          <div class="flex items-center gap-6">
             <section class="league-spartan-medium text-[#858BB2] text-sm">{@client_name}</section>
-            <section class="league-spartan-bold text-[#0C0E16]">
-              £ {format_total(@invoice_total)}
-            </section>
           </div>
-          <div class="flex items-center gap-6">
+          <div class="flex justify-between items-center w-[90%] mx-auto">
+            <section class="flex flex-col gap-4">
+              <div class="league-spartan-medium text-sm text-[#858BB2]">
+                Due {date_formatter(@invoice_due)}
+              </div>
+              <div class="league-spartan-bold text-[#0C0E16]">£ {format_total(@invoice_total)}</div>
+            </section>
             <section class={[
               "py-3 min-w-[8rem] flex justify-center items-center gap-3 rounded-md",
               get_classes_from_state(@invoice_state)
@@ -34,38 +32,44 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
                 {@invoice_state}
               </div>
             </section>
-            <section>
-              <img src={~p"/images/invoices/downarrow.svg"} alt="Down Arrow Image" />
-            </section>
           </div>
         </div>
-      </div>
+      </.link>
 
-      <div class="flex flex-col gap-4 md:hidden">
-        <div class="flex justify-between items-center w-[90%] mx-auto">
-          <section class="league-spartan-bold text-[#858BB2]">
-            #<span class="text-[#0C0E16]">{first_six_letters(@invoice_id)}</span>
-          </section>
-          <section class="league-spartan-medium text-[#858BB2] text-sm">{@client_name}</section>
-        </div>
-        <div class="flex justify-between items-center w-[90%] mx-auto">
-          <section class="flex flex-col gap-4">
-            <div class="league-spartan-medium text-sm text-[#858BB2]">
-              Due {date_formatter(@invoice_due)}
+      <.link navigate={~p"/invoices/#{@invoice_id}"}>
+        <div class="hidden md:block">
+          <div class="flex justify-between items-center gap-4 w-[90%] mx-auto">
+            <div class="flex items-center gap-6">
+              <section class="league-spartan-bold text-[#858BB2]">
+                #<span class="text-[#0C0E16]">{first_six_letters(@invoice_id)}</span>
+              </section>
+              <section class="league-spartan-medium text-sm text-[#858BB2]">
+                Due {date_formatter(@invoice_due)}
+              </section>
             </div>
-            <div class="league-spartan-bold text-[#0C0E16]">£ {format_total(@invoice_total)}</div>
-          </section>
-          <section class={[
-            "py-3 min-w-[8rem] flex justify-center items-center gap-3 rounded-md",
-            get_classes_from_state(@invoice_state)
-          ]}>
-            <div><img src={return_status_button(@invoice_state)} alt="Status Button" /></div>
-            <div class="league-spartan-bold">
-              {@invoice_state}
+            <div class="flex items-center gap-6">
+              <section class="league-spartan-medium text-[#858BB2] text-sm">{@client_name}</section>
+              <section class="league-spartan-bold text-[#0C0E16]">
+                £ {format_total(@invoice_total)}
+              </section>
             </div>
-          </section>
+            <div class="flex items-center gap-6">
+              <section class={[
+                "py-3 min-w-[8rem] flex justify-center items-center gap-3 rounded-md",
+                get_classes_from_state(@invoice_state)
+              ]}>
+                <div><img src={return_status_button(@invoice_state)} alt="Status Button" /></div>
+                <div class="league-spartan-bold">
+                  {@invoice_state}
+                </div>
+              </section>
+              <section>
+                <img src={~p"/images/invoices/downarrow.svg"} alt="Down Arrow Image" />
+              </section>
+            </div>
+          </div>
         </div>
-      </div>
+      </.link>
     </div>
     """
   end

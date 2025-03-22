@@ -12,7 +12,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="bg-[#F8F8FB] min-h-screen">
+    <div class="bg-[#F8F8FB] w-full h-full">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -21,7 +21,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
         sticky: true
       )}
 
-      <div class="w-[95%] mx-auto">
+      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
         <Layout.flex flex_direction="row" justify_content="between" class="gap-2">
           <Layout.flex flex_direction="col" align_items="start" class="w-[35%] min-w-[6rem]">
             <section class="league-spartan-bold text-2xl text-[#0C0E16]">Invoices</section>

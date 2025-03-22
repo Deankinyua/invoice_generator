@@ -86,6 +86,8 @@ defmodule InvoiceGeneratorWeb.Router do
       live "/invoices", InvoiceLive.Index, :index
       live "/invoices/new", InvoiceLive.Index, :new
       live "/invoices/:id/edit", InvoiceLive.Index, :edit
+
+      live "/invoices/:id", InvoiceLive.Show, :show
     end
   end
 
