@@ -22,21 +22,27 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
       )}
 
       <div class="w-[95%] mx-auto">
-        <Layout.flex flex_direction="row" justify_content="between" class="border border-red-400">
-          <Layout.flex flex_direction="col" align_items="start" class="border border-red-400">
-            <section>Invoices</section>
-            <section>No invoices</section>
+        <Layout.flex flex_direction="row" justify_content="between" class="gap-2">
+          <Layout.flex flex_direction="col" align_items="start" class="w-[35%] min-w-[6rem]">
+            <section class="league-spartan-bold text-2xl text-[#0C0E16]">Invoices</section>
+            <section class="league-spartan-medium text-[#888EB0] text-sm">
+              <%= if @invoices_present == false do %>
+                No invoices
+              <% else %>
+                {@invoice_count} invoices
+              <% end %>
+            </section>
           </Layout.flex>
 
-          <Layout.flex flex_direction="row">
-            <div class="w-24 border border-blue-400">
+          <Layout.flex flex_direction="row" justify_content="between" class="gap-10">
+            <div class="w-[6rem]">
               <.live_component
                 module={InvoiceGeneratorWeb.InvoiceLive.FilterComponent}
                 id="invoice items filter component"
               />
             </div>
             <Button.button
-              class="shrink-0 bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
+              class="shrink-1 bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
               phx-click={JS.patch(~p"/invoices/new")}
             >
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
@@ -60,7 +66,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
         </Layout.flex>
 
         <%= if @invoices_present == false do %>
-          <Layout.flex flex_direction="col" justify_content="center" class="border border-blue-400">
+          <Layout.flex flex_direction="col" justify_content="center">
             <section class="mt-32 mb-6">
               <img src={~p"/images/invoices/campaign.svg"} alt="invoice button" />
             </section>
@@ -129,11 +135,14 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     user_invoices = get_invoices(current_user_id)
 
+    invoice_count = Enum.count(user_invoices)
+
     socket = invoices?(user_invoices, socket)
 
     {:ok,
      socket
-     |> stream(:invoices, user_invoices)}
+     |> stream(:invoices, user_invoices)
+     |> assign(invoice_count: invoice_count)}
   end
 
   @impl true
@@ -227,9 +236,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   @impl true
   def handle_info({:invoice_modified, invoice}, socket) do
+    invoice_count = socket.assigns.invoice_count
+
     {:noreply,
      socket
-     |> stream_insert(:invoices, invoice)}
+     |> stream_insert(:invoices, invoice)
+     |> assign(invoice_count: invoice_count + 1)}
   end
 
   @impl true
@@ -238,9 +250,14 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     invoices = Records.get_invoices_by_invoice_state(user_id, state)
 
+    socket = invoices?(invoices, socket)
+
+    invoice_count = Enum.count(invoices)
+
     {:noreply,
      socket
-     |> stream(:invoices, invoices, reset: true)}
+     |> stream(:invoices, invoices, reset: true)
+     |> assign(invoice_count: invoice_count)}
   end
 
   defp submit_the_invoice(changeset) do

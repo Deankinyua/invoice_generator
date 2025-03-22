@@ -17,7 +17,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FilterComponent do
             flex_direction="row"
             justify_content="center"
             align_items="center"
-            class="gap-3 border border-red-400"
+            class="gap-3"
           >
             <div class="text-black">Filter</div>
             <div>
