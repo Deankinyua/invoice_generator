@@ -29,24 +29,14 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
           </Layout.flex>
 
           <Layout.flex flex_direction="row">
-            <Layout.flex
-              flex_direction="row"
-              justify_content="center"
-              align_items="center"
-              class="gap-3 border border-red-400"
-            >
-              <div>Filter</div>
-              <div>
-                <img src={~p"/images/invoices/downarrow.svg"} alt="Down Arrow" />
-              </div>
-            </Layout.flex>
-
-            <.live_component
-              module={InvoiceGeneratorWeb.InvoiceLive.FilterComponent}
-              id="invoice items filter component"
-            />
+            <div class="w-24 border border-blue-400">
+              <.live_component
+                module={InvoiceGeneratorWeb.InvoiceLive.FilterComponent}
+                id="invoice items filter component"
+              />
+            </div>
             <Button.button
-              class="bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
+              class="shrink-0 bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
               phx-click={JS.patch(~p"/invoices/new")}
             >
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">

@@ -27,32 +27,34 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.FilterComponent do
         </:button>
         <:item>
           <button
-            class="px-4 py-2 space-x-4 inline-flex items-center"
+            class="px-2 py-2 space-x-4 inline-flex items-center"
             phx-click={JS.push("invoice_state", value: %{state: "Draft"})}
             phx-target={@myself}
           >
-            <label class="container">Draft <input type="radio" name="radio" />
+            <label class="container league-spartan-bold">Draft <input type="radio" name="radio" />
               <span class="checkmark"></span></label>
           </button>
         </:item>
         <:item>
           <button
-            class="px-4 py-2 space-x-4 inline-flex items-center"
+            class="px-2 py-2 space-x-4 inline-flex items-center"
             phx-click={JS.push("invoice_state", value: %{state: "Pending"})}
             phx-target={@myself}
           >
-            <label class="container">Pending <input type="radio" checked="checked" name="radio" />
-              <span class="checkmark"></span></label>
+            <label class="container league-spartan-bold">
+              Pending <input type="radio" checked="checked" name="radio" />
+              <span class="checkmark"></span>
+            </label>
           </button>
         </:item>
 
         <:item>
           <button
-            class="px-4 py-2 space-x-4 inline-flex items-center"
+            class="px-2 py-2 space-x-4 inline-flex items-center"
             phx-click={JS.push("invoice_state", value: %{state: "Paid"})}
             phx-target={@myself}
           >
-            <label class="container">Paid <input type="radio" name="radio" />
+            <label class="container league-spartan-bold">Paid <input type="radio" name="radio" />
               <span class="checkmark"></span></label>
           </button>
         </:item>
