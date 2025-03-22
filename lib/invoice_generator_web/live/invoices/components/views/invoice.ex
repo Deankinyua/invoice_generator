@@ -7,19 +7,37 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="w-[90%] mx-auto bg-[#FFFFFF] rounded-lg pt-6 pb-8">
-      <div class="flex border border-blue-400 hidden md:block">
-        <div class="w-[90%] mx-auto flex">
-          <section>#RT3080</section>
-          <section>Due  19 Aug 2021</section>
-        </div>
-        <div class="flex">
-          <section>Jensen Huang</section>
-          <section>£ 1,800.90</section>
-        </div>
-        <div class="flex">
-          <section>Status</section>
-          <section>Arrow</section>
+    <div class="w-[90%] max-w-3xl mx-auto bg-[#FFFFFF] rounded-lg pt-6 pb-8">
+      <div class="hidden md:block">
+        <div class="flex justify-between items-center gap-4 w-[90%] mx-auto">
+          <div class="flex items-center gap-6">
+            <section class="league-spartan-bold text-[#858BB2]">
+              #<span class="text-[#0C0E16]">{first_six_letters(@invoice_id)}</span>
+            </section>
+            <section class="league-spartan-medium text-sm text-[#858BB2]">
+              Due {date_formatter(@invoice_due)}
+            </section>
+          </div>
+          <div class="flex items-center gap-6">
+            <section class="league-spartan-medium text-[#858BB2] text-sm">{@client_name}</section>
+            <section class="league-spartan-bold text-[#0C0E16]">
+              £ {format_total(@invoice_total)}
+            </section>
+          </div>
+          <div class="flex items-center gap-6">
+            <section class={[
+              "py-3 min-w-[8rem] flex justify-center items-center gap-3 rounded-md",
+              get_classes_from_state(@invoice_state)
+            ]}>
+              <div><img src={return_status_button(@invoice_state)} alt="Status Button" /></div>
+              <div class="league-spartan-bold">
+                {@invoice_state}
+              </div>
+            </section>
+            <section>
+              <img src={~p"/images/invoices/downarrow.svg"} alt="Down Arrow Image" />
+            </section>
+          </div>
         </div>
       </div>
 
