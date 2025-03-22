@@ -106,32 +106,32 @@ defmodule InvoiceGeneratorWeb.Profile.Address.Component do
     # save_user_profile(socket, socket.assigns.action, user_profile_params)
   end
 
-  defp save_user_profile(socket, :edit, user_profile_params) do
-    case Profile.update_user_profile(socket.assigns.user_profile, user_profile_params) do
-      {:ok, _user_profile} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "User profile updated successfully")
-         |> push_patch(to: socket.assigns.patch)}
+  # defp save_user_profile(socket, :edit, user_profile_params) do
+  #   case Profile.update_user_profile(socket.assigns.user_profile, user_profile_params) do
+  #     {:ok, _user_profile} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "User profile updated successfully")
+  #        |> push_patch(to: socket.assigns.patch)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, form: to_form(changeset))}
-    end
-  end
+  #     {:error, %Ecto.Changeset{} = changeset} ->
+  #       {:noreply, assign(socket, form: to_form(changeset))}
+  #   end
+  # end
 
-  defp save_user_profile(socket, :new, user_profile_params) do
-    case Profile.create_user_profile(user_profile_params) do
-      {:ok, _user_profile} ->
-        {:noreply,
-         socket
-         |> put_flash(:info, "User profile created successfully")
-         |> redirect(to: ~p"/welcome")}
+  # defp save_user_profile(socket, :new, user_profile_params) do
+  #   case Profile.create_user_profile(user_profile_params) do
+  #     {:ok, _user_profile} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:info, "User profile created successfully")
+  #        |> redirect(to: ~p"/welcome")}
 
-      {:error, _changeset} ->
-        {:noreply,
-         socket
-         |> put_flash(:error, "User profile exists Already")
-         |> redirect(to: ~p"/welcome")}
-    end
-  end
+  #     {:error, _changeset} ->
+  #       {:noreply,
+  #        socket
+  #        |> put_flash(:error, "User profile exists Already")
+  #        |> redirect(to: ~p"/welcome")}
+  #   end
+  # end
 end

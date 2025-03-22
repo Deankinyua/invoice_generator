@@ -29,8 +29,22 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
           </Layout.flex>
 
           <Layout.flex flex_direction="row">
-            <section>filter</section>
+            <Layout.flex
+              flex_direction="row"
+              justify_content="center"
+              align_items="center"
+              class="gap-3 border border-red-400"
+            >
+              <div>Filter</div>
+              <div>
+                <img src={~p"/images/invoices/downarrow.svg"} alt="Down Arrow" />
+              </div>
+            </Layout.flex>
 
+            <.live_component
+              module={InvoiceGeneratorWeb.InvoiceLive.FilterComponent}
+              id="invoice items filter component"
+            />
             <Button.button
               class="bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
               phx-click={JS.patch(~p"/invoices/new")}
@@ -137,7 +151,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
+  defp apply_action(socket, :edit, %{"id" => _id}) do
     socket
     |> assign(:page_title, "Edit Invoice")
     |> assign(:invoice, nil)
@@ -226,6 +240,17 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     {:noreply,
      socket
      |> stream_insert(:invoices, invoice)}
+  end
+
+  @impl true
+  def handle_info({:filter_invoice, state}, socket) do
+    user_id = socket.assigns.current_user.id
+
+    invoices = Records.get_invoices_by_invoice_state(user_id, state)
+
+    {:noreply,
+     socket
+     |> stream(:invoices, invoices, reset: true)}
   end
 
   defp submit_the_invoice(changeset) do
