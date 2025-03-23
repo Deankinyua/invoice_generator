@@ -25,7 +25,7 @@ defmodule InvoiceGenerator.Records.Invoice do
 
     timestamps(type: :utc_datetime)
 
-    embeds_many :items, InvoiceGenerator.Records.Item
+    embeds_many :items, InvoiceGenerator.Records.Item, on_replace: :delete
   end
 
   @doc false

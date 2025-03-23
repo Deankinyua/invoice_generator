@@ -107,6 +107,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             current_user={@current_user.id}
             action={@live_action}
             patch={~p"/invoices"}
+            invoice={@invoice}
           />
 
           <.live_component
@@ -114,6 +115,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             id="invoice date information form"
             current_user={@current_user.id}
             action={@live_action}
+            invoice={@invoice}
           />
 
           <.live_component
@@ -150,10 +152,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => _id}) do
+  defp apply_action(socket, :edit, %{"id" => id}) do
+    invoice = Records.get_invoice!(id)
+
     socket
     |> assign(:page_title, "Edit Invoice")
-    |> assign(:invoice, nil)
+    |> assign(:invoice, invoice)
   end
 
   defp apply_action(socket, :new, _params) do
@@ -174,7 +178,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   end
 
   @impl true
-  def handle_info({:valid_item_details, item_details, status}, socket) do
+  def handle_info({:valid_item_details, item_details, status, action}, socket) do
     item_details =
       Enum.map(item_details, fn map ->
         Map.delete(map, :errors)
@@ -199,22 +203,44 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             all_details = Map.merge(item_details, date_details)
             all_details = Map.merge(all_details, business_details)
 
-            invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
+            case action == :new do
+              true ->
+                invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
 
-            case submit_the_invoice(invoice_changeset) do
-              {:ok, record} ->
-                send(self(), {:invoice_modified, record})
+                case Repo.insert(invoice_changeset) do
+                  {:ok, record} ->
+                    send(self(), {:invoice_created, record})
 
-                {:noreply,
-                 socket
-                 |> push_patch(to: ~p"/invoices")
-                 |> put_flash(:info, "Invoice was Successfully processed")}
+                    {:noreply,
+                     socket
+                     |> push_patch(to: ~p"/invoices")
+                     |> put_flash(:info, "Invoice was Successfully processed")}
 
-              {:error, _changeset} ->
-                {:noreply,
-                 socket
-                 |> push_patch(to: ~p"/invoices")
-                 |> put_flash(:error, "Details were not Submitted!!")}
+                  {:error, _changeset} ->
+                    {:noreply,
+                     socket
+                     |> push_patch(to: ~p"/invoices")
+                     |> put_flash(:error, "Details were not Submitted!!")}
+                end
+
+              false ->
+                invoice_changeset = Records.change_invoice(socket.assigns.invoice, all_details)
+
+                case Repo.update(invoice_changeset) do
+                  {:ok, record} ->
+                    send(self(), {:invoice_modified, record})
+
+                    {:noreply,
+                     socket
+                     |> push_patch(to: ~p"/invoices")
+                     |> put_flash(:info, "Invoice was Updated Successfully")}
+
+                  {:error, _changeset} ->
+                    {:noreply,
+                     socket
+                     |> push_patch(to: ~p"/invoices")
+                     |> put_flash(:error, "Invoice was not updated!!")}
+                end
             end
         end
     end
@@ -235,13 +261,20 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
   end
 
   @impl true
-  def handle_info({:invoice_modified, invoice}, socket) do
+  def handle_info({:invoice_created, invoice}, socket) do
     invoice_count = socket.assigns.invoice_count
 
     {:noreply,
      socket
      |> stream_insert(:invoices, invoice)
      |> assign(invoice_count: invoice_count + 1)}
+  end
+
+  @impl true
+  def handle_info({:invoice_modified, invoice}, socket) do
+    {:noreply,
+     socket
+     |> stream_insert(:invoices, invoice)}
   end
 
   @impl true
@@ -258,10 +291,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
      socket
      |> stream(:invoices, invoices, reset: true)
      |> assign(invoice_count: invoice_count)}
-  end
-
-  defp submit_the_invoice(changeset) do
-    Repo.insert(changeset)
   end
 
   defp invoices?(invoices, socket) do

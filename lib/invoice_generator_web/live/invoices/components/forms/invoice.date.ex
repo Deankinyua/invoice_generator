@@ -69,6 +69,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
 
   @impl true
   def update(assigns, socket) do
+    invoice = assigns.invoice
+
+    if invoice do
+      send_date_details(invoice)
+    end
+
     {:ok,
      socket
      |> assign(assigns)
@@ -127,10 +133,37 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
   end
 
   defp assign_form(socket) do
-    invoice = %Invoice{
-      invoice_date: Date.utc_today(),
-      invoice_due_days: "Net 14 Days"
-    }
+    invoice =
+      case Map.get(socket.assigns, :invoice) do
+        nil ->
+          invoice = %Invoice{
+            invoice_date: Date.utc_today(),
+            invoice_due_days: "Net 14 Days"
+          }
+
+          invoice
+
+        invoice ->
+          due_date = invoice.invoice_due
+          invoice_date = invoice.invoice_date
+          description = invoice.project_description
+
+          due_days = Date.diff(due_date, invoice_date)
+
+          due_days =
+            case due_days == 1 do
+              true -> "Net #{due_days} Day"
+              false -> "Net #{due_days} Days"
+            end
+
+          invoice = %Invoice{
+            invoice_date: invoice_date,
+            invoice_due_days: due_days,
+            project_description: description
+          }
+
+          invoice
+      end
 
     socket = create_and_assign_form(socket, invoice)
     socket
@@ -162,5 +195,15 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
     params = Map.merge(params, %{"invoice_due" => due_date})
 
     params
+  end
+
+  defp send_date_details(invoice) do
+    date_details = %{
+      invoice_due: invoice.invoice_due,
+      invoice_date: invoice.invoice_date,
+      project_description: invoice.project_description
+    }
+
+    send(self(), {:valid_date_details, date_details})
   end
 end

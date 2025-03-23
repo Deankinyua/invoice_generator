@@ -14,7 +14,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
         </Text.title>
 
         <Text.subtitle color="gray">
-          Use this form to manage shop records in your database.
+          Use this form to manage invoice records in your database.
         </Text.subtitle>
 
         <Layout.divider class="my-4" />
@@ -176,6 +176,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
   @impl true
   def update(assigns, socket) do
+    invoice = assigns.invoice
+
+    if invoice do
+      send_combined_data(invoice)
+    end
+
     {:ok,
      socket
      |> assign(assigns)
@@ -196,6 +202,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
           sender_initial_data = extract_changeset_data(data)
 
           combined_business_data = Map.merge(sender_initial_data, changeset.changes)
+
+          dbg(combined_business_data)
 
           send(self(), {:valid_business_details, combined_business_data})
 
@@ -226,24 +234,31 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
   end
 
   defp assign_form(socket) do
-    user_id = socket.assigns.current_user
-
-    case Helpers.get_user(user_id) do
+    case Map.get(socket.assigns, :invoice) do
       nil ->
-        invoice = %Invoice{user_id: user_id}
+        user_id = socket.assigns.current_user
 
-        socket = create_and_assign_form(socket, invoice)
-        socket
+        case Helpers.get_user(user_id) do
+          nil ->
+            invoice = %Invoice{user_id: user_id}
 
-      user_profile ->
-        invoice = %Invoice{
-          user_id: user_id,
-          from_address: user_profile.street,
-          from_city: user_profile.city,
-          from_country: user_profile.country,
-          from_post_code: user_profile.postal_code
-        }
+            socket = create_and_assign_form(socket, invoice)
+            socket
 
+          user_profile ->
+            invoice = %Invoice{
+              user_id: user_id,
+              from_address: user_profile.street,
+              from_city: user_profile.city,
+              from_country: user_profile.country,
+              from_post_code: user_profile.postal_code
+            }
+
+            socket = create_and_assign_form(socket, invoice)
+            socket
+        end
+
+      invoice ->
         socket = create_and_assign_form(socket, invoice)
         socket
     end
@@ -270,5 +285,23 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
       from_post_code: data.from_post_code,
       from_country: data.from_country
     }
+  end
+
+  defp send_combined_data(invoice) do
+    combined_business_data = %{
+      to_address: invoice.to_address,
+      user_id: invoice.user_id,
+      to_client_name: invoice.to_client_name,
+      from_address: invoice.from_address,
+      from_city: invoice.from_city,
+      from_country: invoice.from_country,
+      from_post_code: invoice.from_post_code,
+      to_city: invoice.to_city,
+      to_client_email: invoice.to_client_email,
+      to_country: invoice.to_country,
+      to_post_code: invoice.to_post_code
+    }
+
+    send(self(), {:valid_business_details, combined_business_data})
   end
 end

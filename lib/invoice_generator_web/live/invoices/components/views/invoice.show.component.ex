@@ -35,7 +35,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
             <section>
               <button
                 class="bg-[#F9FAFE] rounded-full text-[#7E88C3] league-spartan-bold rounded-full px-6 py-3"
-                phx-click={JS.patch(~p"/invoices/new")}
+                phx-click={JS.patch(return_edit_path(@invoice_id))}
               >
                 Edit
               </button>
@@ -184,5 +184,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
     {:ok,
      socket
      |> assign(assigns)}
+  end
+
+  defp return_edit_path(id) do
+    ~p"/invoices/#{id}/edit"
   end
 end

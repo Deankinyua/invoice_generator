@@ -79,26 +79,39 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
             Add new item
           </Button.button>
           <div class="flex gap-4">
-            <Button.button
-              variant="secondary"
-              size="xl"
-              class="mt-2 w-min"
-              phx-click={JS.push("close_modal")}
-              phx-target={@myself}
-            >
-              Discard
-            </Button.button>
+            <%= if @action == :edit do %>
+              <Button.button
+                type="submit"
+                size="xl"
+                class="mt-2 w-min"
+                phx-click={JS.push("save", value: %{status: "Draft"})}
+                phx-target={@myself}
+                phx-disable-with="Saving..."
+              >
+                Cancel
+              </Button.button>
+            <% else %>
+              <Button.button
+                variant="secondary"
+                size="xl"
+                class="mt-2 w-min"
+                phx-click={JS.push("close_modal")}
+                phx-target={@myself}
+              >
+                Discard
+              </Button.button>
 
-            <Button.button
-              type="submit"
-              size="xl"
-              class="mt-2 w-min"
-              phx-click={JS.push("save", value: %{status: "Draft"})}
-              phx-target={@myself}
-              phx-disable-with="Saving..."
-            >
-              Save as Draft
-            </Button.button>
+              <Button.button
+                type="submit"
+                size="xl"
+                class="mt-2 w-min"
+                phx-click={JS.push("save", value: %{status: "Draft"})}
+                phx-target={@myself}
+                phx-disable-with="Saving..."
+              >
+                Save as Draft
+              </Button.button>
+            <% end %>
 
             <Button.button
               type="submit"
@@ -108,7 +121,11 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
               phx-target={@myself}
               phx-disable-with="Saving..."
             >
-              Save and Send
+              <%= if @action == :edit do %>
+                Save Changes
+              <% else %>
+                Save and Send
+              <% end %>
             </Button.button>
           </div>
         </.form>
@@ -162,7 +179,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
         case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
           nil ->
             status = String.to_atom(value)
-            send(self(), {:valid_item_details, list_of_item_params, status})
+            action = socket.assigns.action
+            send(self(), {:valid_item_details, list_of_item_params, status, action})
 
             {:noreply,
              socket
