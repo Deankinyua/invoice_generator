@@ -24,7 +24,11 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
       )}
 
       <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
-        <Layout.flex flex_direction="col" justify_content="between" class="gap-5">
+        <Layout.flex
+          flex_direction="col"
+          justify_content="between"
+          class="gap-5 border border-blue-400 sm:hidden"
+        >
           <div class="w-full mt-8">
             <.link navigate={~p"/invoices"}>
               <div class="flex items-center gap-6">
@@ -145,7 +149,39 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
               </div>
             </div>
           </section>
+
+          <div class="w-full bg-[#FFFFFF] flex justify-center gap-3 py-6">
+            <section>
+              <Button.button
+                class="bg-[#7c5dfa] rounded-full pl-2"
+                phx-click={JS.patch(~p"/invoices/new")}
+              >
+                Edit
+              </Button.button>
+            </section>
+            <section>
+              <Button.button
+                class="bg-[#7c5dfa] rounded-full pl-2"
+                phx-click={JS.patch(~p"/invoices/new")}
+              >
+                Delete
+              </Button.button>
+            </section>
+            <section>
+              <Button.button
+                class="bg-[#7c5dfa] rounded-full pl-2"
+                phx-click={JS.patch(~p"/invoices/new")}
+              >
+                Mark as Paid
+              </Button.button>
+            </section>
+          </div>
         </Layout.flex>
+
+        <.live_component
+          module={InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge}
+          id="individual invoice at large screen size"
+        />
       </div>
     </div>
     """
