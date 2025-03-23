@@ -48,7 +48,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
                 <div><img src={~p"/images/invoices/plusbutton.svg"} alt="invoice button" /></div>
 
-                <div>New Invoice</div>
+                <div class="league-spartan-bold">New Invoice</div>
               </Layout.flex>
             </button>
 

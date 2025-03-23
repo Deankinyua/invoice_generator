@@ -56,77 +56,67 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
               </Layout.col>
 
               <div class={show_remove_item_button(item.id, @item_count)}>
-                <Button.button
-                  variant="secondary"
-                  size="xs"
-                  class="mt-2 w-min"
+                <button
+                  type="button"
+                  class="bg-[#FFFFFF] text-[#7E88C3] rounded-full px-5 py-3"
                   phx-click={JS.push("remove_item", value: %{id: item.id})}
                   phx-target={@myself}
                 >
-                  Remove Item
-                </Button.button>
+                  <img src={~p"/images/invoices/bin.svg"} alt="Bin" />
+                </button>
               </div>
             <% end %>
           </div>
 
-          <Button.button
-            variant="secondary"
-            size="xl"
-            class="mt-2 w-min"
+          <button
+            type="button"
+            class="w-full league-spartan-bold bg-[#F9FAFE] text-[#7E88C3] rounded-full px-5 py-3 mt-8"
             phx-click={JS.push("add_new_item")}
             phx-target={@myself}
           >
             Add new item
-          </Button.button>
-          <div class="flex gap-4">
-            <%= if @action == :edit do %>
-              <Button.button
-                type="submit"
-                size="xl"
-                class="mt-2 w-min"
-                phx-click={JS.push("save", value: %{status: "Draft"})}
-                phx-target={@myself}
-                phx-disable-with="Saving..."
-              >
-                Cancel
-              </Button.button>
-            <% else %>
-              <Button.button
-                variant="secondary"
-                size="xl"
-                class="mt-2 w-min"
-                phx-click={JS.push("close_modal")}
-                phx-target={@myself}
-              >
-                Discard
-              </Button.button>
-
-              <Button.button
-                type="submit"
-                size="xl"
-                class="mt-2 w-min"
-                phx-click={JS.push("save", value: %{status: "Draft"})}
-                phx-target={@myself}
-                phx-disable-with="Saving..."
-              >
-                Save as Draft
-              </Button.button>
-            <% end %>
-
-            <Button.button
-              type="submit"
-              size="xl"
-              class="mt-2 w-min"
-              phx-click={JS.push("save", value: %{status: "Pending"})}
+          </button>
+          <div class={["flex gap-4 mt-8", determine_justification(@action)]}>
+            <button
+              type="button"
+              class="league-spartan-bold bg-[#F9FAFE] text-[#7E88C3] rounded-full px-5 py-3"
+              phx-click={JS.push("close_modal")}
               phx-target={@myself}
-              phx-disable-with="Saving..."
             >
               <%= if @action == :edit do %>
-                Save Changes
+                Cancel
               <% else %>
-                Save and Send
+                Discard
               <% end %>
-            </Button.button>
+            </button>
+
+            <div class="flex gap-4">
+              <%= if @action == :new do %>
+                <button
+                  type="submit"
+                  class="league-spartan-bold bg-[#373B53] text-[#FFFFFF] rounded-full px-5 py-3"
+                  phx-click={JS.push("save", value: %{status: "Draft"})}
+                  phx-target={@myself}
+                  phx-disable-with="Saving..."
+                >
+                  Save as Draft
+                </button>
+              <% end %>
+
+              <button
+                type="submit"
+                class="league-spartan-bold bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-5 py-3"
+                phx-click={JS.push("save", value: %{status: "Pending"})}
+                phx-target={@myself}
+                phx-disable-with="Saving..."
+              >
+                <%= if @action == :edit do %>
+                  Save Changes
+                <% else %>
+                  Save & Send
+                <% end %>
+              </button>
+            </div>
           </div>
         </.form>
       </Layout.col>
@@ -300,6 +290,16 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
             "hidden"
           end
       end
+    end
+  end
+
+  defp determine_justification(action) do
+    case action == :new do
+      true ->
+        "justify-between"
+
+      false ->
+        "justify-end"
     end
   end
 end
