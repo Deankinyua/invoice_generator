@@ -14,7 +14,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DeadView.InvoiceHelper do
       get_classes_from_state(@invoice_state)
     ]}>
       <div><img src={return_status_button(@invoice_state)} alt="Status Button" /></div>
-      <div class="league-spartan-bold">
+      <div class="league-spartan-bold text-base">
+        {@invoice_state}
+      </div>
+    </section>
+    """
+  end
+
+  attr :invoice_state, :atom, required: true
+
+  @doc """
+  Renders a user profile menu
+  """
+  def individual_invoice_state_button(assigns) do
+    ~H"""
+    <section class={[
+      "py-2 px-6 flex justify-center items-center gap-3 rounded-md",
+      get_classes_from_state(@invoice_state)
+    ]}>
+      <div><img src={return_status_button(@invoice_state)} alt="Status Button" /></div>
+      <div class="league-spartan-bold text-base">
         {@invoice_state}
       </div>
     </section>

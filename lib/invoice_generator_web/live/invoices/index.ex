@@ -41,8 +41,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
                 id="invoice items filter component"
               />
             </div>
-            <Button.button
-              class="shrink-1 bg-[#7c5dfa] rounded-full pl-2 hidden sm:block"
+            <button
+              class="shrink-1 bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-6 py-3 hidden sm:block"
               phx-click={JS.patch(~p"/invoices/new")}
             >
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
@@ -50,7 +50,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
                 <div>New Invoice</div>
               </Layout.flex>
-            </Button.button>
+            </button>
 
             <Button.button
               class="bg-[#7c5dfa] rounded-full pl-2 block sm:hidden"

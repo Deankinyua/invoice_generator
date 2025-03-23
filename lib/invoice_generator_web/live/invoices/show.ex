@@ -181,6 +181,23 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
         <.live_component
           module={InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge}
           id="individual invoice at large screen size"
+          invoice_id={@invoice_id}
+          description={@description}
+          invoice_state={@invoice_state}
+          invoice_date={@invoice_date}
+          due_date={@due_date}
+          sender_address={@sender_address}
+          sender_country={@sender_country}
+          sender_postcode={@sender_postcode}
+          sender_city={@sender_city}
+          receiver_address={@receiver_address}
+          receiver_country={@receiver_country}
+          receiver_postcode={@receiver_postcode}
+          receiver_city={@receiver_city}
+          receiver_email={@receiver_email}
+          receiver_name={@receiver_name}
+          items={@items}
+          total_item_cost={@total_item_cost}
         />
       </div>
     </div>
