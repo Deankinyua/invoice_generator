@@ -6,10 +6,14 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
   def render(assigns) do
     ~H"""
     <div>
-      <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-        <Text.text class="my-4">
+      <Layout.flex
+        flex_direction="col"
+        align_items="start"
+        class="gap-4 league-spartan-regular text-[#0C0E16]"
+      >
+        <p>
           Password must contain:
-        </Text.text>
+        </p>
 
         <Layout.flex flex_direction="col" align_items="start">
           <Layout.flex flex_direction="row" align_items="start">
@@ -17,7 +21,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
               flex_direction="row"
               align_items="center"
               justify_content="start"
-              class="gap-2 flex-1 border border-red-400"
+              class="gap-1 flex-1"
             >
               <div>
                 <img
@@ -30,13 +34,13 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
                   class={validation_feedback(:gray, :length, @form_errors)}
                 />
               </div>
-              <p class="text-xs">8+ characters</p>
+              <p class="text-sm">8+ characters</p>
             </Layout.flex>
             <Layout.flex
               flex_direction="row"
               align_items="center"
               justify_content="start"
-              class="gap-2 flex-1 border border-red-400"
+              class="gap-1 flex-1"
             >
               <div>
                 <img
@@ -49,13 +53,13 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
                   class={validation_feedback(:gray, :number, @form_errors)}
                 />
               </div>
-              <p class="text-xs">number</p>
+              <p class="text-sm">number</p>
             </Layout.flex>
             <Layout.flex
               flex_direction="row"
               align_items="center"
               justify_content="start"
-              class="gap-2 flex-1 border border-red-400"
+              class="gap-1 flex-1"
             >
               <div>
                 <img
@@ -68,7 +72,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
                   class={validation_feedback(:gray, :uppercase, @form_errors)}
                 />
               </div>
-              <p class="text-xs">upper-case</p>
+              <p class="text-sm">upper-case</p>
             </Layout.flex>
           </Layout.flex>
         </Layout.flex>
@@ -76,7 +80,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
           flex_direction="row"
           align_items="center"
           justify_content="start"
-          class="gap-2 flex-1 border border-red-400"
+          class="gap-1 flex-1"
         >
           <div>
             <img
@@ -89,7 +93,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
               class={validation_feedback(:gray, :special, @form_errors)}
             />
           </div>
-          <p class="text-xs">special character (*#$%&!-@)</p>
+          <p class="text-sm">special character (*#$%&!-@)</p>
         </Layout.flex>
       </Layout.flex>
     </div>

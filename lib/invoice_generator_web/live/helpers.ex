@@ -221,7 +221,7 @@ defmodule InvoiceGenerator.Helpers do
     ]
   end
 
-  def payment_terms() do
+  def payment_terms do
     [
       %{name: "Net 30 Days"},
       %{name: "Net 14 Days"},
@@ -244,13 +244,14 @@ defmodule InvoiceGenerator.Helpers do
     # converts the keyword items into a map with atom keys
 
     result =
-      Enum.map(messages, fn {x, y} -> {String.to_atom(x), y} end)
+      messages
+      |> Enum.map(fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
     result
   end
 
-  def initial_errors() do
+  def initial_errors do
     %{
       length: "errors",
       uppercase: "errors",
@@ -300,31 +301,7 @@ defmodule InvoiceGenerator.Helpers do
     # * params is the result
 
     params =
-      case price == :error do
-        true ->
-          params =
-            Map.merge(params, %{"product_#{count}_total" => "quantity and price must be numbers"})
-
-          params
-
-        false ->
-          case quantity == :error do
-            true ->
-              params =
-                Map.merge(params, %{
-                  "product_#{count}_total" => "quantity and price must be numbers"
-                })
-
-              params
-
-            false ->
-              total = elem(price, 0) * elem(quantity, 0)
-
-              params = Map.merge(params, %{"product_#{count}_total" => "#{total}"})
-
-              params
-          end
-      end
+      calculate_total(params, count, price, quantity)
 
     # * Using the unique prefix for fields e.g product_1 this code here
     # * groups each map of a product as its own map
@@ -342,15 +319,45 @@ defmodule InvoiceGenerator.Helpers do
     # * this code transforms our map from having string keys to having atom keys
     # * in preparation for the next step
     individual_map_with_atom_keys =
-      Enum.map(individual_map_for_product, fn {x, y} -> {String.to_atom(x), y} end)
+      individual_map_for_product
+      |> Enum.map(fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
     individual_map_with_atom_keys
   end
 
+  defp calculate_total(params, count, price, quantity) do
+    case price == :error do
+      true ->
+        params =
+          Map.merge(params, %{"product_#{count}_total" => "quantity and price must be numbers"})
+
+        params
+
+      false ->
+        case quantity == :error do
+          true ->
+            params =
+              Map.merge(params, %{
+                "product_#{count}_total" => "quantity and price must be numbers"
+              })
+
+            params
+
+          false ->
+            total = elem(price, 0) * elem(quantity, 0)
+
+            params = Map.merge(params, %{"product_#{count}_total" => "#{total}"})
+
+            params
+        end
+    end
+  end
+
   def merge_individual_maps_to_one(list_of_maps) do
     merged_map =
-      Enum.reduce(list_of_maps, %{}, fn map, empty_map ->
+      list_of_maps
+      |> Enum.reduce(%{}, fn map, empty_map ->
         Map.merge(empty_map, map)
       end)
 
@@ -400,10 +407,15 @@ defmodule InvoiceGenerator.Helpers do
         end
       end)
 
+    add_errors_to_map_of_product(list_of_tuples)
+  end
+
+  defp add_errors_to_map_of_product(list_of_tuples) do
     # * converts the list of tuples into a map with atom keys
 
     map_of_product =
-      Enum.map(list_of_tuples, fn {x, y} -> {String.to_atom(x), y} end)
+      list_of_tuples
+      |> Enum.map(fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
     # * adds an error field to detect missing details
@@ -416,7 +428,7 @@ defmodule InvoiceGenerator.Helpers do
           map_of_product = Map.put(map_of_product, :errors, false)
           map_of_product
 
-        _ ->
+        _tuple ->
           map_of_product = Map.put(map_of_product, :errors, true)
           map_of_product
       end

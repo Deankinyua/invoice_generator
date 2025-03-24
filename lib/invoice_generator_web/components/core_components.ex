@@ -271,13 +271,14 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
   attr :id, :any, default: nil
   attr :name, :any
   attr :label, :string, default: nil
+  attr :label_class, :string, default: "text-sm"
+  attr :class, :string, default: ""
   attr :value, :any
-  attr :hide_errors, :string, default: "block"
 
   attr :type, :string,
     default: "text",
     values: ~w(checkbox color date datetime-local email file month number password
-               range search select tel text textarea time url week)
+               range search select tel text textarea time url week nullify_errors)
 
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
@@ -311,7 +312,7 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
 
     ~H"""
     <div>
-      <label class="flex items-center gap-4 text-sm leading-6 text-zinc-600">
+      <label class={["flex items-center gap-4 text-sm leading-6 text-zinc-600", @label_class]}>
         <input type="hidden" name={@name} value="false" disabled={@rest[:disabled]} />
         <input
           type="checkbox"
@@ -367,11 +368,32 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "nullify_errors"} = assigns) do
+    ~H"""
+    <div>
+      <label for={@id} class={@label_class}>{@label}</label>
+      <input
+        type="text"
+        name={@name}
+        id={@id}
+        value={Phoenix.HTML.Form.normalize_value("text", @value)}
+        class={[
+          "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6 border-zinc-300 focus:border-zinc-400"
+        ]}
+        {@rest}
+      />
+      <div class="hidden">
+        <.error :for={msg <- @errors}>{msg}</.error>
+      </div>
+    </div>
+    """
+  end
+
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
     <div>
-      <.label for={@id}>{@label}</.label>
+      <label for={@id} class={@label_class}>{@label}</label>
       <input
         type={@type}
         name={@name}
@@ -379,12 +401,13 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
           "mt-2 block w-full rounded-lg text-zinc-900 focus:ring-0 sm:text-sm sm:leading-6",
-          @errors == [] && "border-zinc-300 focus:border-zinc-400",
+          @class,
+          @errors == [] && "border-[#00000066] focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
         ]}
         {@rest}
       />
-      <div class={@hide_errors}>
+      <div>
         <.error :for={msg <- @errors}>{msg}</.error>
       </div>
     </div>
@@ -395,11 +418,12 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
   Renders a label.
   """
   attr :for, :string, default: nil
+  attr :class, :string, default: "text-sm"
   slot :inner_block, required: true
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-zinc-800">
+    <label for={@for} class={["block text-sm font-semibold leading-6 text-zinc-800", @class]}>
       {render_slot(@inner_block)}
     </label>
     """

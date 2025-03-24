@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   alias InvoiceGenerator.Records.Invoice
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="bg-[#F8F8FB] w-full h-full">
@@ -25,13 +25,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
         <Layout.flex
           flex_direction="row"
           justify_content="between"
-          class="w-[90%] mx-auto gap-2 border border-blue-400 max-w-3xl mt-10"
+          class="w-[90%] mx-auto gap-2 max-w-3xl mt-10"
         >
-          <Layout.flex
-            flex_direction="col"
-            align_items="start"
-            class="w-[28%] sm:w-[45%] border border-red-400"
-          >
+          <Layout.flex flex_direction="col" align_items="start" class="w-[28%] sm:w-[45%]">
             <section class="league-spartan-bold text-2xl text-[#0C0E16] sm:text-4xl">
               Invoices
             </section>
@@ -39,7 +35,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
               <%= if @invoices_present == false do %>
                 No invoices
               <% else %>
-                There are {@invoice_count} invoices
+                There are {@invoice_count} {@invoice_type} invoices
               <% end %>
             </section>
           </Layout.flex>
@@ -63,7 +59,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             </button>
 
             <button
-              class="shrink-1 bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-6 py-3 sm:hidden"
+              class="z-50 shrink-0 bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-6 py-3 sm:hidden border border-blue-400"
               phx-click={JS.patch(~p"/invoices/new")}
             >
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
@@ -141,23 +137,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     current_user_id = socket.assigns.current_user.id
 
     user_invoices = get_invoices(current_user_id)
 
-    invoice_count = Integer.to_string(Enum.count(user_invoices)) <> " " <> "total"
+    invoice_count = Enum.count(user_invoices)
+
+    invoice_type = "total"
 
     socket = invoices?(user_invoices, socket)
 
     {:ok,
      socket
      |> stream(:invoices, user_invoices)
-     |> assign(invoice_count: invoice_count)}
+     |> assign(invoice_count: invoice_count)
+     |> assign(invoice_type: invoice_type)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
@@ -187,7 +186,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     result
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:valid_item_details, item_details, status, action}, socket) do
     item_details =
       Enum.map(item_details, fn map ->
@@ -213,64 +212,26 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             all_details = Map.merge(item_details, date_details)
             all_details = Map.merge(all_details, business_details)
 
-            case action == :new do
-              true ->
-                invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
-
-                case Repo.insert(invoice_changeset) do
-                  {:ok, record} ->
-                    send(self(), {:invoice_created, record})
-
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:info, "Invoice was Successfully processed")}
-
-                  {:error, _changeset} ->
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:error, "Details were not Submitted!!")}
-                end
-
-              false ->
-                invoice_changeset = Records.change_invoice(socket.assigns.invoice, all_details)
-
-                case Repo.update(invoice_changeset) do
-                  {:ok, record} ->
-                    send(self(), {:invoice_modified, record})
-
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:info, "Invoice was Updated Successfully")}
-
-                  {:error, _changeset} ->
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:error, "Invoice was not updated!!")}
-                end
-            end
+            submit_invoice_details(action, socket, all_details)
         end
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:valid_date_details, date_details}, socket) do
     {:noreply,
      socket
      |> assign(date_details: date_details)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:valid_business_details, business_details}, socket) do
     {:noreply,
      socket
      |> assign(business_details: business_details)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:invoice_created, invoice}, socket) do
     invoice_count = socket.assigns.invoice_count
 
@@ -280,30 +241,32 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
      |> assign(invoice_count: invoice_count + 1)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:invoice_modified, invoice}, socket) do
     {:noreply,
      socket
      |> stream_insert(:invoices, invoice)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:filter_invoice, state}, socket) do
     user_id = socket.assigns.current_user.id
 
     invoices = Records.get_invoices_by_invoice_state(user_id, state)
 
-    state =
-      Atom.to_string(state)
+    invoice_type =
+      state
+      |> Atom.to_string()
       |> String.downcase()
 
     invoice_count =
-      Integer.to_string(Enum.count(invoices)) <> " " <> state
+      Enum.count(invoices)
 
     {:noreply,
      socket
      |> stream(:invoices, invoices, reset: true)
-     |> assign(invoice_count: invoice_count)}
+     |> assign(invoice_count: invoice_count)
+     |> assign(invoice_type: invoice_type)}
   end
 
   defp invoices?(invoices, socket) do
@@ -313,6 +276,55 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
       false ->
         assign(socket, :invoices_present, true)
+    end
+  end
+
+  defp submit_invoice_details(action, socket, all_details) do
+    case action == :new do
+      true ->
+        invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
+
+        create_invoice(invoice_changeset, socket)
+
+      false ->
+        invoice_changeset = Records.change_invoice(socket.assigns.invoice, all_details)
+        update_invoice(invoice_changeset, socket)
+    end
+  end
+
+  defp create_invoice(invoice_changeset, socket) do
+    case Repo.insert(invoice_changeset) do
+      {:ok, record} ->
+        send(self(), {:invoice_created, record})
+
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:info, "Invoice was Successfully processed")}
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:error, "Details were not Submitted!!")}
+    end
+  end
+
+  defp update_invoice(invoice_changeset, socket) do
+    case Repo.update(invoice_changeset) do
+      {:ok, record} ->
+        send(self(), {:invoice_modified, record})
+
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:info, "Invoice was Updated Successfully")}
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:error, "Invoice was not updated!!")}
     end
   end
 end

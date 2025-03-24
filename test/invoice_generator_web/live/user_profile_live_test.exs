@@ -1,5 +1,5 @@
 defmodule InvoiceGeneratorWeb.UserProfileLiveTest do
-  use InvoiceGeneratorWeb.ConnCase
+  use InvoiceGeneratorWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import InvoiceGenerator.ProfileFixtures
@@ -38,7 +38,9 @@ defmodule InvoiceGeneratorWeb.UserProfileLiveTest do
     test "saves new user_profile", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
-      assert index_live |> element("a", "New User profile") |> render_click() =~
+      assert index_live
+             |> element("a", "New User profile")
+             |> render_click() =~
                "New User profile"
 
       assert_patch(index_live, ~p"/profiles/new")
@@ -61,7 +63,9 @@ defmodule InvoiceGeneratorWeb.UserProfileLiveTest do
     test "updates user_profile in listing", %{conn: conn, user_profile: user_profile} do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
-      assert index_live |> element("#profiles-#{user_profile.id} a", "Edit") |> render_click() =~
+      assert index_live
+             |> element("#profiles-#{user_profile.id} a", "Edit")
+             |> render_click() =~
                "Edit User profile"
 
       assert_patch(index_live, ~p"/profiles/#{user_profile}/edit")
@@ -84,7 +88,10 @@ defmodule InvoiceGeneratorWeb.UserProfileLiveTest do
     test "deletes user_profile in listing", %{conn: conn, user_profile: user_profile} do
       {:ok, index_live, _html} = live(conn, ~p"/profiles")
 
-      assert index_live |> element("#profiles-#{user_profile.id} a", "Delete") |> render_click()
+      assert index_live
+             |> element("#profiles-#{user_profile.id} a", "Delete")
+             |> render_click()
+
       refute has_element?(index_live, "#profiles-#{user_profile.id}")
     end
   end
@@ -102,7 +109,9 @@ defmodule InvoiceGeneratorWeb.UserProfileLiveTest do
     test "updates user_profile within modal", %{conn: conn, user_profile: user_profile} do
       {:ok, show_live, _html} = live(conn, ~p"/profiles/#{user_profile}")
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
+      assert show_live
+             |> element("a", "Edit")
+             |> render_click() =~
                "Edit User profile"
 
       assert_patch(show_live, ~p"/profiles/#{user_profile}/show/edit")

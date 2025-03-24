@@ -2,10 +2,8 @@ defmodule InvoiceGeneratorWeb.UserForgotPasswordLiveTest do
   use InvoiceGeneratorWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import InvoiceGenerator.AccountsFixtures
 
-  alias InvoiceGenerator.Accounts
-  alias InvoiceGenerator.Repo
+  alias InvoiceGenerator.{Accounts, AccountsFixtures, Repo}
 
   describe "Forgot password page" do
     test "renders email page", %{conn: conn} do

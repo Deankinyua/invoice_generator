@@ -8,10 +8,18 @@
 /* This file is for your main application CSS */
 
 /* League Spartan Font Classes */
-.league-spartan-bold {
+
+.league-spartan-extralight {
   font-family: "League Spartan", sans-serif;
   font-optical-sizing: none;
-  font-weight: 700;
+  font-weight: 200;
+  font-style: normal;
+}
+
+.league-spartan-regular {
+  font-family: "League Spartan", sans-serif;
+  font-optical-sizing: none;
+  font-weight: 400;
   font-style: normal;
 }
 
@@ -22,8 +30,28 @@
   font-style: normal;
 }
 
+.league-spartan-semibold {
+  font-family: "League Spartan", sans-serif;
+  font-optical-sizing: none;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.league-spartan-bold {
+  font-family: "League Spartan", sans-serif;
+  font-optical-sizing: none;
+  font-weight: 700;
+  font-style: normal;
+}
+
 /* -------------------- */
 
 .center-element {
   margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .hide-placeholder::placeholder {
+    color: transparent; /* Hides placeholder */
+  }
 }

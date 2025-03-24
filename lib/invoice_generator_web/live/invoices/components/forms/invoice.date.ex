@@ -1,10 +1,9 @@
 defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
   use InvoiceGeneratorWeb, :live_component
 
-  alias InvoiceGenerator.{Records, Helpers}
-  alias InvoiceGenerator.Records.Invoice
+  alias InvoiceGenerator.{Helpers, Records, Records.Invoice}
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -67,7 +66,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     invoice = assigns.invoice
 
@@ -82,7 +81,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
      |> assign_form()}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"date_details" => date_params}, socket) do
     date_params = get_the_invoice_due_date(date_params)
 
@@ -117,7 +116,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DateComponent do
      |> assign(form: form)}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("save", %{"date_details" => date_params}, socket) do
     date_params = get_the_invoice_due_date(date_params)
 

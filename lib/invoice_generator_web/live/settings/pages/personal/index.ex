@@ -1,16 +1,14 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.Index do
-  alias InvoiceGenerator.Accounts
   use InvoiceGeneratorWeb, :live_view
 
-  require Logger
+  import Ecto.Changeset
 
-  alias Ecto.Changeset
-  alias InvoiceGenerator.{Repo, Profile, Helpers}
+  alias InvoiceGenerator.{Accounts, Helpers, Profile, Repo}
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="w-full h-full">
+    <div class="w-full h-full bg-[#F8F8F8]">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -19,7 +17,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
         sticky: true
       )}
 
-      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
+      <div class="min-h-screen mx-2 mx-auto max-w-4xl sm:w-[60%] sm:py-6">
         {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
           session: %{
             "active_tab" => "personal",
@@ -29,60 +27,58 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
           sticky: true
         )}
 
-        <div class="border border-blue-400 mx-4 py-20">
-          <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-            <div class="border border-red-400">
-              <.live_component
-                module={InvoiceGeneratorWeb.Profile.ActualPicture}
-                id="actual_picture_live_component"
-                profile_url={@profile_url}
-                name={@current_user.name}
-              />
-            </div>
-
-            <Layout.flex flex_direction="row">
-              <section>
+        <div class="mx-4 py-10 bg-[#FFFFFF]">
+          <div class="w-[90%] mx-auto">
+            <Layout.flex flex_direction="col" align_items="start" class="gap-4">
+              <div class="">
                 <.live_component
-                  module={InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture}
-                  id="settings_update_profile_picture"
-                  user_id={@current_user.id}
+                  module={InvoiceGeneratorWeb.Profile.ActualPicture}
+                  id="actual_picture_live_component"
+                  profile_url={@profile_url}
+                  name={@current_user.name}
                 />
-              </section>
+              </div>
+
+              <Layout.flex flex_direction="row">
+                <section>
+                  <.live_component
+                    module={InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture}
+                    id="settings_update_profile_picture"
+                    user_id={@current_user.id}
+                  />
+                </section>
+              </Layout.flex>
             </Layout.flex>
-          </Layout.flex>
-          <Text.title class="my-4">
-            Edit Profile Information
-          </Text.title>
+            <p class="my-4 text-xl league-spartan-medium text-[#0C0E16]">
+              Edit Profile Information
+            </p>
 
-          <.live_component
-            module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}
-            id="settings_personal_details"
-            current_user={@current_user}
-          />
+            <.live_component
+              module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}
+              id="settings_personal_details"
+              current_user={@current_user}
+            />
 
-          <.live_component
-            module={InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails}
-            id="settings_business_address_details"
-            current_user={@current_user.id}
-          />
+            <.live_component
+              module={InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails}
+              id="settings_business_address_details"
+              current_user={@current_user.id}
+            />
+          </div>
         </div>
       </div>
     </div>
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     user_id = socket.assigns.current_user.id
 
-    profile_url = Helpers.get_profile_url(user_id)
-
-    {:ok,
-     socket
-     |> assign(profile_url: profile_url)}
+    {:ok, assign(socket, profile_url: Helpers.get_profile_url(user_id))}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info(
         {:update_profile_picture, details},
         socket
@@ -100,17 +96,15 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
           delete_profile_picture(filename)
       end
 
-    changeset = Changeset.change(user, %{picture: details})
+    changeset = change(user, %{picture: details})
     Repo.update(changeset)
 
     {
       :noreply,
-      socket
-      |> redirect(to: "/personaldetails")
+      redirect(socket, to: "/personaldetails")
     }
   end
 
-  @impl true
   def handle_info(
         {:valid_personal_details, changeset},
         socket
@@ -122,7 +116,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
      |> assign(personal_details: personal_details)}
   end
 
-  @impl true
   def handle_info(
         :update_personal_info,
         socket
@@ -144,18 +137,17 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
      |> redirect(to: "/personaldetails")}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("delete", %{"user_id" => user_id}, socket) do
     user_profile = Helpers.get_user(user_id)
 
     case Map.get(user_profile.picture, :original_filename) do
       nil ->
-        Logger.warning("value is nil")
         {:noreply, socket}
 
       filename ->
@@ -167,9 +159,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
         Repo.update(profile_changeset)
         delete_profile_picture(filename)
 
-        {:noreply,
-         socket
-         |> redirect(to: "/personaldetails")}
+        {:noreply, redirect(socket, to: "/personaldetails")}
     end
   end
 
@@ -177,7 +167,8 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     file_name = "photo/" <> file_name
 
     _result =
-      ExAws.S3.delete_object("invoicegenerator", file_name)
+      "invoicegenerator"
+      |> ExAws.S3.delete_object(file_name)
       |> ExAws.request()
   end
 end

@@ -1,12 +1,12 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.Password do
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.{Helpers, Accounts, Repo, Helpers}
+  alias InvoiceGenerator.{Accounts, Helpers, Repo}
 
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="w-full h-full bg-[#F8F8F8]">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -15,7 +15,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
         sticky: true
       )}
 
-      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
+      <div class="min-h-screen mx-2 mx-auto max-w-4xl sm:w-[60%] sm:py-6">
         {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
           session: %{
             "active_tab" => "password",
@@ -25,42 +25,54 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
           sticky: true
         )}
 
-        <div class="border border-blue-400 mx-4 py-20">
-          <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-            <div class="border border-red-400">
-              <.live_component
-                module={InvoiceGeneratorWeb.Profile.ActualPicture}
-                id="actual_picture_live_component"
-                profile_url={@profile_url}
-                name={@current_user.name}
+        <div class="mx-4 py-10 bg-[#FFFFFF] league-spartan-medium">
+          <div class="w-[90%] mx-auto">
+            <Layout.flex flex_direction="col" align_items="start" class="gap-4">
+              <div class="">
+                <.live_component
+                  module={InvoiceGeneratorWeb.Profile.ActualPicture}
+                  id="actual_picture_live_component"
+                  profile_url={@profile_url}
+                  name={@current_user.name}
+                />
+              </div>
+            </Layout.flex>
+
+            <p class="text-xl text-[#0C0E16]">
+              Change Password
+            </p>
+
+            <.simple_form for={@form} phx-submit="reset_password" phx-change="validate" class="my-0">
+              <.input
+                field={@form[:old_password]}
+                type="text"
+                label="Old password"
+                label_class="mt-0 text-[#7E88C3]"
               />
-            </div>
-          </Layout.flex>
+              <.input
+                field={@form[:password]}
+                type="nullify_errors"
+                label="New password"
+                label_class="mt-0 text-[#7E88C3]"
+                autocomplete="off"
+              />
 
-          <Text.title class="my-4">
-            Change Password
-          </Text.title>
+              <.live_component
+                module={InvoiceGeneratorWeb.Password.Validation.Component}
+                id="password_validation_component"
+                form_errors={@form_errors}
+              />
 
-          <.simple_form for={@form} phx-submit="reset_password" phx-change="validate">
-            <.input field={@form[:old_password]} type="text" label="Old password" />
-            <.input
-              field={@form[:password]}
-              type="text"
-              label="New password"
-              autocomplete="off"
-              hide_errors="hidden"
-            />
-
-            <.live_component
-              module={InvoiceGeneratorWeb.Password.Validation.Component}
-              id="password_validation_component"
-              form_errors={@form_errors}
-            />
-
-            <:actions>
-              <.button phx-disable-with="Resetting..." class="w-full">Save Changes</.button>
-            </:actions>
-          </.simple_form>
+              <:actions>
+                <button
+                  phx-disable-with="Resetting..."
+                  class="w-[90%] mx-auto league-spartan-semibold bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-5 py-3 mt-2"
+                >
+                  Save Changes
+                </button>
+              </:actions>
+            </.simple_form>
+          </div>
         </div>
       </div>
     </div>

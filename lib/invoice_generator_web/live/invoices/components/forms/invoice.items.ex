@@ -1,9 +1,9 @@
 defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
   use InvoiceGeneratorWeb, :live_component
 
-  alias InvoiceGenerator.{Helpers}
+  alias InvoiceGenerator.Helpers
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -124,7 +124,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -136,7 +136,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign_form()}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"items" => item_params}, socket) do
     # * the main purpose of whatever is here is to offer feedback to the user
     item_count = socket.assigns.item_count
@@ -153,7 +153,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(item_error: "")}
   end
 
-  def handle_event("save", %{"status" => value}, socket) do
+  def handle_event("save", %{"status" => status}, socket) do
     params = socket.assigns.form.params
 
     case params == %{} do
@@ -166,11 +166,16 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
         count = socket.assigns.item_count
         list_of_item_params = Helpers.get_list_of_params(params, count)
 
-        case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
+        has_errors = &(&1.errors == true)
+
+        case Enum.find(list_of_item_params, has_errors) do
           nil ->
-            status = String.to_atom(value)
             action = socket.assigns.action
-            send(self(), {:valid_item_details, list_of_item_params, status, action})
+
+            send(
+              self(),
+              {:valid_item_details, list_of_item_params, String.to_atom(status), action}
+            )
 
             {:noreply,
              socket
@@ -184,7 +189,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     end
   end
 
-  @impl true
   def handle_event("add_new_item", _params, socket) do
     items = socket.assigns.items
 
@@ -216,7 +220,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     }
   end
 
-  @impl true
   def handle_event("remove_item", %{"id" => id}, socket) do
     items = socket.assigns.items
 
@@ -225,7 +228,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     new_count = count - 1
 
     item =
-      Enum.filter(items, fn x -> x.id == id end)
+      items
+      |> Enum.filter(fn x -> x.id == id end)
       |> Enum.at(0)
 
     new_items =
@@ -237,7 +241,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(items: new_items)}
   end
 
-  @impl true
   def handle_event("close_modal", _params, socket) do
     {:noreply,
      socket
@@ -279,17 +282,21 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     if list_of_params == [] do
       "hidden"
     else
-      case Enum.at(list_of_params, item_index) do
-        nil ->
-          "hidden"
+      hide_errors(list_of_params, item_index)
+    end
+  end
 
-        item_map ->
-          if item_map.errors == true do
-            "block"
-          else
-            "hidden"
-          end
-      end
+  defp hide_errors(list_of_params, item_index) do
+    case Enum.at(list_of_params, item_index) do
+      nil ->
+        "hidden"
+
+      item_map ->
+        if item_map.errors == true do
+          "block"
+        else
+          "hidden"
+        end
     end
   end
 

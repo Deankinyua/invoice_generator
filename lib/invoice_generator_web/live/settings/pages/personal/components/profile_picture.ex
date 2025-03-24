@@ -1,14 +1,14 @@
 defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
   use InvoiceGeneratorWeb, :live_component
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
-      <Layout.flex flex_direction="w-full row">
-        <section class="h-20 w-20 rounded-full border-2 border-blue-400 overflow-hidden ">
+      <Layout.flex flex_direction="row" class="gap-2">
+        <section class="h-20 w-20 sm:h-32 sm:w-32 rounded-full overflow-hidden ">
           <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
         </section>
-        <section>
+        <section class="league-spartan-semibold text-[#0C0E16] text-base">
           {@name} / Profile Information
         </section>
       </Layout.flex>
@@ -16,7 +16,7 @@ defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -27,13 +27,15 @@ end
 defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
   use InvoiceGeneratorWeb, :live_component
   require Logger
-
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
       <.form for={@form} phx-target={@myself} phx-change="check">
-        <Button.button size="xl" class="bg-white hover:bg-white">
+        <button
+          type="button"
+          class="border border-[#DFE3FA] league-spartan-semibold rounded-full px-6 py-2"
+        >
           <fieldset>
             <.live_file_input type="file" upload={@uploads.photo} class="hidden pointer-events-none" />
           </fieldset>
@@ -43,23 +45,22 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
             on_click={JS.dispatch("click", to: "##{@uploads.photo.ref}", bubbles: false)}
             drop_target_ref={@uploads.photo.ref}
           />
-        </Button.button>
+        </button>
 
-        <Button.button size="xl" class="mb-2">
-          <.link
-            phx-click={JS.push("delete", value: %{user_id: @user_id})}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.link>
-        </Button.button>
+        <button
+          type="button"
+          class="ml-3 bg-[#F9FAFE] rounded-full text-[#0C0E16] league-spartan-semibold rounded-full px-6 py-3"
+          phx-click={JS.push("delete", value: %{user_id: @user_id})}
+        >
+          Delete
+        </button>
       </.form>
     </section>
     """
   end
 
-  @impl true
-  @spec update(maybe_improper_list() | map(), map()) :: {:ok, any()}
+  @impl Phoenix.LiveComponent
+
   def update(assigns, socket) do
     socket =
       socket
@@ -104,7 +105,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("check", _params, socket) do
     {:noreply, socket}
   end
@@ -119,7 +120,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
 
   def droptarget(assigns) do
     ~H"""
-    <div phx-click={@on_click} phx-drop-target={@drop_target_ref} for={@for} class="bg-white">
+    <div phx-click={@on_click} phx-drop-target={@drop_target_ref} for={@for}>
       <Text.title>
         Upload a new photo
       </Text.title>

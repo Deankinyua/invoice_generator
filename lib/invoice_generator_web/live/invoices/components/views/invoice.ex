@@ -4,7 +4,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   # alias InvoiceGenerator.{Records, Helpers}
   # alias InvoiceGenerator.Records.Invoice
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div class="w-[90%] max-w-3xl mx-auto bg-[#FFFFFF] rounded-lg pt-6 pb-8">
@@ -74,7 +74,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     %{invoice_items: items} = assigns
 
@@ -92,7 +92,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   end
 
   def first_six_letters(word) when is_binary(word) do
-    String.slice(word, 0, 6)
+    word
+    |> String.slice(0, 6)
     |> String.upcase()
   end
 
@@ -122,8 +123,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   end
 
   def format_total(total) do
-    formatted = :io_lib.format("~.2f", [total * 1.0]) |> to_string()
-    formatted
+    "~.2f"
+    |> :io_lib.format([total * 1.0])
+    |> to_string()
   end
 
   defp return_status_button(state) do

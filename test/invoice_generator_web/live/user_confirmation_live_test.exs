@@ -2,10 +2,8 @@ defmodule InvoiceGeneratorWeb.UserConfirmationLiveTest do
   use InvoiceGeneratorWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
-  import InvoiceGenerator.AccountsFixtures
 
-  alias InvoiceGenerator.Accounts
-  alias InvoiceGenerator.Repo
+  alias InvoiceGenerator.{Accounts, AccountsFixtures, Repo}
 
   setup do
     %{user: user_fixture()}

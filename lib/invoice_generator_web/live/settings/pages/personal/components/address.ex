@@ -1,20 +1,19 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
+  use InvoiceGeneratorWeb, :live_component
   alias InvoiceGenerator.{Helpers, Profile, Repo}
 
   alias InvoiceGenerator.Profile.UserProfile
 
-  use InvoiceGeneratorWeb, :live_component
-
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="league-spartan-medium">
       <.simple_form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
         <Layout.col class="space-y-1.5">
           <label for="profile_country">
-            <Text.text class="text-tremor-content">
+            <p class="text-sm text-[#7E88C3]">
               Country
-            </Text.text>
+            </p>
           </label>
 
           <Select.search_select
@@ -33,9 +32,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
         <Layout.col class="space-y-1.5">
           <label>
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               City
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:city]} type="text" placeholder="Street Address" />
@@ -43,9 +42,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
         <Layout.col class="space-y-1.5">
           <label>
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Street Address
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:street]} type="text" placeholder="Street Address" />
@@ -53,23 +52,27 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
         <Layout.col class="space-y-1.5">
           <label>
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Postal Code
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:postal_code]} type="text" placeholder="Postal Code" />
         </Layout.col>
 
-        <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+        <button
+          type="submit"
+          class="bg-[#7C5DFA] text-[#FFFFFF] league-spartan-semibold rounded-full px-6 py-3"
+          phx-disable-with="Saving..."
+        >
           Save Changes
-        </Button.button>
+        </button>
       </.simple_form>
     </div>
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     user_id = assigns.current_user
 
@@ -100,14 +103,13 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
 
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  @impl true
   def handle_event("save", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
 

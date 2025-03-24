@@ -1,11 +1,9 @@
 defmodule InvoiceGeneratorWeb.Profile.Address.Component do
   use InvoiceGeneratorWeb, :live_component
 
-  alias InvoiceGenerator.Profile
+  alias InvoiceGenerator.{Helpers, Profile}
 
-  alias InvoiceGenerator.Helpers
-
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -58,7 +56,7 @@ defmodule InvoiceGeneratorWeb.Profile.Address.Component do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(%{user_profile: user_profile} = assigns, socket) do
     countries = Helpers.countries()
 
@@ -71,7 +69,7 @@ defmodule InvoiceGeneratorWeb.Profile.Address.Component do
      end)}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.user_profile, user_profile_params)
 
@@ -84,7 +82,6 @@ defmodule InvoiceGeneratorWeb.Profile.Address.Component do
     end
   end
 
-  @impl true
   def handle_event("back", _params, socket) do
     send(self(), :back)
     {:noreply, socket}

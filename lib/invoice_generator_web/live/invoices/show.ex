@@ -9,9 +9,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
   alias InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent
   alias InvoiceGenerator.{Records, Repo}
 
-  alias InvoiceGenerator.Records.Invoice
-
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="bg-[#F8F8FB] w-full h-full">
@@ -152,28 +150,29 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
 
           <div class="w-full bg-[#FFFFFF] flex justify-center gap-3 py-6">
             <section>
-              <Button.button
-                class="bg-[#7c5dfa] rounded-full pl-2"
-                phx-click={JS.patch(~p"/invoices/new")}
+              <button
+                class="bg-[#F9FAFE] rounded-full text-[#7E88C3] league-spartan-bold rounded-full px-6 py-3"
+                phx-click={JS.patch(~p"/invoices/#{@invoice_id}/edit")}
               >
                 Edit
-              </Button.button>
+              </button>
             </section>
             <section>
-              <Button.button
-                class="bg-[#7c5dfa] rounded-full pl-2"
-                phx-click={JS.patch(~p"/invoices/new")}
+              <button
+                class="bg-[#EC5757] rounded-full text-[#FFFFFF] league-spartan-bold rounded-full px-6 py-3"
+                phx-click={JS.push("delete", value: %{invoice_id: @invoice_id})}
+                data-confirm="Are you sure?"
               >
                 Delete
-              </Button.button>
+              </button>
             </section>
             <section>
-              <Button.button
-                class="bg-[#7c5dfa] rounded-full pl-2"
-                phx-click={JS.patch(~p"/invoices/new")}
+              <button
+                class="bg-[#7C5DFA] rounded-full text-[#FFFFFF] league-spartan-bold rounded-full px-6 py-3"
+                phx-click={JS.push("mark_as_paid", value: %{invoice_id: @invoice_id})}
               >
                 Mark as Paid
-              </Button.button>
+              </button>
             </section>
           </div>
         </Layout.flex>
@@ -204,66 +203,94 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _, socket) do
     invoice = Records.get_invoice!(id)
 
-    socket = assign_invoice_details(invoice, socket)
-    {:noreply, socket}
+    {:noreply, assign_invoice_details(socket, invoice)}
   end
 
-  defp assign_invoice_details(invoice, socket) do
-    invoice_id = invoice.id
-
-    description = invoice.project_description
-
-    invoice_state = invoice.invoice_state
-
-    invoice_date = invoice.invoice_date
-    due_date = invoice.invoice_due
-
-    sender_address = invoice.from_address
-    receiver_address = invoice.to_address
-
-    sender_city = invoice.from_city
-    receiver_city = invoice.to_city
-
-    sender_postcode = invoice.from_post_code
-    receiver_postcode = invoice.to_post_code
-
-    sender_country = invoice.from_country
-    receiver_name = invoice.to_client_name
-    receiver_country = invoice.to_country
-    receiver_email = invoice.to_client_email
-
-    invoice_items = invoice.items
-    total_item_cost = InvoiceComponent.get_total_invoice_cost(invoice_items)
-
-    socket =
-      socket
-      |> assign(invoice_id: invoice_id)
-      |> assign(description: description)
-      |> assign(invoice_state: invoice_state)
-      |> assign(invoice_date: invoice_date)
-      |> assign(due_date: due_date)
-      |> assign(sender_address: sender_address)
-      |> assign(sender_city: sender_city)
-      |> assign(sender_postcode: sender_postcode)
-      |> assign(sender_country: sender_country)
-      |> assign(receiver_address: receiver_address)
-      |> assign(receiver_city: receiver_city)
-      |> assign(receiver_postcode: receiver_postcode)
-      |> assign(receiver_country: receiver_country)
-      |> assign(receiver_email: receiver_email)
-      |> assign(receiver_name: receiver_name)
-      |> assign(total_item_cost: total_item_cost)
-      |> assign(items: invoice_items)
-
+  defp assign_invoice_details(socket, invoice) do
     socket
+    |> assign(description: invoice.project_description)
+    |> assign(due_date: invoice.invoice_due)
+    |> assign(invoice_date: invoice.invoice_date)
+    |> assign(invoice_id: invoice.id)
+    |> assign(invoice_state: invoice.invoice_state)
+    |> assign(items: invoice.items)
+    |> assign(sender_address: invoice.from_address)
+    |> assign(sender_city: invoice.from_city)
+    |> assign(sender_country: invoice.from_country)
+    |> assign(sender_postcode: invoice.from_post_code)
+    |> assign(receiver_address: invoice.to_address)
+    |> assign(receiver_city: invoice.to_city)
+    |> assign(receiver_country: invoice.to_country)
+    |> assign(receiver_email: invoice.to_client_email)
+    |> assign(receiver_name: invoice.to_client_name)
+    |> assign(receiver_postcode: invoice.to_post_code)
+    |> assign(total_item_cost: InvoiceComponent.get_total_invoice_cost(invoice.items))
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("delete", %{"invoice_id" => id}, socket) do
+    invoice = Records.get_invoice!(id)
+
+    Repo.delete(invoice)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "The invoice #{InvoiceComponent.first_six_letters(id)} was deleted")
+     |> push_navigate(to: "/invoices")}
+  end
+
+  @impl Phoenix.LiveView
+  def handle_event("mark_as_paid", %{"invoice_id" => id}, socket) do
+    invoice = Records.get_invoice!(id)
+
+    invoice_changeset = Records.change_invoice(invoice, %{invoice_state: :Paid})
+
+    maybe_update_invoice(
+      Enum.count(invoice_changeset.changes),
+      id,
+      invoice_changeset,
+      socket
+    )
+  end
+
+  def maybe_update_invoice(0, id, _invoice_changeset, socket) do
+    {:noreply,
+     socket
+     |> put_flash(
+       :error,
+       "The invoice #{InvoiceComponent.first_six_letters(id)} is already paid"
+     )
+     |> push_patch(to: "/invoices/#{id}")}
+  end
+
+  def maybe_update_invoice(1, id, invoice_changeset, socket) do
+    case Repo.update(invoice_changeset) do
+      {:ok, _record} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :info,
+           "The invoice #{InvoiceComponent.first_six_letters(id)} was updated"
+         )
+         |> push_patch(to: "/invoices/#{id}")}
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> put_flash(
+           :error,
+           "The invoice  #{InvoiceComponent.first_six_letters(id)} was not updated"
+         )
+         |> push_patch(to: "/invoices/#{id}")}
+    end
   end
 end

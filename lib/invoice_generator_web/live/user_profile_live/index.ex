@@ -8,26 +8,20 @@ defmodule InvoiceGeneratorWeb.Event.Step do
 end
 
 defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
-  require Logger
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.Profile
-  alias InvoiceGenerator.Profile.UserProfile
+  alias InvoiceGenerator.{Profile, Repo}
+  alias InvoiceGenerator.Profile.{Picture, UserProfile}
+  alias InvoiceGeneratorWeb.Event.Step
   alias SimpleS3Upload
   # alias ExAwsS3
-
-  alias InvoiceGenerator.Profile.Picture
-
-  alias InvoiceGenerator.Repo
-
-  alias InvoiceGeneratorWeb.Event.Step
 
   @steps [
     %Step{name: "picture", prev: nil, next: "details"},
     %Step{name: "details", prev: "picture", next: nil}
   ]
 
-  @impl true
+  @impl Phoenix.LiveView
 
   def render(assigns) do
     ~H"""
@@ -115,7 +109,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     # * The presign_upload function generates metadata
     socket =
@@ -159,10 +153,8 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     Repo.insert(complete_profile)
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:picture_details, details}, socket) do
-    Logger.warning("Picture details are in the socket :)")
-
     if details == %{} do
       {:noreply, socket}
     else
@@ -172,7 +164,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     end
   end
 
-  @impl true
   def handle_info({:valid_details, changeset}, socket) do
     case submit_details(socket, changeset) do
       {:ok, _record} ->
@@ -189,18 +180,15 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     end
   end
 
-  @impl true
   def handle_info(:back, socket) do
     first_step = Enum.at(@steps, 0)
-
-    IO.puts("going back")
 
     {:noreply,
      socket
      |> assign(progress: first_step)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("validate", _params, socket) do
     {:noreply, socket}
   end
@@ -216,11 +204,9 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
         # if no entries exist send an empty map
         send(self(), {:picture_details, picture_details})
 
-        {:noreply,
-         socket
-         |> assign(progress: second_step)}
+        {:noreply, assign(socket, progress: second_step)}
 
-      _ ->
+      _number ->
         case Map.get(socket.assigns, :details) do
           nil ->
             # if nothing was uploaded earlier just consume the current uploads
@@ -232,7 +218,8 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
             # if there was an earlier upload then delete it before consuming the current one
 
             _result =
-              ExAws.S3.delete_object("invoicegenerator", file_name)
+              "invoicegenerator"
+              |> ExAws.S3.delete_object(file_name)
               |> ExAws.request()
 
             consume_entries(socket)
@@ -243,12 +230,12 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
     {:noreply, cancel_upload(socket, :photo, ref)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end

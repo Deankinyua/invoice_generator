@@ -5,22 +5,22 @@ defmodule InvoiceGeneratorWeb.SettingsLive.PersonalDetails do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="league-spartan-medium">
       <.simple_form for={@form} phx-target={@myself} phx-change="validate">
         <Layout.col class="space-y-1.5">
           <label for="profile_name">
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Name
-            </Text.text>
+            </p>
           </label>
           <.input field={@form[:name]} type="text" placeholder="Name..." />
         </Layout.col>
 
         <Layout.col class="space-y-1.5">
           <label for="profile_username">
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Username
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:username]} type="text" placeholder="Username..." />
@@ -28,9 +28,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.PersonalDetails do
 
         <Layout.col class="space-y-1.5">
           <label for="profile_email">
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Email
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:email]} type="text" placeholder="Email.." />

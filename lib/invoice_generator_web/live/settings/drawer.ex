@@ -1,10 +1,8 @@
 defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
-  alias Tremorx.Components.Layout
-  alias Tremorx.Components.Text
-  alias Tremorx.Theme
-
   use InvoiceGeneratorWeb, :html
   use Phoenix.Component
+  alias Tremorx.Components.{Layout, Text}
+  alias Tremorx.Theme
 
   attr :user, :any, required: true
   attr :active_tab, :any, required: true
@@ -14,7 +12,11 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
     <div class="pl-4">
       <Layout.flex flex_direction="col" align_items="start" class="gap-4">
         <Text.title color="black" class="font-bold">Settings</Text.title>
-        <Layout.flex flex_direction="row" justify_content="start" class="w-[75%] gap-4">
+        <Layout.flex
+          flex_direction="row"
+          justify_content="start"
+          class="w-[75%] gap-2 league-spartan-regular"
+        >
           <.menu_item
             on_click={on_live_navigate(:personal, ~p"/personaldetails")}
             active={@active_tab == "personal"}
@@ -75,7 +77,7 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
           }
           justify_content="start"
         >
-          <Text.subtitle class="text-xs">{@name}</Text.subtitle>
+          <Text.subtitle class="text-sm">{@name}</Text.subtitle>
         </Layout.flex>
       </Layout.flex>
     </button>
@@ -84,7 +86,8 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
 
   @doc false
   defp on_live_navigate(active_tab, href) do
-    JS.push("on_live_navigate", value: %{active_tab: to_string(active_tab)})
+    "on_live_navigate"
+    |> JS.push(value: %{active_tab: to_string(active_tab)})
     |> JS.patch(href)
   end
 end

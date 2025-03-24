@@ -1,10 +1,9 @@
 defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
   use InvoiceGeneratorWeb, :live_component
 
-  alias InvoiceGenerator.{Records, Helpers}
-  alias InvoiceGenerator.Records.Invoice
+  alias InvoiceGenerator.{Helpers, Records, Records.Invoice}
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -174,7 +173,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     invoice = assigns.invoice
 
@@ -188,7 +187,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
      |> assign_form()}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"invoice_details" => invoice_params}, socket) do
     invoice = socket.assigns.invoice
 
@@ -202,8 +201,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
           sender_initial_data = extract_changeset_data(data)
 
           combined_business_data = Map.merge(sender_initial_data, changeset.changes)
-
-          dbg(combined_business_data)
 
           send(self(), {:valid_business_details, combined_business_data})
 
@@ -220,7 +217,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
      |> assign(form: form)}
   end
 
-  @impl true
   def handle_event("save", %{"invoice_details" => invoice_params}, socket) do
     invoice = socket.assigns.invoice
 

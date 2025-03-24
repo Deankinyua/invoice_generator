@@ -1,6 +1,6 @@
-# InvoiceGenerator👀
+# InvoiceGenerator
 
-This is a Phoenix application with a PostgreSQL database
+This is an application that I built to manage invoices
 
 ## Requirements
 
@@ -13,6 +13,12 @@ This is a Phoenix application with a PostgreSQL database
 - Run `mix setup` to install and setup dependencies
 
 - Create a **.env** file in the root of the project following the **.env.example** example fields
+
+- cd into the assets directory and run an
+
+```javascript
+npm install
+```
 
 - If using MacOS, Run your **Local MinIO Server** from the CMD
 
