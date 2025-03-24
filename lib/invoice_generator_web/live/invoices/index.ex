@@ -21,21 +21,31 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
         sticky: true
       )}
 
-      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
-        <Layout.flex flex_direction="row" justify_content="between" class="gap-2">
-          <Layout.flex flex_direction="col" align_items="start" class="w-[35%] min-w-[6rem]">
-            <section class="league-spartan-bold text-2xl text-[#0C0E16]">Invoices</section>
+      <div class="min-h-screen mx-2 sm:ml-32 sm:mr-10 sm:py-6">
+        <Layout.flex
+          flex_direction="row"
+          justify_content="between"
+          class="w-[90%] mx-auto gap-2 border border-blue-400 max-w-3xl mt-10"
+        >
+          <Layout.flex
+            flex_direction="col"
+            align_items="start"
+            class="w-[28%] sm:w-[45%] border border-red-400"
+          >
+            <section class="league-spartan-bold text-2xl text-[#0C0E16] sm:text-4xl">
+              Invoices
+            </section>
             <section class="league-spartan-medium text-[#888EB0] text-sm">
               <%= if @invoices_present == false do %>
                 No invoices
               <% else %>
-                {@invoice_count} invoices
+                There are {@invoice_count} invoices
               <% end %>
             </section>
           </Layout.flex>
 
-          <Layout.flex flex_direction="row" justify_content="between" class="gap-10">
-            <div class="w-[6rem]">
+          <Layout.flex flex_direction="row" justify_content="between" class="gap-2">
+            <div class="max-w-[6rem]">
               <.live_component
                 module={InvoiceGeneratorWeb.InvoiceLive.FilterComponent}
                 id="invoice items filter component"
@@ -52,16 +62,16 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
               </Layout.flex>
             </button>
 
-            <Button.button
-              class="bg-[#7c5dfa] rounded-full pl-2 block sm:hidden"
+            <button
+              class="shrink-1 bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-6 py-3 sm:hidden"
               phx-click={JS.patch(~p"/invoices/new")}
             >
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">
                 <div><img src={~p"/images/invoices/plusbutton.svg"} alt="invoice button" /></div>
 
-                <div>New</div>
+                <div class="league-spartan-bold">New</div>
               </Layout.flex>
-            </Button.button>
+            </button>
           </Layout.flex>
         </Layout.flex>
 
@@ -137,7 +147,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     user_invoices = get_invoices(current_user_id)
 
-    invoice_count = Enum.count(user_invoices)
+    invoice_count = Integer.to_string(Enum.count(user_invoices)) <> " " <> "total"
 
     socket = invoices?(user_invoices, socket)
 
@@ -283,9 +293,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     invoices = Records.get_invoices_by_invoice_state(user_id, state)
 
-    socket = invoices?(invoices, socket)
+    state =
+      Atom.to_string(state)
+      |> String.downcase()
 
-    invoice_count = Enum.count(invoices)
+    invoice_count =
+      Integer.to_string(Enum.count(invoices)) <> " " <> state
 
     {:noreply,
      socket
