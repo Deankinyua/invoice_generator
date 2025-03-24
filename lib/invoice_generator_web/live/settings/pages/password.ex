@@ -6,7 +6,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="max-w-4xl mx-auto">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"

@@ -61,9 +61,13 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
           <.input field={@form[:postal_code]} type="text" placeholder="Postal Code" />
         </Layout.col>
 
-        <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
+        <button
+          type="submit"
+          class="bg-[#7C5DFA] text-[#FFFFFF] league-spartan-semibold rounded-full px-6 py-3"
+          phx-disable-with="Saving..."
+        >
           Save Changes
-        </Button.button>
+        </button>
       </.simple_form>
     </div>
     """

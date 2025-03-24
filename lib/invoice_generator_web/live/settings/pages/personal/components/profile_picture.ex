@@ -33,7 +33,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
     ~H"""
     <section>
       <.form for={@form} phx-target={@myself} phx-change="check">
-        <Button.button size="xl" class="bg-white hover:bg-white">
+        <button class="border border-[#DFE3FA] league-spartan-semibold rounded-full px-6 py-2">
           <fieldset>
             <.live_file_input type="file" upload={@uploads.photo} class="hidden pointer-events-none" />
           </fieldset>
@@ -43,16 +43,15 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
             on_click={JS.dispatch("click", to: "##{@uploads.photo.ref}", bubbles: false)}
             drop_target_ref={@uploads.photo.ref}
           />
-        </Button.button>
+        </button>
 
-        <Button.button size="xl" class="mb-2">
-          <.link
-            phx-click={JS.push("delete", value: %{user_id: @user_id})}
-            data-confirm="Are you sure?"
-          >
-            Delete
-          </.link>
-        </Button.button>
+        <button
+          type="button"
+          class="ml-3 bg-[#F9FAFE] rounded-full text-[#0C0E16] league-spartan-semibold rounded-full px-6 py-3"
+          phx-click={JS.push("delete", value: %{user_id: @user_id})}
+        >
+          Delete
+        </button>
       </.form>
     </section>
     """
@@ -119,7 +118,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
 
   def droptarget(assigns) do
     ~H"""
-    <div phx-click={@on_click} phx-drop-target={@drop_target_ref} for={@for} class="bg-white">
+    <div phx-click={@on_click} phx-drop-target={@drop_target_ref} for={@for}>
       <Text.title>
         Upload a new photo
       </Text.title>

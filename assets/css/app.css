@@ -8,17 +8,25 @@
 /* This file is for your main application CSS */
 
 /* League Spartan Font Classes */
-.league-spartan-bold {
-  font-family: "League Spartan", sans-serif;
-  font-optical-sizing: none;
-  font-weight: 700;
-  font-style: normal;
-}
 
 .league-spartan-medium {
   font-family: "League Spartan", sans-serif;
   font-optical-sizing: none;
   font-weight: 500;
+  font-style: normal;
+}
+
+.league-spartan-semibold {
+  font-family: "League Spartan", sans-serif;
+  font-optical-sizing: none;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.league-spartan-bold {
+  font-family: "League Spartan", sans-serif;
+  font-optical-sizing: none;
+  font-weight: 700;
   font-style: normal;
 }
 
