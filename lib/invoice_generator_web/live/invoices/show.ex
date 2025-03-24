@@ -9,8 +9,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
   alias InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent
   alias InvoiceGenerator.{Records, Repo}
 
-  alias InvoiceGenerator.Records.Invoice
-
   @impl true
   def render(assigns) do
     ~H"""
@@ -152,28 +150,29 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
 
           <div class="w-full bg-[#FFFFFF] flex justify-center gap-3 py-6">
             <section>
-              <Button.button
-                class="bg-[#7c5dfa] rounded-full pl-2"
-                phx-click={JS.patch(~p"/invoices/new")}
+              <button
+                class="bg-[#F9FAFE] rounded-full text-[#7E88C3] league-spartan-bold rounded-full px-6 py-3"
+                phx-click={JS.patch(return_edit_path(@invoice_id))}
               >
                 Edit
-              </Button.button>
+              </button>
             </section>
             <section>
-              <Button.button
-                class="bg-[#7c5dfa] rounded-full pl-2"
-                phx-click={JS.patch(~p"/invoices/new")}
+              <button
+                class="bg-[#EC5757] rounded-full text-[#FFFFFF] league-spartan-bold rounded-full px-6 py-3"
+                phx-click={JS.push("delete", value: %{invoice_id: @invoice_id})}
+                data-confirm="Are you sure?"
               >
                 Delete
-              </Button.button>
+              </button>
             </section>
             <section>
-              <Button.button
-                class="bg-[#7c5dfa] rounded-full pl-2"
-                phx-click={JS.patch(~p"/invoices/new")}
+              <button
+                class="bg-[#7C5DFA] rounded-full text-[#FFFFFF] league-spartan-bold rounded-full px-6 py-3"
+                phx-click={JS.push("mark_as_paid", value: %{invoice_id: @invoice_id})}
               >
                 Mark as Paid
-              </Button.button>
+              </button>
             </section>
           </div>
         </Layout.flex>
@@ -265,5 +264,58 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
       |> assign(items: invoice_items)
 
     socket
+  end
+
+  def return_edit_path(id) do
+    ~p"/invoices/#{id}/edit"
+  end
+
+  @impl true
+  def handle_event("delete", %{"invoice_id" => id}, socket) do
+    invoice = Records.get_invoice!(id)
+
+    _result = Repo.delete(invoice)
+
+    {:noreply,
+     socket
+     |> put_flash(:info, "The invoice #{InvoiceComponent.first_six_letters(id)} was deleted")
+     |> push_navigate(to: "/invoices")}
+  end
+
+  @impl true
+  def handle_event("mark_as_paid", %{"invoice_id" => id}, socket) do
+    invoice = Records.get_invoice!(id)
+
+    invoice_changeset = Records.change_invoice(invoice, %{invoice_state: :Paid})
+
+    if invoice_changeset.changes == %{} do
+      {:noreply,
+       socket
+       |> put_flash(
+         :error,
+         "The invoice #{InvoiceComponent.first_six_letters(id)} is already paid"
+       )
+       |> push_patch(to: "/invoices/#{id}")}
+    else
+      case Repo.update(invoice_changeset) do
+        {:ok, _record} ->
+          {:noreply,
+           socket
+           |> put_flash(
+             :info,
+             "The invoice #{InvoiceComponent.first_six_letters(id)} was updated"
+           )
+           |> push_patch(to: "/invoices/#{id}")}
+
+        {:error, _changeset} ->
+          {:noreply,
+           socket
+           |> put_flash(
+             :error,
+             "The invoice  #{InvoiceComponent.first_six_letters(id)} was not updated"
+           )
+           |> push_patch(to: "/invoices/#{id}")}
+      end
+    end
   end
 end

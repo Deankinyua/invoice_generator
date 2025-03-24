@@ -39,7 +39,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
               <%= if @invoices_present == false do %>
                 No invoices
               <% else %>
-                There are {@invoice_count} invoices
+                There are {@invoice_count} {@invoice_type} invoices
               <% end %>
             </section>
           </Layout.flex>
@@ -147,14 +147,17 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     user_invoices = get_invoices(current_user_id)
 
-    invoice_count = Integer.to_string(Enum.count(user_invoices)) <> " " <> "total"
+    invoice_count = Enum.count(user_invoices)
+
+    invoice_type = "total"
 
     socket = invoices?(user_invoices, socket)
 
     {:ok,
      socket
      |> stream(:invoices, user_invoices)
-     |> assign(invoice_count: invoice_count)}
+     |> assign(invoice_count: invoice_count)
+     |> assign(invoice_type: invoice_type)}
   end
 
   @impl true
@@ -293,17 +296,18 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
     invoices = Records.get_invoices_by_invoice_state(user_id, state)
 
-    state =
+    invoice_type =
       Atom.to_string(state)
       |> String.downcase()
 
     invoice_count =
-      Integer.to_string(Enum.count(invoices)) <> " " <> state
+      Enum.count(invoices)
 
     {:noreply,
      socket
      |> stream(:invoices, invoices, reset: true)
-     |> assign(invoice_count: invoice_count)}
+     |> assign(invoice_count: invoice_count)
+     |> assign(invoice_type: invoice_type)}
   end
 
   defp invoices?(invoices, socket) do

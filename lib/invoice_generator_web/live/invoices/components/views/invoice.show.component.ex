@@ -7,6 +7,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
 
   alias InvoiceGeneratorWeb.InvoiceLive.DeadView.InvoiceHelper
   alias InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent
+  alias InvoiceGeneratorWeb.InvoiceLive.Show
 
   @impl true
   def render(assigns) do
@@ -35,7 +36,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
             <section>
               <button
                 class="bg-[#F9FAFE] rounded-full text-[#7E88C3] league-spartan-bold rounded-full px-6 py-3"
-                phx-click={JS.patch(return_edit_path(@invoice_id))}
+                phx-click={JS.patch(Show.return_edit_path(@invoice_id))}
               >
                 Edit
               </button>
@@ -43,7 +44,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
             <section>
               <button
                 class="bg-[#EC5757] rounded-full text-[#FFFFFF] league-spartan-bold rounded-full px-6 py-3"
-                phx-click={JS.patch(~p"/invoices/new")}
+                phx-click={JS.push("delete", value: %{invoice_id: @invoice_id})}
+                data-confirm="Are you sure?"
               >
                 Delete
               </button>
@@ -51,7 +53,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
             <section>
               <button
                 class="bg-[#7C5DFA] rounded-full text-[#FFFFFF] league-spartan-bold rounded-full px-6 py-3"
-                phx-click={JS.patch(~p"/invoices/new")}
+                phx-click={JS.push("mark_as_paid", value: %{invoice_id: @invoice_id})}
               >
                 Mark as Paid
               </button>
@@ -184,9 +186,5 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
     {:ok,
      socket
      |> assign(assigns)}
-  end
-
-  defp return_edit_path(id) do
-    ~p"/invoices/#{id}/edit"
   end
 end
