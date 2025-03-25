@@ -33,7 +33,10 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
     ~H"""
     <section>
       <.form for={@form} phx-target={@myself} phx-change="check">
-        <button class="border border-[#DFE3FA] league-spartan-semibold rounded-full px-6 py-2">
+        <button
+          type="button"
+          class="border border-[#DFE3FA] league-spartan-semibold rounded-full px-6 py-2"
+        >
           <fieldset>
             <.live_file_input type="file" upload={@uploads.photo} class="hidden pointer-events-none" />
           </fieldset>
