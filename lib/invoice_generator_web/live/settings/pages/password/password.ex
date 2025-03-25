@@ -15,7 +15,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
         sticky: true
       )}
 
-      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
+      <div class="min-h-screen mx-2 sm:ml-32 sm:mr-10 sm:py-6">
         {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
           session: %{
             "active_tab" => "password",
@@ -25,7 +25,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
           sticky: true
         )}
 
-        <div class="border border-blue-400 mx-4 py-20">
+        <div class="mx-4 py-10 league-spartan-medium">
           <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
             <div class="border border-red-400">
               <.live_component
@@ -37,18 +37,28 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
             </div>
           </Layout.flex>
 
-          <Text.title class="my-4">
+          <p class="text-xl text-[#0C0E16]">
             Change Password
-          </Text.title>
+          </p>
 
-          <.simple_form for={@form} phx-submit="reset_password" phx-change="validate">
-            <.input field={@form[:old_password]} type="text" label="Old password" />
+          <.simple_form
+            for={@form}
+            phx-submit="reset_password"
+            phx-change="validate"
+            class="my-0 border border-red-400"
+          >
+            <.input
+              field={@form[:old_password]}
+              type="text"
+              label="Old password"
+              label_class="mt-0 text-[#7E88C3]"
+            />
             <.input
               field={@form[:password]}
-              type="text"
+              type="nullify_errors"
               label="New password"
+              label_class="mt-0 text-[#7E88C3]"
               autocomplete="off"
-              hide_errors="hidden"
             />
 
             <.live_component
@@ -58,7 +68,12 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
             />
 
             <:actions>
-              <.button phx-disable-with="Resetting..." class="w-full">Save Changes</.button>
+              <button
+                phx-disable-with="Resetting..."
+                class="w-[90%] mx-auto league-spartan-semibold bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-5 py-3 mt-2"
+              >
+                Save Changes
+              </button>
             </:actions>
           </.simple_form>
         </div>

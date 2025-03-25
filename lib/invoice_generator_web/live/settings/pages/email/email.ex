@@ -18,7 +18,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
         sticky: true
       )}
 
-      <div class="min-h-screen mx-6 sm:ml-32 sm:mr-10 sm:py-6">
+      <div class="min-h-screen mx-2 sm:ml-32 sm:mr-10 sm:py-6">
         {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
           session: %{
             "active_tab" => "notifications",

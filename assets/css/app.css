@@ -9,6 +9,13 @@
 
 /* League Spartan Font Classes */
 
+.league-spartan-regular {
+  font-family: "League Spartan", sans-serif;
+  font-optical-sizing: none;
+  font-weight: 400;
+  font-style: normal;
+}
+
 .league-spartan-medium {
   font-family: "League Spartan", sans-serif;
   font-optical-sizing: none;
