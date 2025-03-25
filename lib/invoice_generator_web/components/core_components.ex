@@ -272,6 +272,7 @@ defmodule InvoiceGeneratorWeb.CoreComponents do
   attr :name, :any
   attr :label, :string, default: nil
   attr :label_class, :string, default: "text-sm"
+  attr :class, :string
   attr :value, :any
 
   attr :type, :string,

@@ -4,11 +4,11 @@ defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
   def render(assigns) do
     ~H"""
     <div>
-      <Layout.flex flex_direction="w-full row">
-        <section class="h-20 w-20 rounded-full border-2 border-blue-400 overflow-hidden ">
+      <Layout.flex flex_direction="row" class="gap-2">
+        <section class="h-20 w-20 sm:h-32 sm:w-32 rounded-full overflow-hidden ">
           <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
         </section>
-        <section>
+        <section class="league-spartan-semibold text-[#0C0E16]">
           {@name} / Profile Information
         </section>
       </Layout.flex>

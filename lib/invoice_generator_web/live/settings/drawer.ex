@@ -11,10 +11,14 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
 
   def drawer(assigns) do
     ~H"""
-    <div class="pl-4">
+    <div class="pl-4 border border-green-400">
       <Layout.flex flex_direction="col" align_items="start" class="gap-4">
         <Text.title color="black" class="font-bold">Settings</Text.title>
-        <Layout.flex flex_direction="row" justify_content="start" class="w-[75%] gap-4">
+        <Layout.flex
+          flex_direction="row"
+          justify_content="start"
+          class="w-[75%] gap-2 league-spartan-regular"
+        >
           <.menu_item
             on_click={on_live_navigate(:personal, ~p"/personaldetails")}
             active={@active_tab == "personal"}
@@ -75,7 +79,7 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
           }
           justify_content="start"
         >
-          <Text.subtitle class="text-xs">{@name}</Text.subtitle>
+          <Text.subtitle class="text-sm">{@name}</Text.subtitle>
         </Layout.flex>
       </Layout.flex>
     </button>

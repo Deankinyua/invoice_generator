@@ -8,13 +8,13 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
   @impl true
   def render(assigns) do
     ~H"""
-    <div>
+    <div class="league-spartan-medium">
       <.simple_form for={@form} phx-target={@myself} phx-change="validate" phx-submit="save">
         <Layout.col class="space-y-1.5">
           <label for="profile_country">
-            <Text.text class="text-tremor-content">
+            <p class="text-sm text-[#7E88C3]">
               Country
-            </Text.text>
+            </p>
           </label>
 
           <Select.search_select
@@ -33,9 +33,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
         <Layout.col class="space-y-1.5">
           <label>
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               City
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:city]} type="text" placeholder="Street Address" />
@@ -43,9 +43,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
         <Layout.col class="space-y-1.5">
           <label>
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Street Address
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:street]} type="text" placeholder="Street Address" />
@@ -53,9 +53,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
         <Layout.col class="space-y-1.5">
           <label>
-            <Text.text class="text-tremor-content text-bold py-2">
+            <p class="text-sm text-[#7E88C3]">
               Postal Code
-            </Text.text>
+            </p>
           </label>
 
           <.input field={@form[:postal_code]} type="text" placeholder="Postal Code" />

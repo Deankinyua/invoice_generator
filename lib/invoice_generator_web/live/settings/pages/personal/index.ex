@@ -50,9 +50,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
               </section>
             </Layout.flex>
           </Layout.flex>
-          <Text.title class="my-4">
+          <p class="my-4 text-xl league-spartan-medium text-[#0C0E16]">
             Edit Profile Information
-          </Text.title>
+          </p>
 
           <.live_component
             module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}
