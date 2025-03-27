@@ -7,7 +7,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   alias Ecto.Changeset
   alias InvoiceGenerator.{Repo, Profile, Helpers}
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="w-full h-full border border-purple-400 max-w-4xl mx-auto">
@@ -71,7 +71,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     user_id = socket.assigns.current_user.id
 
@@ -82,7 +82,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
      |> assign(profile_url: profile_url)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info(
         {:update_profile_picture, details},
         socket
@@ -110,7 +110,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     }
   end
 
-  @impl true
   def handle_info(
         {:valid_personal_details, changeset},
         socket
@@ -122,7 +121,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
      |> assign(personal_details: personal_details)}
   end
 
-  @impl true
   def handle_info(
         :update_personal_info,
         socket
@@ -149,7 +147,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     {:noreply, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("delete", %{"user_id" => user_id}, socket) do
     user_profile = Helpers.get_user(user_id)
 

@@ -5,7 +5,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
 
   use InvoiceGeneratorWeb, :live_component
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div class="league-spartan-medium">
@@ -73,7 +73,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     user_id = assigns.current_user
 
@@ -104,14 +104,13 @@ defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
 
     {:noreply, assign(socket, form: to_form(changeset, action: :validate))}
   end
 
-  @impl true
   def handle_event("save", %{"user_profile" => user_profile_params}, socket) do
     changeset = Profile.change_user_profile(socket.assigns.userprofile, user_profile_params)
 
