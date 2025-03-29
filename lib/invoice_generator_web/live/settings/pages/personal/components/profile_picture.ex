@@ -8,7 +8,7 @@ defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
         <section class="h-20 w-20 sm:h-32 sm:w-32 rounded-full overflow-hidden ">
           <img src={@profile_url} class="h-80 w-80 rounded-full object-cover object-center" />
         </section>
-        <section class="league-spartan-semibold text-[#0C0E16]">
+        <section class="league-spartan-semibold text-[#0C0E16] text-base">
           {@name} / Profile Information
         </section>
       </Layout.flex>

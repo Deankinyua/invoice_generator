@@ -10,7 +10,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="w-full h-full border border-purple-400 max-w-4xl mx-auto">
+    <div class="w-full h-full bg-[#F8F8F8]">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -19,7 +19,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
         sticky: true
       )}
 
-      <div class="min-h-screen mx-2 sm:ml-32 sm:mr-10 sm:py-6">
+      <div class="min-h-screen mx-2 mx-auto max-w-4xl sm:w-[60%] sm:py-6">
         {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
           session: %{
             "active_tab" => "personal",
@@ -29,42 +29,44 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
           sticky: true
         )}
 
-        <div class="border border-blue-400 mx-4 py-20">
-          <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-            <div class="border border-red-400">
-              <.live_component
-                module={InvoiceGeneratorWeb.Profile.ActualPicture}
-                id="actual_picture_live_component"
-                profile_url={@profile_url}
-                name={@current_user.name}
-              />
-            </div>
-
-            <Layout.flex flex_direction="row">
-              <section>
+        <div class="mx-4 py-10 bg-[#FFFFFF]">
+          <div class="w-[90%] mx-auto">
+            <Layout.flex flex_direction="col" align_items="start" class="gap-4">
+              <div class="">
                 <.live_component
-                  module={InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture}
-                  id="settings_update_profile_picture"
-                  user_id={@current_user.id}
+                  module={InvoiceGeneratorWeb.Profile.ActualPicture}
+                  id="actual_picture_live_component"
+                  profile_url={@profile_url}
+                  name={@current_user.name}
                 />
-              </section>
+              </div>
+
+              <Layout.flex flex_direction="row">
+                <section>
+                  <.live_component
+                    module={InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture}
+                    id="settings_update_profile_picture"
+                    user_id={@current_user.id}
+                  />
+                </section>
+              </Layout.flex>
             </Layout.flex>
-          </Layout.flex>
-          <p class="my-4 text-xl league-spartan-medium text-[#0C0E16]">
-            Edit Profile Information
-          </p>
+            <p class="my-4 text-xl league-spartan-medium text-[#0C0E16]">
+              Edit Profile Information
+            </p>
 
-          <.live_component
-            module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}
-            id="settings_personal_details"
-            current_user={@current_user}
-          />
+            <.live_component
+              module={InvoiceGeneratorWeb.SettingsLive.PersonalDetails}
+              id="settings_personal_details"
+              current_user={@current_user}
+            />
 
-          <.live_component
-            module={InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails}
-            id="settings_business_address_details"
-            current_user={@current_user.id}
-          />
+            <.live_component
+              module={InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails}
+              id="settings_business_address_details"
+              current_user={@current_user.id}
+            />
+          </div>
         </div>
       </div>
     </div>

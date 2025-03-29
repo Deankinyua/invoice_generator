@@ -11,7 +11,7 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
 
   def drawer(assigns) do
     ~H"""
-    <div class="pl-4 border border-green-400">
+    <div class="pl-4">
       <Layout.flex flex_direction="col" align_items="start" class="gap-4">
         <Text.title color="black" class="font-bold">Settings</Text.title>
         <Layout.flex

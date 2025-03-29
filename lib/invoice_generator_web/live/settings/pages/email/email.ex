@@ -28,9 +28,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
           sticky: true
         )}
 
-        <div class="border border-blue-400 mx-4 py-20">
-          <Layout.flex flex_direction="col" align_items="start" class="gap-4 border border-red-400">
-            <div class="border border-red-400">
+        <div class="mx-4 py-10">
+          <Layout.flex flex_direction="col" align_items="start" class="gap-4">
+            <div class="">
               <.live_component
                 module={InvoiceGeneratorWeb.Profile.ActualPicture}
                 id="actual_picture_live_component"
@@ -40,9 +40,12 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
             </div>
           </Layout.flex>
 
-          <Text.title class="my-4">
+          <p class="league-spartan-medium my-4 text-xl">
             Edit Notifications Preferences
-          </Text.title>
+          </p>
+          <p class="league-spartan-medium my-4">
+            I’d like to receive:
+          </p>
 
           <div>
             <.form for={@form} phx-submit="change_notifications">
@@ -50,13 +53,20 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
                 field={@form[:product_updates]}
                 type="checkbox"
                 label="Newsletter and product updates"
+                label_class="league-spartan-regular"
               />
               <.input
                 field={@form[:sign_in_notification]}
                 type="checkbox"
                 label="Sign in notification"
+                label_class="league-spartan-regular"
               />
-              <.input field={@form[:payment_reminders]} type="checkbox" label="Due payment reminders" />
+              <.input
+                field={@form[:payment_reminders]}
+                type="checkbox"
+                label="Due payment reminders"
+                label_class="league-spartan-regular"
+              />
 
               <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
                 Save Changes
