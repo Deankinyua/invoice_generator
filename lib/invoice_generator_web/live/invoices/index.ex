@@ -25,13 +25,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
         <Layout.flex
           flex_direction="row"
           justify_content="between"
-          class="w-[90%] mx-auto gap-2 border border-blue-400 max-w-3xl mt-10"
+          class="w-[90%] mx-auto gap-2 max-w-3xl mt-10"
         >
-          <Layout.flex
-            flex_direction="col"
-            align_items="start"
-            class="w-[28%] sm:w-[45%] border border-red-400"
-          >
+          <Layout.flex flex_direction="col" align_items="start" class="w-[28%] sm:w-[45%]">
             <section class="league-spartan-bold text-2xl text-[#0C0E16] sm:text-4xl">
               Invoices
             </section>

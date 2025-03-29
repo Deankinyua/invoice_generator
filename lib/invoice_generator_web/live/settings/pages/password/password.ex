@@ -42,7 +42,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Password do
               Change Password
             </p>
 
-            <.simple_form for={@form} phx-submit="reset_password" phx-change="validate" class="my-0 ">
+            <.simple_form for={@form} phx-submit="reset_password" phx-change="validate" class="my-0">
               <.input
                 field={@form[:old_password]}
                 type="text"

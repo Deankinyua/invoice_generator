@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
       <Layout.flex
         flex_direction="col"
         align_items="start"
-        class="gap-4 league-spartan-regular text-[#0C0E16] border border-red-400"
+        class="gap-4 league-spartan-regular text-[#0C0E16]"
       >
         <p>
           Password must contain:
@@ -21,7 +21,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
               flex_direction="row"
               align_items="center"
               justify_content="start"
-              class="gap-1 flex-1 border border-red-400"
+              class="gap-1 flex-1"
             >
               <div>
                 <img
@@ -40,7 +40,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
               flex_direction="row"
               align_items="center"
               justify_content="start"
-              class="gap-1 flex-1 border border-red-400"
+              class="gap-1 flex-1"
             >
               <div>
                 <img
@@ -59,7 +59,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
               flex_direction="row"
               align_items="center"
               justify_content="start"
-              class="gap-1 flex-1 border border-red-400"
+              class="gap-1 flex-1"
             >
               <div>
                 <img
@@ -80,7 +80,7 @@ defmodule InvoiceGeneratorWeb.Password.Validation.Component do
           flex_direction="row"
           align_items="center"
           justify_content="start"
-          class="gap-1 flex-1 border border-red-400"
+          class="gap-1 flex-1"
         >
           <div>
             <img

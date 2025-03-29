@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="max-w-4xl mx-auto">
+    <div class="w-full h-full bg-[#F8F8F8]">
       {live_render(@socket, InvoiceGeneratorWeb.Header,
         session: %{
           "user" => "user?email=#{@current_user.email}"
@@ -17,8 +17,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
         id: "live_header",
         sticky: true
       )}
-
-      <div class="min-h-screen mx-2 sm:ml-32 sm:mr-10 sm:py-6">
+      <div class="min-h-screen mx-2 mx-auto max-w-4xl sm:w-[60%] sm:py-6">
         {live_render(@socket, InvoiceGeneratorWeb.Settings.LiveDrawer,
           session: %{
             "active_tab" => "notifications",
@@ -27,51 +26,56 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
           id: "settings_live_drawer",
           sticky: true
         )}
+        <div class="mx-4 py-10 bg-[#FFFFFF]">
+          <div class="w-[90%] mx-auto">
+            <Layout.flex flex_direction="col" align_items="start" class="gap-4">
+              <div class="">
+                <.live_component
+                  module={InvoiceGeneratorWeb.Profile.ActualPicture}
+                  id="actual_picture_live_component"
+                  profile_url={@profile_url}
+                  name={@current_user.name}
+                />
+              </div>
+            </Layout.flex>
 
-        <div class="mx-4 py-10">
-          <Layout.flex flex_direction="col" align_items="start" class="gap-4">
-            <div class="">
-              <.live_component
-                module={InvoiceGeneratorWeb.Profile.ActualPicture}
-                id="actual_picture_live_component"
-                profile_url={@profile_url}
-                name={@current_user.name}
-              />
+            <p class="league-spartan-medium my-4 text-xl">
+              Edit Notifications Preferences
+            </p>
+            <p class="league-spartan-medium my-4">
+              I’d like to receive:
+            </p>
+
+            <div>
+              <.form for={@form} phx-submit="change_notifications">
+                <.input
+                  field={@form[:product_updates]}
+                  type="checkbox"
+                  label="Newsletter and product updates"
+                  label_class="league-spartan-regular"
+                />
+                <.input
+                  field={@form[:sign_in_notification]}
+                  type="checkbox"
+                  label="Sign in notification"
+                  label_class="league-spartan-regular"
+                />
+                <.input
+                  field={@form[:payment_reminders]}
+                  type="checkbox"
+                  label="Due payment reminders"
+                  label_class="league-spartan-regular"
+                />
+
+                <button
+                  type="submit"
+                  class="bg-[#7C5DFA] text-[#FFFFFF] league-spartan-semibold rounded-full px-6 py-3 my-3"
+                  phx-disable-with="Saving..."
+                >
+                  Save Changes
+                </button>
+              </.form>
             </div>
-          </Layout.flex>
-
-          <p class="league-spartan-medium my-4 text-xl">
-            Edit Notifications Preferences
-          </p>
-          <p class="league-spartan-medium my-4">
-            I’d like to receive:
-          </p>
-
-          <div>
-            <.form for={@form} phx-submit="change_notifications">
-              <.input
-                field={@form[:product_updates]}
-                type="checkbox"
-                label="Newsletter and product updates"
-                label_class="league-spartan-regular"
-              />
-              <.input
-                field={@form[:sign_in_notification]}
-                type="checkbox"
-                label="Sign in notification"
-                label_class="league-spartan-regular"
-              />
-              <.input
-                field={@form[:payment_reminders]}
-                type="checkbox"
-                label="Due payment reminders"
-                label_class="league-spartan-regular"
-              />
-
-              <Button.button type="submit" size="xl" class="mt-2 w-min" phx-disable-with="Saving...">
-                Save Changes
-              </Button.button>
-            </.form>
           </div>
         </div>
       </div>

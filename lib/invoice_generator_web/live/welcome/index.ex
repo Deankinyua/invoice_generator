@@ -9,41 +9,41 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
   def render(assigns) do
     ~H"""
     <div class="flex flex-col items-center">
-      <section class="w-full flex flex-col items-center justify-start gap-6  h-[90vh] py-8">
+      <section class="w-full flex flex-col items-center justify-start gap-2 h-[90vh] py-8">
         <div class="flex flex-row justify-center items-center gap-6  w-full">
-          <section>
-            <img src={~p"/images/mobilelogo.svg"} width="80" />
+          <section class="w-20 md:w-24">
+            <img src={~p"/images/mobilelogo.svg"} class="w-full h-full object-cover" />
           </section>
-          <section class="font-semibold text-[#7c5dfa] text-4xl">Invoice</section>
+          <section class="font-semibold text-[#7c5dfa] text-[3.5rem] league-spartan-semibold md:text-9xl">Invoice</section>
         </div>
-        <div class="w-full flex flex-col items-center mb-20 text-2xl font-semibold">
-          <div class="text-tremor-content-emphasis text-2xl text-bold">Sign in to Invoice</div>
+        <div class="w-full flex flex-col items-center mb-20 text-2xl">
+          <div class="text-[2rem] league-spartan-medium md:text-6xl">Sign in to Invoice</div>
         </div>
         <.link
-          class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 py-2 border rounded-full"
+          class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 py-2 md:py-6 border rounded-full"
           patch={~p"/"}
         >
-          <section class="w-6">
-            <img class="object-cover" src={~p"/images/googlesmall.svg"} />
+          <section class="w-6 md:w-8">
+            <img class="w-full h-full object-cover" src={~p"/images/googlesmall.svg"} />
           </section>
-          <Text.text class="text-3xl">Sign in with Google</Text.text>
+          <div class="text-xl league-spartan-regular md:text-[2.5rem]">Sign in with Google</div>
         </.link>
         <.link
-          class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 py-2 border rounded-full"
+          class="flex flex-row justify-center items-center gap-6 w-[75%] mb-10 py-2 md:py-6 border rounded-full"
           patch={~p"/users/register"}
         >
-          <section class="w-6">
-            <img class="object-cover" src={~p"/images/email.svg"} />
+          <section class="w-6 md:w-8">
+            <img class="w-full h-full object-cover" src={~p"/images/email.svg"} />
           </section>
-          <Text.text class="text-3xl">Continue with email</Text.text>
+          <div class="text-xl league-spartan-regular md:text-[2.5rem]">Continue with email</div>
         </.link>
 
-        <div class="w-[68%] text-center text-gray-500 text-sm">
-          <p>By creating an account, you agree to</p>
-          <p class="mt-1">Invoice company's</p>
+        <div class="w-[68%] league-spartan-regular text-center text-[#888EB0]">
+          <p class="md:text-[2rem]">By creating an account, you agree to</p>
+          <p class="mt-1 md:text-[2rem]">Invoice company's</p>
           <p class="mt-1">
-            <span class="font-bold text-gray-500">Terms of use</span>
-            and <span class="font-bold text-gray-500">Privacy Policy.</span>
+            <span class="league-spartan-semibold md:text-xl">Terms of use</span>
+            <span class="md:text-xl">and</span> <span class="league-spartan-semibold md:text-xl">Privacy Policy.</span>
           </p>
         </div>
       </section>
