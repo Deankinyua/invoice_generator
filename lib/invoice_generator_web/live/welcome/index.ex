@@ -14,7 +14,9 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
           <section class="w-20 md:w-24">
             <img src={~p"/images/mobilelogo.svg"} class="w-full h-full object-cover" />
           </section>
-          <section class="font-semibold text-[#7c5dfa] text-[3.5rem] league-spartan-semibold md:text-9xl">Invoice</section>
+          <section class="font-semibold text-[#7c5dfa] text-[3.5rem] league-spartan-semibold md:text-9xl">
+            Invoice
+          </section>
         </div>
         <div class="w-full flex flex-col items-center mb-20 text-2xl">
           <div class="text-[2rem] league-spartan-medium md:text-6xl">Sign in to Invoice</div>
@@ -43,7 +45,8 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
           <p class="mt-1 md:text-[2rem]">Invoice company's</p>
           <p class="mt-1">
             <span class="league-spartan-semibold md:text-xl">Terms of use</span>
-            <span class="md:text-xl">and</span> <span class="league-spartan-semibold md:text-xl">Privacy Policy.</span>
+            <span class="md:text-xl">and</span>
+            <span class="league-spartan-semibold md:text-xl">Privacy Policy.</span>
           </p>
         </div>
       </section>
