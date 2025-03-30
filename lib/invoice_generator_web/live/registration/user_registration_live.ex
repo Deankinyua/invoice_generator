@@ -6,9 +6,9 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
 
   def render(assigns) do
     ~H"""
-    <div class="border border-blue-400">
+    <div class="my-6 bg-[#FFFFFF]">
       <%= if @confirm do %>
-        <div class="border border-red-400">
+        <div class="">
           <.live_component
             module={InvoiceGeneratorWeb.ConfirmationFeedback.Component}
             id="feedback_confirmation"
@@ -16,22 +16,19 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
           />
         </div>
       <% else %>
-        <Layout.flex flex_direction="col" justify_content="center" class="my-10">
+        <Layout.flex flex_direction="col" justify_content="center" class="">
           <Layout.flex
             flex_direction="col"
             align_items="start"
-            class="grow mb-4 border border-red-400 py-8 px-6 my-10 max-w-4xl"
+            class="grow w-[90%] max-w-4xl"
           >
-            <.header class="text-center border w-full border-red-400">
-              Register for an account
-              <:subtitle>
-                Already registered?
-                <.link navigate={~p"/users/log_in"} class="font-semibold text-brand hover:underline">
-                  Log in
-                </.link>
-                to your account now.
-              </:subtitle>
-            </.header>
+            <div class="w-full text-[2rem] league-spartan-bold">
+              Create an account
+            </div>
+
+            <div class="w-full league-spartan-regular">
+              Begin creating invoices for free!
+            </div>
 
             <div class="w-full">
               <.form
@@ -43,56 +40,54 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                 action={~p"/users/log_in?_action=registered"}
                 method="post"
               >
-                <.error :if={@check_errors}>
-                  Oops, something went wrong! Please check the errors below.
-                </.error>
-
-                <.input field={@form[:name]} type="text" label="Name" placeholder="Enter Your Name" />
-                <.input
-                  field={@form[:username]}
-                  type="text"
-                  label="Username"
-                  placeholder="Enter Your Username"
-                  required
-                />
-                <.input
-                  field={@form[:email]}
-                  type="email"
-                  label="Email"
-                  placeholder="Enter Your Email"
-                />
-
-                <Layout.col class="space-y-1.5">
-                  <label for="password">
-                    <Text.text class="text-tremor-content font-extrabold text-black">
-                      Password
-                    </Text.text>
-                  </label>
-
-                  <Input.text_input
-                    id="password"
-                    name="user[password]"
-                    placeholder="Enter Your Password"
-                    type="password"
-                    field={@form[:password]}
-                    value={@form[:password].value}
+                <div class="flex flex-col gap-5">
+                  <.input
+                    field={@form[:name]}
+                    type="text"
+                    placeholder="Enter Your Name"
+                    class="league-spartan-extralight"
                   />
-                </Layout.col>
+                  <.input
+                    field={@form[:username]}
+                    type="text"
+                    placeholder="Enter Your Username"
+                    class="league-spartan-extralight"
+                  />
+                  <.input
+                    field={@form[:email]}
+                    type="email"
+                    placeholder="Enter Your Email"
+                    class="league-spartan-extralight"
+                  />
 
-                <.live_component
-                  module={InvoiceGeneratorWeb.Password.Validation.Component}
-                  id="password_validation_component"
-                  form_errors={@form_errors}
-                />
+                  <div class="mt-2">
+                    <Input.text_input
+                      id="password"
+                      name="user[password]"
+                      placeholder="Enter Your Password"
+                      class="league-spartan-extralight"
+                      type="password"
+                      field={@form[:password]}
+                      value={@form[:password].value}
+                    />
+                  </div>
+                </div>
 
-                <Button.button
+                <div class="mt-10">
+                  <.live_component
+                    module={InvoiceGeneratorWeb.Password.Validation.Component}
+                    id="password_validation_component"
+                    form_errors={@form_errors}
+                  />
+                </div>
+
+                <button
                   type="submit"
-                  size="xl"
-                  class="mt-4"
+                  class="bg-[#7C5DFA] text-[#FFFFFF] league-spartan-bold rounded-md w-full text-xl px-6 py-3 my-8"
                   phx-disable-with="Creating account..."
                 >
                   Sign Up
-                </Button.button>
+                </button>
               </.form>
             </div>
 
@@ -100,14 +95,14 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
               class="space-x-2 underline cursor-pointer decoration-2"
               justify_content="start"
             >
-              <Text.subtitle color="gray">
+              <p class="text-[#000000CC] league-spartan-medium">
                 Already have an account?
-              </Text.subtitle>
+              </p>
 
-              <a href="/users/log_in" class="cursor-pointer decoration-2 text-blue-400">
-                <Text.subtitle color="blue">
+              <a href="/users/log_in" class="cursor-pointer decoration-2 text-[#7C5DFA] league-spartan-medium">
+                <p>
                   Login
-                </Text.subtitle>
+                </p>
               </a>
             </Layout.flex>
           </Layout.flex>
