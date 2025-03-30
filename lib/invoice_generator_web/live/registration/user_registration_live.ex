@@ -17,11 +17,7 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
         </div>
       <% else %>
         <Layout.flex flex_direction="col" justify_content="center" class="">
-          <Layout.flex
-            flex_direction="col"
-            align_items="start"
-            class="grow w-[90%] max-w-4xl"
-          >
+          <Layout.flex flex_direction="col" align_items="start" class="grow w-[90%] max-w-4xl">
             <div class="w-full text-[2rem] league-spartan-bold">
               Create an account
             </div>
@@ -99,7 +95,10 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                 Already have an account?
               </p>
 
-              <a href="/users/log_in" class="cursor-pointer decoration-2 text-[#7C5DFA] league-spartan-medium">
+              <a
+                href="/users/log_in"
+                class="cursor-pointer decoration-2 text-[#7C5DFA] league-spartan-medium"
+              >
                 <p>
                   Login
                 </p>
