@@ -50,8 +50,8 @@
   margin: 0 auto;
 }
 
-@media (min-width: 768px) {
-  .password-font-size {
-    font-size: 1.25rem;
+@media (min-width: 1024px) {
+  .hide-placeholder::placeholder {
+    color: transparent; /* Hides placeholder */
   }
 }
