@@ -49,3 +49,9 @@
 .center-element {
   margin: 0 auto;
 }
+
+@media (min-width: 768px) {
+  .password-font-size {
+    font-size: 1.25rem;
+  }
+}

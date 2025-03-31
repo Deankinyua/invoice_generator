@@ -41,7 +41,7 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
           </.link>
           <.link
             class="flex flex-row justify-center items-center gap-6 w-[75%] max-w-[30.31rem] mb-10 py-2 border rounded-full md:py-6 lg:py-2"
-            patch={~p"/users/log_in"}
+            href={~p"/users/log_in"}
           >
             <section class="w-6 md:w-8 lg:w-6">
               <img class="w-full h-full object-cover" src={~p"/images/email.svg"} />
@@ -62,7 +62,7 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
             <p class="hidden lg:block mt-6 league-spartan-regular text-xl">
               Don’t have an account?
               <span class="league-spartan-regular text-[#7C5DFA]">
-                <.link patch={~p"/users/register"}>
+                <.link href={~p"/users/register"}>
                   Sign Up
                 </.link>
               </span>

@@ -70,6 +70,13 @@ defmodule InvoiceGeneratorWeb.Router do
   scope "/", InvoiceGeneratorWeb do
     pipe_through [:browser, :require_authenticated_user]
 
+    # * A live_session in Phoenix groups multiple LiveViews under a shared session context.
+    # * It allows seamless LiveView-to-LiveView navigation without a full page reload.
+    # * what this means is if a user is in the liveview ~p"/profiles" they can easily navigate to
+    # * ~p"/home" as they are in the same Live Session and this is done over the existing web socket
+    # * connection but navigation to
+    # * ~p"/users/log_in" would require traditional browser navigation and a full page refresh
+
     live_session :require_authenticated_user,
       on_mount: [{InvoiceGeneratorWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit

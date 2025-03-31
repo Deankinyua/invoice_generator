@@ -17,12 +17,12 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
         </div>
       <% else %>
         <Layout.flex flex_direction="col" justify_content="center" class="">
-          <Layout.flex flex_direction="col" align_items="start" class="grow w-[90%] max-w-4xl">
-            <div class="w-full text-[2rem] league-spartan-bold">
+          <Layout.flex flex_direction="col" align_items="start" class="grow w-[84%] max-w-3xl">
+            <div class="w-full text-[2rem] league-spartan-bold sm:text-6xl">
               Create an account
             </div>
 
-            <div class="w-full league-spartan-regular">
+            <div class="w-full league-spartan-regular sm:text-[2rem]">
               Begin creating invoices for free!
             </div>
 
@@ -41,19 +41,19 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                     field={@form[:name]}
                     type="text"
                     placeholder="Enter Your Name"
-                    class="league-spartan-extralight"
+                    class="league-spartan-extralight max-w-xl sm:text-xl"
                   />
                   <.input
                     field={@form[:username]}
                     type="text"
                     placeholder="Enter Your Username"
-                    class="league-spartan-extralight"
+                    class="league-spartan-extralight max-w-xl sm:text-xl"
                   />
                   <.input
                     field={@form[:email]}
                     type="email"
                     placeholder="Enter Your Email"
-                    class="league-spartan-extralight"
+                    class="league-spartan-extralight max-w-xl sm:text-xl"
                   />
 
                   <div class="mt-2">
@@ -61,7 +61,7 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
                       id="password"
                       name="user[password]"
                       placeholder="Enter Your Password"
-                      class="league-spartan-extralight"
+                      class="league-spartan-extralight max-w-xl border-[#00000066]"
                       type="password"
                       field={@form[:password]}
                       value={@form[:password].value}
@@ -79,7 +79,7 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
 
                 <button
                   type="submit"
-                  class="bg-[#7C5DFA] text-[#FFFFFF] league-spartan-bold rounded-md w-full text-xl px-6 py-3 my-8"
+                  class="bg-[#7C5DFA] text-[#FFFFFF] league-spartan-bold rounded-md w-full max-w-xl text-xl px-6 py-3 my-8"
                   phx-disable-with="Creating account..."
                 >
                   Sign Up
@@ -91,13 +91,13 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive do
               class="space-x-2 underline cursor-pointer decoration-2"
               justify_content="start"
             >
-              <p class="text-[#000000CC] league-spartan-medium">
+              <p class="text-xl text-[#000000CC] league-spartan-medium">
                 Already have an account?
               </p>
 
               <a
                 href="/users/log_in"
-                class="cursor-pointer decoration-2 text-[#7C5DFA] league-spartan-medium"
+                class="cursor-pointer decoration-2 text-[#7C5DFA] text-xl league-spartan-medium"
               >
                 <p>
                   Login
