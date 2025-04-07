@@ -16,8 +16,7 @@ defmodule InvoiceGeneratorWeb.UserRegistrationLive.Show do
   end
 
   @impl true
-  def handle_params(%{"id" => id}, _, socket) do
-    dbg(id)
+  def handle_params(%{"id" => _id}, _, socket) do
     {:noreply, socket}
   end
 end

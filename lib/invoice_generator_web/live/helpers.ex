@@ -416,7 +416,7 @@ defmodule InvoiceGenerator.Helpers do
           map_of_product = Map.put(map_of_product, :errors, false)
           map_of_product
 
-        _ ->
+        _tuple ->
           map_of_product = Map.put(map_of_product, :errors, true)
           map_of_product
       end

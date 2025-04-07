@@ -220,7 +220,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
          socket
          |> assign(progress: second_step)}
 
-      _ ->
+      _number ->
         case Map.get(socket.assigns, :details) do
           nil ->
             # if nothing was uploaded earlier just consume the current uploads

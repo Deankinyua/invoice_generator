@@ -1,6 +1,5 @@
 defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
-  alias Tremorx.Components.Layout
-  alias Tremorx.Components.Text
+  alias Tremorx.Components.{Layout, Text}
   alias Tremorx.Theme
 
   use InvoiceGeneratorWeb, :html

@@ -32,7 +32,7 @@ defmodule InvoiceGeneratorWeb.UserConfirmationLive do
   # leaked token giving the user access to the account.
   def handle_event("confirm_account", %{"user" => %{"token" => token}}, socket) do
     case Accounts.confirm_user(token) do
-      {:ok, _} ->
+      {:ok, _user} ->
         {:noreply,
          socket
          |> put_flash(:info, "User confirmed successfully.")
