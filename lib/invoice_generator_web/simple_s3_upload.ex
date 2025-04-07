@@ -147,8 +147,9 @@ defmodule SimpleS3Upload do
     [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
 
     {:ok, url} =
-      ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
-      |> ExAws.S3.presigned_url(:get, bucket, key, expires_in: expires_in)
+      config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
+
+    ExAws.S3.presigned_url(config, :get, bucket, key, expires_in: expires_in)
 
     url
   end
@@ -163,12 +164,14 @@ defmodule SimpleS3Upload do
         ExAws.Config.new(:s3, scheme: scheme <> "://", host: "localhost", port: 9000)
       end
 
-    ExAws.S3.put_object(
-      bucket,
-      key,
-      file
-    )
-    |> ExAws.request!(config)
+    operation =
+      ExAws.S3.put_object(
+        bucket,
+        key,
+        file
+      )
+
+    ExAws.request!(operation, config)
   end
 
   # * The presign_upload function's job is to generate metadata
@@ -176,7 +179,8 @@ defmodule SimpleS3Upload do
   # * It must return {:ok, metadata, socket}
 
   def presign_upload(entry, socket, key \\ "audio") do
-    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+    [scheme, host] =
+      String.split(System.get_env("PROJECT_URL_MEDIA"), "://")
 
     config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
     bucket = "invoicegenerator"

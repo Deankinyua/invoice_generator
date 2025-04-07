@@ -21,8 +21,7 @@ defmodule InvoiceGenerator.DataCase do
       alias InvoiceGenerator.Repo
 
       import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
+      import Ecto.{Changeset, Query}
       import InvoiceGenerator.DataCase
     end
   end

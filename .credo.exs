@@ -189,15 +189,7 @@
           {Credo.Check.Readability.SeparateAliasRequire, []},
           {Credo.Check.Readability.SingleFunctionToBlockPipe, []},
           {Credo.Check.Readability.SinglePipe, []},
-          {Credo.Check.Readability.Specs,
-           files: %{
-             excluded: [
-               "lib/elixir_drops_web.ex",
-               "lib/elixir_drops_web/components/core_components.ex",
-               "lib/elixir_drops_web/controllers/error_html.ex",
-               "lib/elixir_drops_web/controllers/error_json.ex"
-             ]
-           }},
+          {Credo.Check.Readability.Specs, false},
           {Credo.Check.Readability.StrictModuleLayout,
            order: [:shortdoc, :moduledoc, :use, :import, :alias, :require, :behaviour]},
           {Credo.Check.Readability.WithCustomTaggedTuple, []},

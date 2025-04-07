@@ -2,11 +2,9 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
   alias InvoiceGenerator.Notifications.Notification
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.{Helpers, Repo, Notifications}
+  alias InvoiceGenerator.{Helpers, Repo, Notifications, Notifications.Notification}
 
-  alias InvoiceGenerator.Notifications.Notification
-
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="w-full h-full bg-[#F8F8F8]">
@@ -83,7 +81,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     user = socket.assigns.current_user
     user_id = user.id
@@ -117,7 +115,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("change_notifications", %{"notifications" => notification_params}, socket) do
     user_id = socket.assigns.current_user.id
 

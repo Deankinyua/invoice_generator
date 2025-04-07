@@ -4,9 +4,7 @@ defmodule InvoiceGeneratorWeb.Header do
   """
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.Accounts
-
-  alias InvoiceGenerator.Helpers
+  alias InvoiceGenerator.{Accounts, Helpers}
 
   @impl true
   def mount(_params, session, socket) do

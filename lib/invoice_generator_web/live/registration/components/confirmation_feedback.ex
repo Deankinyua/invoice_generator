@@ -1,7 +1,5 @@
 defmodule InvoiceGeneratorWeb.ConfirmationFeedback.Component do
   use InvoiceGeneratorWeb, :live_component
-  alias Tremorx.Components.Button
-  alias Tremorx.Components.Layout
 
   @impl true
 

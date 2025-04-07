@@ -5,7 +5,7 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
 
   use InvoiceGeneratorWeb, :live_view
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="flex justify-center h-screen overflow-hidden lg:justify-between">
@@ -74,12 +74,12 @@ defmodule InvoiceGeneratorWeb.WelcomeLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(_params, _url, socket) do
     {:noreply, socket}
   end

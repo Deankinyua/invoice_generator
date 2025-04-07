@@ -179,7 +179,7 @@ defmodule InvoiceGenerator.Accounts.User do
   Confirms the account by setting `confirmed_at`.
   """
   def confirm_changeset(user) do
-    now = DateTime.utc_now() |> DateTime.truncate(:second)
+    now = DateTime.utc_now(:second)
     change(user, confirmed_at: now)
   end
 

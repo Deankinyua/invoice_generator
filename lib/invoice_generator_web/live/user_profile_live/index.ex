@@ -11,23 +11,18 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   require Logger
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.Profile
-  alias InvoiceGenerator.Profile.UserProfile
+  alias InvoiceGenerator.{Profile, Repo}
+  alias InvoiceGenerator.Profile.{UserProfile, Picture}
+  alias InvoiceGeneratorWeb.Event.Step
   alias SimpleS3Upload
   # alias ExAwsS3
-
-  alias InvoiceGenerator.Profile.Picture
-
-  alias InvoiceGenerator.Repo
-
-  alias InvoiceGeneratorWeb.Event.Step
 
   @steps [
     %Step{name: "picture", prev: nil, next: "details"},
     %Step{name: "details", prev: "picture", next: nil}
   ]
 
-  @impl true
+  @impl Phoenix.LiveView
 
   def render(assigns) do
     ~H"""
@@ -115,7 +110,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     # * The presign_upload function generates metadata
     socket =
@@ -159,7 +154,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     Repo.insert(complete_profile)
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:picture_details, details}, socket) do
     Logger.warning("Picture details are in the socket :)")
 
@@ -172,7 +167,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     end
   end
 
-  @impl true
   def handle_info({:valid_details, changeset}, socket) do
     case submit_details(socket, changeset) do
       {:ok, _record} ->
@@ -189,7 +183,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     end
   end
 
-  @impl true
   def handle_info(:back, socket) do
     first_step = Enum.at(@steps, 0)
 
@@ -200,7 +193,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
      |> assign(progress: first_step)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("validate", _params, socket) do
     {:noreply, socket}
   end

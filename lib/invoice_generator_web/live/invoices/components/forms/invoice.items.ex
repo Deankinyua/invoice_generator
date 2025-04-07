@@ -153,7 +153,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(item_error: "")}
   end
 
-  def handle_event("save", %{"status" => value}, socket) do
+  def handle_event("save", %{"status" => status}, socket) do
     params = socket.assigns.form.params
 
     case params == %{} do
@@ -168,9 +168,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
 
         case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
           nil ->
-            status = String.to_atom(value)
             action = socket.assigns.action
-            send(self(), {:valid_item_details, list_of_item_params, status, action})
+
+            send(
+              self(),
+              {:valid_item_details, list_of_item_params, String.to_atom(status), action}
+            )
 
             {:noreply,
              socket

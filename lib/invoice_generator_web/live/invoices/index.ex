@@ -59,7 +59,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             </button>
 
             <button
-              class="shrink-1 bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-6 py-3 sm:hidden"
+              class="z-50 shrink-0 bg-[#7C5DFA] text-[#FFFFFF] rounded-full px-6 py-3 sm:hidden border border-blue-400"
               phx-click={JS.patch(~p"/invoices/new")}
             >
               <Layout.flex flex_direction="row" justify_content="between" class="gap-4">

@@ -203,7 +203,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.DetailsComponent do
 
           combined_business_data = Map.merge(sender_initial_data, changeset.changes)
 
-
           send(self(), {:valid_business_details, combined_business_data})
 
           :ok
