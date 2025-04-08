@@ -92,7 +92,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   end
 
   def first_six_letters(word) when is_binary(word) do
-    String.slice(word, 0, 6)
+    word
+    |> String.slice(0, 6)
     |> String.upcase()
   end
 
@@ -122,8 +123,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   end
 
   def format_total(total) do
-    formatted = :io_lib.format("~.2f", [total * 1.0]) |> to_string()
-    formatted
+    "~.2f"
+    |> :io_lib.format([total * 1.0])
+    |> to_string()
   end
 
   defp return_status_button(state) do

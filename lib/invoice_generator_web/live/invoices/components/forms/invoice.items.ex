@@ -166,7 +166,9 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
         count = socket.assigns.item_count
         list_of_item_params = Helpers.get_list_of_params(params, count)
 
-        case Enum.find(list_of_item_params, fn x -> x.errors == true end) do
+        has_errors = &(&1.errors == true)
+
+        case Enum.find(list_of_item_params, has_errors) do
           nil ->
             action = socket.assigns.action
 
@@ -228,7 +230,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     new_count = count - 1
 
     item =
-      Enum.filter(items, fn x -> x.id == id end)
+      items
+      |> Enum.filter(fn x -> x.id == id end)
       |> Enum.at(0)
 
     new_items =
@@ -282,17 +285,21 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     if list_of_params == [] do
       "hidden"
     else
-      case Enum.at(list_of_params, item_index) do
-        nil ->
-          "hidden"
+      hide_errors(list_of_params, item_index)
+    end
+  end
 
-        item_map ->
-          if item_map.errors == true do
-            "block"
-          else
-            "hidden"
-          end
-      end
+  defp hide_errors(list_of_params, item_index) do
+    case Enum.at(list_of_params, item_index) do
+      nil ->
+        "hidden"
+
+      item_map ->
+        if item_map.errors == true do
+          "block"
+        else
+          "hidden"
+        end
     end
   end
 

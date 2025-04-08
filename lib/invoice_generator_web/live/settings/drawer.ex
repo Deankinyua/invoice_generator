@@ -87,7 +87,8 @@ defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
 
   @doc false
   defp on_live_navigate(active_tab, href) do
-    JS.push("on_live_navigate", value: %{active_tab: to_string(active_tab)})
+    "on_live_navigate"
+    |> JS.push(value: %{active_tab: to_string(active_tab)})
     |> JS.patch(href)
   end
 end

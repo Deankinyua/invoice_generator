@@ -11,6 +11,22 @@ config :invoice_generator,
   ecto_repos: [InvoiceGenerator.Repo],
   generators: [timestamp_type: :utc_datetime]
 
+# * Don't pay attention to this I was just playing with Application.get_env/3
+
+config :invoice_generator, Databases.RepoOne,
+  # A database configuration
+  ip: "localhost",
+  port: 5433
+
+config :invoice_generator, Databases.RepoTwo,
+  # Another database configuration (for the same OTP app)
+  ip: "localhost",
+  port: 20717
+
+config :invoice_generator, invoice_generator_databases: [Databases.RepoOne, Databases.RepoTwo]
+
+# *--------------------------------------------------#
+
 # Configures the endpoint
 config :invoice_generator, InvoiceGeneratorWeb.Endpoint,
   url: [host: "localhost"],

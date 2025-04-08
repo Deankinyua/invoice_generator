@@ -212,45 +212,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
             all_details = Map.merge(item_details, date_details)
             all_details = Map.merge(all_details, business_details)
 
-            case action == :new do
-              true ->
-                invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
-
-                case Repo.insert(invoice_changeset) do
-                  {:ok, record} ->
-                    send(self(), {:invoice_created, record})
-
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:info, "Invoice was Successfully processed")}
-
-                  {:error, _changeset} ->
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:error, "Details were not Submitted!!")}
-                end
-
-              false ->
-                invoice_changeset = Records.change_invoice(socket.assigns.invoice, all_details)
-
-                case Repo.update(invoice_changeset) do
-                  {:ok, record} ->
-                    send(self(), {:invoice_modified, record})
-
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:info, "Invoice was Updated Successfully")}
-
-                  {:error, _changeset} ->
-                    {:noreply,
-                     socket
-                     |> push_patch(to: ~p"/invoices")
-                     |> put_flash(:error, "Invoice was not updated!!")}
-                end
-            end
+            submit_invoice_details(action, socket, all_details)
         end
     end
   end
@@ -293,7 +255,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     invoices = Records.get_invoices_by_invoice_state(user_id, state)
 
     invoice_type =
-      Atom.to_string(state)
+      state
+      |> Atom.to_string()
       |> String.downcase()
 
     invoice_count =
@@ -313,6 +276,55 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
       false ->
         assign(socket, :invoices_present, true)
+    end
+  end
+
+  defp submit_invoice_details(action, socket, all_details) do
+    case action == :new do
+      true ->
+        invoice_changeset = Records.change_invoice(%Invoice{}, all_details)
+
+        create_invoice(invoice_changeset, socket)
+
+      false ->
+        invoice_changeset = Records.change_invoice(socket.assigns.invoice, all_details)
+        update_invoice(invoice_changeset, socket)
+    end
+  end
+
+  defp create_invoice(invoice_changeset, socket) do
+    case Repo.insert(invoice_changeset) do
+      {:ok, record} ->
+        send(self(), {:invoice_created, record})
+
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:info, "Invoice was Successfully processed")}
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:error, "Details were not Submitted!!")}
+    end
+  end
+
+  defp update_invoice(invoice_changeset, socket) do
+    case Repo.update(invoice_changeset) do
+      {:ok, record} ->
+        send(self(), {:invoice_modified, record})
+
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:info, "Invoice was Updated Successfully")}
+
+      {:error, _changeset} ->
+        {:noreply,
+         socket
+         |> push_patch(to: ~p"/invoices")
+         |> put_flash(:error, "Invoice was not updated!!")}
     end
   end
 end

@@ -186,8 +186,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
   def handle_info(:back, socket) do
     first_step = Enum.at(@steps, 0)
 
-    IO.puts("going back")
-
     {:noreply,
      socket
      |> assign(progress: first_step)}
@@ -225,7 +223,8 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
             # if there was an earlier upload then delete it before consuming the current one
 
             _result =
-              ExAws.S3.delete_object("invoicegenerator", file_name)
+              "invoicegenerator"
+              |> ExAws.S3.delete_object(file_name)
               |> ExAws.request()
 
             consume_entries(socket)

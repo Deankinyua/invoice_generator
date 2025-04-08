@@ -244,7 +244,8 @@ defmodule InvoiceGenerator.Helpers do
     # converts the keyword items into a map with atom keys
 
     result =
-      Enum.map(messages, fn {x, y} -> {String.to_atom(x), y} end)
+      messages
+      |> Enum.map(fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
     result
@@ -342,7 +343,8 @@ defmodule InvoiceGenerator.Helpers do
     # * this code transforms our map from having string keys to having atom keys
     # * in preparation for the next step
     individual_map_with_atom_keys =
-      Enum.map(individual_map_for_product, fn {x, y} -> {String.to_atom(x), y} end)
+      individual_map_for_product
+      |> Enum.map(fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
     individual_map_with_atom_keys
@@ -350,7 +352,8 @@ defmodule InvoiceGenerator.Helpers do
 
   def merge_individual_maps_to_one(list_of_maps) do
     merged_map =
-      Enum.reduce(list_of_maps, %{}, fn map, empty_map ->
+      list_of_maps
+      |> Enum.reduce(%{}, fn map, empty_map ->
         Map.merge(empty_map, map)
       end)
 
@@ -403,7 +406,8 @@ defmodule InvoiceGenerator.Helpers do
     # * converts the list of tuples into a map with atom keys
 
     map_of_product =
-      Enum.map(list_of_tuples, fn {x, y} -> {String.to_atom(x), y} end)
+      list_of_tuples
+      |> Enum.map(fn {x, y} -> {String.to_atom(x), y} end)
       |> Enum.into(%{})
 
     # * adds an error field to detect missing details

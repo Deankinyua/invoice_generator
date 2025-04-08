@@ -144,7 +144,10 @@ defmodule SimpleS3Upload do
   defp sha256(secret, msg), do: :crypto.mac(:hmac, :sha256, secret, msg)
 
   def get_file_url(key, bucket, expires_in) do
-    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+    [scheme, host] =
+      "PROJECT_URL_MEDIA"
+      |> System.get_env()
+      |> String.split("://")
 
     {:ok, url} =
       config = ExAws.Config.new(:s3, scheme: scheme <> "://", host: host, port: nil)
@@ -155,7 +158,10 @@ defmodule SimpleS3Upload do
   end
 
   def put_object(key, bucket, file) do
-    [scheme, host] = System.get_env("PROJECT_URL_MEDIA") |> String.split("://")
+    [scheme, host] =
+      "PROJECT_URL_MEDIA"
+      |> System.get_env()
+      |> String.split("://")
 
     config =
       if System.get_env("MIX_ENV") == "prod" do

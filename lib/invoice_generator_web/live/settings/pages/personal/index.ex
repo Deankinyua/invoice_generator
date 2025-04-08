@@ -177,7 +177,8 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
     file_name = "photo/" <> file_name
 
     _result =
-      ExAws.S3.delete_object("invoicegenerator", file_name)
+      "invoicegenerator"
+      |> ExAws.S3.delete_object(file_name)
       |> ExAws.request()
   end
 end
