@@ -79,9 +79,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
     profile_url = Helpers.get_profile_url(user_id)
 
-    {:ok,
-     socket
-     |> assign(profile_url: profile_url)}
+    {:ok, assign(socket, profile_url: profile_url)}
   end
 
   @impl Phoenix.LiveView
@@ -107,8 +105,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
     {
       :noreply,
-      socket
-      |> redirect(to: "/personaldetails")
+      redirect(socket, to: "/personaldetails")
     }
   end
 
@@ -167,9 +164,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
         Repo.update(profile_changeset)
         delete_profile_picture(filename)
 
-        {:noreply,
-         socket
-         |> redirect(to: "/personaldetails")}
+        {:noreply, redirect(socket, to: "/personaldetails")}
     end
   end
 

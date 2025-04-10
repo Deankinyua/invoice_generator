@@ -131,8 +131,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
 
       :failure ->
         {:noreply,
-         socket
-         |> put_flash(:error, "An error occurred while updating your notification settings")}
+         put_flash(socket, :error, "An error occurred while updating your notification settings")}
     end
   end
 

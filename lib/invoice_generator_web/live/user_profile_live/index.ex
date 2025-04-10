@@ -207,9 +207,7 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
         # if no entries exist send an empty map
         send(self(), {:picture_details, picture_details})
 
-        {:noreply,
-         socket
-         |> assign(progress: second_step)}
+        {:noreply, assign(socket, progress: second_step)}
 
       _number ->
         case Map.get(socket.assigns, :details) do

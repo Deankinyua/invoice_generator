@@ -1,5 +1,5 @@
 defmodule InvoiceGeneratorWeb.UserProfileLiveTest do
-  use InvoiceGeneratorWeb.ConnCase
+  use InvoiceGeneratorWeb.ConnCase, async: true
 
   import Phoenix.LiveViewTest
   import InvoiceGenerator.ProfileFixtures

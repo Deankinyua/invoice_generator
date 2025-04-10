@@ -1,5 +1,5 @@
 defmodule InvoiceGenerator.AccountsTest do
-  use InvoiceGenerator.DataCase
+  use InvoiceGenerator.DataCase, async: true
 
   alias InvoiceGenerator.Accounts
 

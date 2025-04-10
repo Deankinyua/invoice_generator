@@ -301,31 +301,7 @@ defmodule InvoiceGenerator.Helpers do
     # * params is the result
 
     params =
-      case price == :error do
-        true ->
-          params =
-            Map.merge(params, %{"product_#{count}_total" => "quantity and price must be numbers"})
-
-          params
-
-        false ->
-          case quantity == :error do
-            true ->
-              params =
-                Map.merge(params, %{
-                  "product_#{count}_total" => "quantity and price must be numbers"
-                })
-
-              params
-
-            false ->
-              total = elem(price, 0) * elem(quantity, 0)
-
-              params = Map.merge(params, %{"product_#{count}_total" => "#{total}"})
-
-              params
-          end
-      end
+      calculate_total(params, count, price, quantity)
 
     # * Using the unique prefix for fields e.g product_1 this code here
     # * groups each map of a product as its own map
@@ -348,6 +324,34 @@ defmodule InvoiceGenerator.Helpers do
       |> Enum.into(%{})
 
     individual_map_with_atom_keys
+  end
+
+  defp calculate_total(params, count, price, quantity) do
+    case price == :error do
+      true ->
+        params =
+          Map.merge(params, %{"product_#{count}_total" => "quantity and price must be numbers"})
+
+        params
+
+      false ->
+        case quantity == :error do
+          true ->
+            params =
+              Map.merge(params, %{
+                "product_#{count}_total" => "quantity and price must be numbers"
+              })
+
+            params
+
+          false ->
+            total = elem(price, 0) * elem(quantity, 0)
+
+            params = Map.merge(params, %{"product_#{count}_total" => "#{total}"})
+
+            params
+        end
+    end
   end
 
   def merge_individual_maps_to_one(list_of_maps) do
@@ -403,6 +407,10 @@ defmodule InvoiceGenerator.Helpers do
         end
       end)
 
+    add_errors_to_map_of_product(list_of_tuples)
+  end
+
+  defp add_errors_to_map_of_product(list_of_tuples) do
     # * converts the list of tuples into a map with atom keys
 
     map_of_product =

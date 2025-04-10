@@ -89,7 +89,7 @@
              if_called_more_often_than: 0,
              files: %{
                excluded: [
-                 "lib/elixir_drops_web/components/core_components.ex"
+                 "lib/invoice_generator_web/components/core_components.ex"
                ]
              }
            ]},
@@ -194,7 +194,7 @@
            order: [:shortdoc, :moduledoc, :use, :import, :alias, :require, :behaviour]},
           {Credo.Check.Readability.WithCustomTaggedTuple, []},
           {Credo.Check.Refactor.ABCSize, []},
-          {Credo.Check.Refactor.AppendSingleItem, []},
+          {Credo.Check.Refactor.AppendSingleItem, false},
           {Credo.Check.Refactor.DoubleBooleanNegation, []},
           {Credo.Check.Refactor.FilterReject, []},
           {Credo.Check.Refactor.IoPuts, []},
@@ -202,15 +202,15 @@
           {Credo.Check.Refactor.ModuleDependencies,
            files: %{
              excluded: [
-               "lib/elixir_drops/application.ex",
-               "lib/elixir_drops/drops.ex",
-               "lib/elixir_drops_web.ex",
-               "lib/elixir_drops_web/endpoint.ex",
-               "lib/elixir_drops_web/router.ex"
+               "lib/invoice_generator/application.ex",
+               "lib/invoice_generator/drops.ex",
+               "lib/invoice_generator_web.ex",
+               "lib/invoice_generator_web/endpoint.ex",
+               "lib/invoice_generator_web/router.ex"
              ]
            },
            max_deps: 20},
-          {Credo.Check.Refactor.NegatedIsNil, []},
+          {Credo.Check.Refactor.NegatedIsNil, false},
           {Credo.Check.Refactor.PassAsyncInTestCases, []},
           {Credo.Check.Refactor.PipeChainStart, []},
           {Credo.Check.Refactor.RejectFilter, []},

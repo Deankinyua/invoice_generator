@@ -1,5 +1,5 @@
 defmodule InvoiceGenerator.ProfileTest do
-  use InvoiceGenerator.DataCase
+  use InvoiceGenerator.DataCase, async: true
 
   alias InvoiceGenerator.Profile
 
