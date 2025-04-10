@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
 
   alias InvoiceGenerator.Records.Invoice
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="bg-[#F8F8FB] w-full h-full">
@@ -156,7 +156,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
      |> assign(invoice_type: invoice_type)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(params, _url, socket) do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end

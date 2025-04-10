@@ -241,7 +241,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign(items: new_items)}
   end
 
-  @impl true
   def handle_event("close_modal", _params, socket) do
     {:noreply,
      socket

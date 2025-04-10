@@ -16,10 +16,9 @@ defmodule InvoiceGenerator.Accounts.UserNotifier do
       |> subject(subject)
       |> render_body(template, %{the_email: user.email, name: user.name, url: url})
       |> attachment(
-        Swoosh.Attachment.new(
-          Path.absname("priv/static/images/logo.png"),
-          type: :inline
-        )
+        "priv/static/images/logo.png"
+        |> Path.absname()
+        |> Swoosh.Attachment.new(type: :inline)
       )
 
     with {:ok, _metadata} <- Mailer.deliver(email) do

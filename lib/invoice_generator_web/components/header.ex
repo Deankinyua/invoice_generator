@@ -6,7 +6,7 @@ defmodule InvoiceGeneratorWeb.Header do
 
   alias InvoiceGenerator.{Accounts, Helpers}
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, session, socket) do
     %{"user" => "user?email=" <> email} = session
 
@@ -24,7 +24,7 @@ defmodule InvoiceGeneratorWeb.Header do
     {:ok, socket, layout: false}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("dark-mode", %{"dark" => value}, socket) do
     is_dark = change_theme(value)
 
@@ -51,7 +51,7 @@ defmodule InvoiceGeneratorWeb.Header do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div>
