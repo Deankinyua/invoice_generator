@@ -9,7 +9,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
   alias InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent
   alias InvoiceGenerator.{Records, Repo}
 
-  @impl true
+  @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
     <div class="bg-[#F8F8FB] w-full h-full">
@@ -203,12 +203,12 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     {:ok, socket}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(%{"id" => id}, _, socket) do
     invoice = Records.get_invoice!(id)
 
@@ -270,7 +270,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
     ~p"/invoices/#{id}/edit"
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("delete", %{"invoice_id" => id}, socket) do
     invoice = Records.get_invoice!(id)
 
@@ -282,7 +282,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show do
      |> push_navigate(to: "/invoices")}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("mark_as_paid", %{"invoice_id" => id}, socket) do
     invoice = Records.get_invoice!(id)
 

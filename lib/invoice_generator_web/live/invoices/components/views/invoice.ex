@@ -4,7 +4,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
   # alias InvoiceGenerator.{Records, Helpers}
   # alias InvoiceGenerator.Records.Invoice
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div class="w-[90%] max-w-3xl mx-auto bg-[#FFFFFF] rounded-lg pt-6 pb-8">
@@ -74,7 +74,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     %{invoice_items: items} = assigns
 

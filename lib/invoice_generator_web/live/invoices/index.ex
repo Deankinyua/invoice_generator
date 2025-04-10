@@ -137,7 +137,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     current_user_id = socket.assigns.current_user.id
 
@@ -186,7 +186,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     result
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:valid_item_details, item_details, status, action}, socket) do
     item_details =
       Enum.map(item_details, fn map ->
@@ -217,21 +217,21 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:valid_date_details, date_details}, socket) do
     {:noreply,
      socket
      |> assign(date_details: date_details)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:valid_business_details, business_details}, socket) do
     {:noreply,
      socket
      |> assign(business_details: business_details)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:invoice_created, invoice}, socket) do
     invoice_count = socket.assigns.invoice_count
 
@@ -241,14 +241,14 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Index do
      |> assign(invoice_count: invoice_count + 1)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:invoice_modified, invoice}, socket) do
     {:noreply,
      socket
      |> stream_insert(:invoices, invoice)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_info({:filter_invoice, state}, socket) do
     user_id = socket.assigns.current_user.id
 

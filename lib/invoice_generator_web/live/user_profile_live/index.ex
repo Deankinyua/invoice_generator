@@ -233,12 +233,12 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_event("cancel-upload", %{"ref" => ref, "value" => _value}, socket) do
     {:noreply, cancel_upload(socket, :photo, ref)}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end

@@ -141,7 +141,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
      |> redirect(to: "/personaldetails")}
   end
 
-  @impl true
+  @impl Phoenix.LiveView
   def handle_params(_unsigned_params, _uri, socket) do
     {:noreply, socket}
   end

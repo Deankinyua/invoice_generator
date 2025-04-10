@@ -1,6 +1,6 @@
 defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
   use InvoiceGeneratorWeb, :live_component
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <div>
@@ -16,7 +16,7 @@ defmodule InvoiceGeneratorWeb.Profile.ActualPicture do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -27,8 +27,7 @@ end
 defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
   use InvoiceGeneratorWeb, :live_component
   require Logger
-
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -60,8 +59,8 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
     """
   end
 
-  @impl true
-  @spec update(maybe_improper_list() | map(), map()) :: {:ok, any()}
+  @impl Phoenix.LiveComponent
+
   def update(assigns, socket) do
     socket =
       socket
@@ -106,7 +105,7 @@ defmodule InvoiceGeneratorWeb.SettingsLive.UpdateProfilePicture do
     end
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("check", _params, socket) do
     {:noreply, socket}
   end

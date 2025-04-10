@@ -3,7 +3,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
 
   alias InvoiceGenerator.{Helpers}
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def render(assigns) do
     ~H"""
     <section>
@@ -124,7 +124,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     """
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def update(assigns, socket) do
     {:ok,
      socket
@@ -136,7 +136,7 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
      |> assign_form()}
   end
 
-  @impl true
+  @impl Phoenix.LiveComponent
   def handle_event("validate", %{"items" => item_params}, socket) do
     # * the main purpose of whatever is here is to offer feedback to the user
     item_count = socket.assigns.item_count
@@ -189,7 +189,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     end
   end
 
-  @impl true
   def handle_event("add_new_item", _params, socket) do
     items = socket.assigns.items
 
@@ -221,7 +220,6 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
     }
   end
 
-  @impl true
   def handle_event("remove_item", %{"id" => id}, socket) do
     items = socket.assigns.items
 
