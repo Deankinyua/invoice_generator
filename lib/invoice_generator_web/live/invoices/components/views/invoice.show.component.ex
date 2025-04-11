@@ -6,8 +6,8 @@ defmodule InvoiceGeneratorWeb.InvoiceLive.Show.InvoiceLarge do
   use InvoiceGeneratorWeb, :live_component
 
   alias InvoiceGeneratorWeb.InvoiceLive.DeadView.InvoiceHelper
-  alias InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent
   alias InvoiceGeneratorWeb.InvoiceLive.Show
+  alias InvoiceGeneratorWeb.InvoiceLive.View.InvoiceComponent
 
   @impl true
   def render(assigns) do

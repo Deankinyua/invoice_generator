@@ -1,7 +1,7 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.Password do
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.{Helpers, Accounts, Repo, Helpers}
+  alias InvoiceGenerator.{Accounts, Helpers, Repo}
 
   @impl true
   def render(assigns) do

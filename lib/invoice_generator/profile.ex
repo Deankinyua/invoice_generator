@@ -6,7 +6,7 @@ defmodule InvoiceGenerator.Profile do
   import Ecto.Query, warn: false
   alias InvoiceGenerator.Repo
 
-  alias InvoiceGenerator.Profile.{UserProfile, Picture}
+  alias InvoiceGenerator.Profile.{Picture, UserProfile}
 
   @doc """
   Returns the list of profiles.

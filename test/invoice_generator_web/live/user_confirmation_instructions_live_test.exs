@@ -3,7 +3,7 @@ defmodule InvoiceGeneratorWeb.UserConfirmationInstructionsLiveTest do
 
   import Phoenix.LiveViewTest
 
-  alias InvoiceGenerator.{Accounts, Repo, AccountsFixtures}
+  alias InvoiceGenerator.{Accounts, AccountsFixtures, Repo}
 
   setup do
     %{user: user_fixture()}
@@ -31,7 +31,9 @@ defmodule InvoiceGeneratorWeb.UserConfirmationInstructionsLiveTest do
     end
 
     test "does not send confirmation token if user is confirmed", %{conn: conn, user: user} do
-      Repo.update!(Accounts.User.confirm_changeset(user))
+      user
+      |> Accounts.User.confirm_changeset()
+      |> Repo.update!()
 
       {:ok, lv, _html} = live(conn, ~p"/users/confirm")
 

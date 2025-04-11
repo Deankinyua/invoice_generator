@@ -1,9 +1,8 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.BusinessAddressDetails do
+  use InvoiceGeneratorWeb, :live_component
   alias InvoiceGenerator.{Helpers, Profile, Repo}
 
   alias InvoiceGenerator.Profile.UserProfile
-
-  use InvoiceGeneratorWeb, :live_component
 
   @impl Phoenix.LiveComponent
   def render(assigns) do

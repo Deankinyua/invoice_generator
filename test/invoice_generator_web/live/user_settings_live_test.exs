@@ -1,9 +1,9 @@
 defmodule InvoiceGeneratorWeb.UserSettingsLiveTest do
   use InvoiceGeneratorWeb.ConnCase, async: true
 
-  alias InvoiceGenerator.Accounts
   import Phoenix.LiveViewTest
   import InvoiceGenerator.AccountsFixtures
+  alias InvoiceGenerator.Accounts
 
   describe "Settings page" do
     test "renders settings page", %{conn: conn} do

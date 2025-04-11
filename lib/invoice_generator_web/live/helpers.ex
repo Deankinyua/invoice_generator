@@ -221,7 +221,7 @@ defmodule InvoiceGenerator.Helpers do
     ]
   end
 
-  def payment_terms() do
+  def payment_terms do
     [
       %{name: "Net 30 Days"},
       %{name: "Net 14 Days"},
@@ -251,7 +251,7 @@ defmodule InvoiceGenerator.Helpers do
     result
   end
 
-  def initial_errors() do
+  def initial_errors do
     %{
       length: "errors",
       uppercase: "errors",

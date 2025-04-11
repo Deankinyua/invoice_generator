@@ -1,12 +1,11 @@
 defmodule InvoiceGenerator.Accounts.UserNotifier do
   # import Swoosh.Email
 
-  alias InvoiceGenerator.Mailer
-
   use Phoenix.Swoosh,
     template_root: "lib/invoice_generator_web/templates",
     template_path: "emails"
 
+  alias InvoiceGenerator.Mailer
   # Delivers the email using the application mailer.
   defp deliver(user, url, subject, template) do
     email =

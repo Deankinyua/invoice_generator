@@ -8,11 +8,10 @@ defmodule InvoiceGeneratorWeb.Event.Step do
 end
 
 defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
-  require Logger
   use InvoiceGeneratorWeb, :live_view
 
   alias InvoiceGenerator.{Profile, Repo}
-  alias InvoiceGenerator.Profile.{UserProfile, Picture}
+  alias InvoiceGenerator.Profile.{Picture, UserProfile}
   alias InvoiceGeneratorWeb.Event.Step
   alias SimpleS3Upload
   # alias ExAwsS3
@@ -156,8 +155,6 @@ defmodule InvoiceGeneratorWeb.UserProfileLive.Index do
 
   @impl Phoenix.LiveView
   def handle_info({:picture_details, details}, socket) do
-    Logger.warning("Picture details are in the socket :)")
-
     if details == %{} do
       {:noreply, socket}
     else

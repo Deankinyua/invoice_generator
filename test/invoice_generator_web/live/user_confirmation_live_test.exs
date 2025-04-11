@@ -3,7 +3,7 @@ defmodule InvoiceGeneratorWeb.UserConfirmationLiveTest do
 
   import Phoenix.LiveViewTest
 
-  alias InvoiceGenerator.{Repo, Accounts, AccountsFixtures}
+  alias InvoiceGenerator.{Accounts, AccountsFixtures, Repo}
 
   setup do
     %{user: user_fixture()}

@@ -1,7 +1,7 @@
 defmodule InvoiceGeneratorWeb.InvoiceLive.ItemComponent do
   use InvoiceGeneratorWeb, :live_component
 
-  alias InvoiceGenerator.{Helpers}
+  alias InvoiceGenerator.Helpers
 
   @impl Phoenix.LiveComponent
   def render(assigns) do

@@ -1,8 +1,7 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.EmailNotifications do
-  alias InvoiceGenerator.Notifications.Notification
   use InvoiceGeneratorWeb, :live_view
 
-  alias InvoiceGenerator.{Helpers, Repo, Notifications, Notifications.Notification}
+  alias InvoiceGenerator.{Helpers, Notifications, Notifications.Notification, Repo}
 
   @impl Phoenix.LiveView
   def render(assigns) do

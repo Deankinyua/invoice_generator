@@ -1,9 +1,9 @@
 defmodule InvoiceGenerator.AccountsTest do
   use InvoiceGenerator.DataCase, async: true
 
+  import InvoiceGenerator.AccountsFixtures
   alias InvoiceGenerator.Accounts
 
-  import InvoiceGenerator.AccountsFixtures
   alias InvoiceGenerator.Accounts.{User, UserToken}
 
   describe "get_user_by_email/1" do
@@ -86,7 +86,10 @@ defmodule InvoiceGenerator.AccountsTest do
 
     test "registers users with a hashed password" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+
+      attrs = valid_user_attributes(email: email)
+      {:ok, user} = Accounts.register_user(attrs)
+
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)

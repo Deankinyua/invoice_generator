@@ -1,9 +1,8 @@
 defmodule InvoiceGeneratorWeb.Settings.NavigationComponent do
-  alias Tremorx.Components.{Layout, Text}
-  alias Tremorx.Theme
-
   use InvoiceGeneratorWeb, :html
   use Phoenix.Component
+  alias Tremorx.Components.{Layout, Text}
+  alias Tremorx.Theme
 
   attr :user, :any, required: true
   attr :active_tab, :any, required: true

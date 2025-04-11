@@ -1,11 +1,8 @@
 defmodule InvoiceGeneratorWeb.SettingsLive.Index do
-  alias InvoiceGenerator.Accounts
   use InvoiceGeneratorWeb, :live_view
 
-  require Logger
-
   alias Ecto.Changeset
-  alias InvoiceGenerator.{Repo, Profile, Helpers}
+  alias InvoiceGenerator.{Accounts, Helpers, Profile, Repo}
 
   @impl Phoenix.LiveView
   def render(assigns) do
@@ -152,7 +149,6 @@ defmodule InvoiceGeneratorWeb.SettingsLive.Index do
 
     case Map.get(user_profile.picture, :original_filename) do
       nil ->
-        Logger.warning("value is nil")
         {:noreply, socket}
 
       filename ->
